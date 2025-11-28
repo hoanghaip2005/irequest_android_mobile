@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
@@ -11,8 +13,9 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var etUsername: EditText
     private lateinit var etPassword: EditText
     private lateinit var btnLogin: Button
-    private lateinit var btnGoogleLogin: Button
-    private lateinit var btnFacebookLogin: Button
+    private lateinit var btnGoogleLogin: LinearLayout
+    private lateinit var btnFacebookLogin: LinearLayout
+    private lateinit var tvForgotPassword: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,14 +24,16 @@ class LoginActivity : AppCompatActivity() {
         initViews()
         setupLoginButton()
         setupSocialLoginButtons()
+        setupForgotPassword()
     }
 
     private fun initViews() {
-        etUsername = findViewById(R.id.etUsername)
-        etPassword = findViewById(R.id.etPassword)
-        btnLogin = findViewById(R.id.btnLogin)
-        btnGoogleLogin = findViewById(R.id.btnGoogleLogin)
-        btnFacebookLogin = findViewById(R.id.btnFacebookLogin)
+        etUsername = findViewById<EditText>(R.id.etUsername)
+        etPassword = findViewById<EditText>(R.id.etPassword)
+        btnLogin = findViewById<Button>(R.id.btnLogin)
+        btnGoogleLogin = findViewById<LinearLayout>(R.id.btnGoogleLogin)
+        btnFacebookLogin = findViewById<LinearLayout>(R.id.btnFacebookLogin)
+        tvForgotPassword = findViewById<TextView>(R.id.tvForgotPassword)
     }
 
     private fun setupLoginButton() {
@@ -65,6 +70,13 @@ class LoginActivity : AppCompatActivity() {
             // TODO: Implement Facebook login  
             // For demo, we'll just navigate to home
             navigateToHome()
+        }
+    }
+
+    private fun setupForgotPassword() {
+        tvForgotPassword.setOnClickListener {
+            Toast.makeText(this, "Chức năng quên mật khẩu", Toast.LENGTH_SHORT).show()
+            // TODO: Implement forgot password functionality
         }
     }
 
