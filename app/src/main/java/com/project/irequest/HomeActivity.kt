@@ -4,9 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.Toast
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : BaseActivity() {
     private lateinit var tvWelcome: TextView
     private lateinit var btnLogout: Button
 
@@ -16,6 +16,12 @@ class HomeActivity : AppCompatActivity() {
 
         initViews()
         setupLogoutButton()
+        
+        // Setup navigation từ BaseActivity
+        setupBottomNavigation()
+        
+        // Set tab Home là active (index 0)
+        setActiveTab(0)
     }
 
     private fun initViews() {
@@ -30,5 +36,30 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+    }
+
+    // Override navigation methods để xử lý riêng cho HomeActivity
+    override fun onNavigationHomeClicked() {
+        // Đã ở trang chủ rồi, không cần làm gì
+        Toast.makeText(this, "Bạn đang ở trang chủ", Toast.LENGTH_SHORT).show()
+        setActiveTab(0)
+    }
+    
+    override fun onNavigationWorkClicked() {
+        // Chuyển đến WorkActivity
+        val intent = Intent(this, WorkActivity::class.java)
+        startActivity(intent)
+    }
+    
+    override fun onNavigationChatClicked() {
+        // TODO: Chuyển đến ChatActivity  
+        Toast.makeText(this, "Chuyển đến trang Chat", Toast.LENGTH_SHORT).show()
+        setActiveTab(2)
+    }
+    
+    override fun onNavigationAccountClicked() {
+        // TODO: Chuyển đến AccountActivity
+        Toast.makeText(this, "Chuyển đến trang Tài khoản", Toast.LENGTH_SHORT).show()
+        setActiveTab(3)
     }
 }

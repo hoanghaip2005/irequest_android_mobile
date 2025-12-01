@@ -251,4 +251,7 @@
 
     </ScrollView>
 
+    <!-- Bottom Navigation -->
+    <include layout="@layout/bottom_navigation" />
+
 </LinearLayout>
