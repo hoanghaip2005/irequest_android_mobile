@@ -32,6 +32,17 @@
             android:name=".MainActivity"
             android:exported="false" />
 
+        <!-- Chat Activity -->
+        <activity
+            android:name=".ChatActivity"
+            android:exported="false" />
+
+        <!-- Chat Detail Activity -->
+        <activity
+            android:name=".ChatDetailActivity"
+            android:exported="false"
+            android:parentActivityName=".ChatActivity" />
+
     </application>
 
 </manifest>
