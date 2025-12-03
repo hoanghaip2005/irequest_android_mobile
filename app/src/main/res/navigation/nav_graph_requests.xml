@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/nav_my_requests">
+
+    <!-- Main Navigation Structure for 4 Features -->
+
+    <!-- My Requests Fragment -->
+    <fragment
+        android:id="@+id/nav_my_requests"
+        android:name="com.irequest.ui.fragments.MyRequestsFragment"
+        android:label="Yêu cầu của tôi">
+
+        <!-- Navigate to Request Detail -->
+        <action
+            android:id="@+id/action_myRequests_to_requestDetail"
+            app:destination="@id/nav_request_detail" />
+
+        <!-- Navigate to Edit Request (Create) -->
+        <action
+            android:id="@+id/action_myRequests_to_editRequest"
+            app:destination="@id/nav_edit_request" />
+
+    </fragment>
+
+    <!-- Request Detail Fragment -->
+    <fragment
+        android:id="@+id/nav_request_detail"
+        android:name="com.irequest.ui.fragments.RequestDetailFragment"
+        android:label="Chi tiết yêu cầu">
+
+        <!-- Argument: Request ID -->
+        <argument
+            android:name="requestId"
+            app:argType="string" />
+
+        <!-- Navigate back to My Requests -->
+        <action
+            android:id="@+id/action_requestDetail_to_myRequests"
+            app:destination="@id/nav_my_requests"
+            app:popUpTo="@id/nav_my_requests"
+            app:popUpToInclusive="true" />
+
+        <!-- Navigate to Edit Request -->
+        <action
+            android:id="@+id/action_requestDetail_to_editRequest"
+            app:destination="@id/nav_edit_request" />
+
+    </fragment>
+
+    <!-- Edit Request Fragment -->
+    <fragment
+        android:id="@+id/nav_edit_request"
+        android:name="com.irequest.ui.fragments.EditRequestFragment"
+        android:label="Tạo yêu cầu mới">
+
+        <!-- Argument: Request ID (Optional for update) -->
+        <argument
+            android:name="requestId"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+
+        <!-- Navigate back to My Requests after creating -->
+        <action
+            android:id="@+id/action_editRequest_to_myRequests"
+            app:destination="@id/nav_my_requests"
+            app:popUpTo="@id/nav_my_requests"
+            app:popUpToInclusive="true" />
+
+        <!-- Navigate back to Request Detail (if editing) -->
+        <action
+            android:id="@+id/action_editRequest_to_requestDetail"
+            app:destination="@id/nav_request_detail"
+            app:popUpTo="@id/nav_request_detail"
+            app:popUpToInclusive="true" />
+
+    </fragment>
+
+    <!-- Comments Tab Fragment (Nested) -->
+    <fragment
+        android:id="@+id/nav_comments_tab"
+        android:name="com.irequest.ui.fragments.CommentsTabFragment"
+        android:label="Thảo luận" />
+
+    <!-- Attachments Tab Fragment (Nested) -->
+    <fragment
+        android:id="@+id/nav_attachments_tab"
+        android:name="com.irequest.ui.fragments.AttachmentsTabFragment"
+        android:label="Đính kèm" />
+
+    <!-- History Tab Fragment (Nested) -->
+    <fragment
+        android:id="@+id/nav_history_tab"
+        android:name="com.irequest.ui.fragments.HistoryTabFragment"
+        android:label="Lịch sử" />
+
+</navigation>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Text Styles -->
+    <attr name="textStyleHeading" format="reference" />
+    <attr name="textStyleSubheading" format="reference" />
+    <attr name="textStyleBody" format="reference" />
+    <attr name="textStyleCaption" format="reference" />
+
+    <!-- Color Attributes -->
+    <attr name="colorPrimary" format="color" />
+    <attr name="colorPrimaryDark" format="color" />
+    <attr name="colorAccent" format="color" />
+    <attr name="colorSuccess" format="color" />
+    <attr name="colorWarning" format="color" />
+    <attr name="colorError" format="color" />
+    <attr name="colorBackground" format="color" />
+    <attr name="colorSurface" format="color" />
+
+    <!-- Dimen Attributes -->
+    <attr name="spacingSmall" format="dimension" />
+    <attr name="spacingMedium" format="dimension" />
+    <attr name="spacingLarge" format="dimension" />
+    <attr name="cornerRadiusSmall" format="dimension" />
+    <attr name="cornerRadiusLarge" format="dimension" />
+
+    <!-- Custom View Attributes -->
+    <declare-styleable name="PriorityBadge">
+        <attr name="priority" format="enum">
+            <enum name="low" value="0" />
+            <enum name="medium" value="1" />
+            <enum name="high" value="2" />
+            <enum name="urgent" value="3" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="StatusBadge">
+        <attr name="status" format="enum">
+            <enum name="new_status" value="0" />
+            <enum name="pending" value="1" />
+            <enum name="in_progress" value="2" />
+            <enum name="completed" value="3" />
+            <enum name="rejected" value="4" />
+            <enum name="cancelled" value="5" />
+        </attr>
+    </declare-styleable>
+
+</resources>

@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import com.google.android.material.card.MaterialCardView
 
 class HomeActivity : BaseActivity() {
     private lateinit var tvWelcome: TextView
     private lateinit var btnLogout: Button
+    private lateinit var cardRequests: MaterialCardView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,6 +18,7 @@ class HomeActivity : BaseActivity() {
 
         initViews()
         setupLogoutButton()
+        setupRequestsCard()
         
         // Setup navigation từ BaseActivity
         setupBottomNavigation()
@@ -27,6 +30,7 @@ class HomeActivity : BaseActivity() {
     private fun initViews() {
         tvWelcome = findViewById(R.id.tvWelcome)
         btnLogout = findViewById(R.id.btnLogout)
+        cardRequests = findViewById(R.id.cardRequests)
     }
 
     private fun setupLogoutButton() {
@@ -35,6 +39,13 @@ class HomeActivity : BaseActivity() {
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
             finish()
+        }
+    }
+
+    private fun setupRequestsCard() {
+        cardRequests.setOnClickListener {
+            val intent = Intent(this, RequestsActivity::class.java)
+            startActivity(intent)
         }
     }
 

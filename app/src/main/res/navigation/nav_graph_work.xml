@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph_work"
+    app:startDestination="@id/nav_my_requests_work">
+
+    <!-- My Requests Fragment (Work Tab) -->
+    <fragment
+        android:id="@+id/nav_my_requests_work"
+        android:name="com.irequest.ui.fragments.MyRequestsFragment"
+        android:label="Yêu cầu của tôi">
+
+        <action
+            android:id="@+id/action_myRequests_work_to_requestDetail"
+            app:destination="@id/nav_request_detail_work" />
+
+    </fragment>
+
+    <!-- Assigned Requests Fragment -->
+    <fragment
+        android:id="@+id/nav_assigned_requests"
+        android:name="com.irequest.ui.fragments.AssignedRequestsFragment"
+        android:label="Công việc">
+
+        <action
+            android:id="@+id/action_assigned_to_requestDetail"
+            app:destination="@id/nav_request_detail_work" />
+
+    </fragment>
+
+    <!-- Unassigned Requests Fragment -->
+    <fragment
+        android:id="@+id/nav_unassigned_requests"
+        android:name="com.irequest.ui.fragments.UnassignedRequestsFragment"
+        android:label="Chưa gán">
+
+        <action
+            android:id="@+id/action_unassigned_to_requestDetail"
+            app:destination="@id/nav_request_detail_work" />
+
+    </fragment>
+
+    <!-- Approval Queue Fragment -->
+    <fragment
+        android:id="@+id/nav_approval_queue"
+        android:name="com.irequest.ui.fragments.ApprovalQueueFragment"
+        android:label="Phê duyệt">
+
+        <action
+            android:id="@+id/action_approval_to_requestDetail"
+            app:destination="@id/nav_request_detail_work" />
+
+    </fragment>
+
+    <!-- Request Detail Fragment (Work) -->
+    <fragment
+        android:id="@+id/nav_request_detail_work"
+        android:name="com.irequest.ui.fragments.RequestDetailFragment"
+        android:label="Chi tiết yêu cầu">
+
+        <argument
+            android:name="requestId"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_requestDetail_work_back"
+            app:destination="@id/nav_my_requests_work"
+            app:popUpTo="@id/nav_my_requests_work"
+            app:popUpToInclusive="true" />
+
+    </fragment>
+
+</navigation>

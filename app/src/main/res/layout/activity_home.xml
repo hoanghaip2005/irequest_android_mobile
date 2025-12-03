@@ -91,6 +91,7 @@
 
                 <!-- Feature 1 -->
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardRequests"
                     android:layout_width="0dp"
                     android:layout_height="120dp"
                     android:layout_columnWeight="1"
@@ -116,7 +117,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Quản lý"
+                            android:text="Yêu cầu"
                             android:textSize="14sp"
                             android:textStyle="bold"
                             android:textColor="#E65100" />
