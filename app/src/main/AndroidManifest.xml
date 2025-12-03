@@ -48,6 +48,11 @@
             android:exported="false"
             android:parentActivityName=".ChatActivity" />
 
+        <!-- Alerts Activity -->
+        <activity
+            android:name=".AlertsActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>
