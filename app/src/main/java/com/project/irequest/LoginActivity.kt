@@ -2,17 +2,20 @@ package com.project.irequest
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
+import android.view.View // Thêm import này
 import android.widget.EditText
+import android.widget.TextView // Dùng TextView thay vì Button để tránh lỗi
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var etUsername: EditText
     private lateinit var etPassword: EditText
-    private lateinit var btnLogin: Button
-    private lateinit var btnGoogleLogin: Button
-    private lateinit var btnFacebookLogin: Button
+
+    // 👇 SỬA Ở ĐÂY: Đổi hết từ Button thành View (hoặc TextView)
+    private lateinit var btnLogin: View
+    private lateinit var btnGoogleLogin: View
+    private lateinit var btnFacebookLogin: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +29,8 @@ class LoginActivity : AppCompatActivity() {
     private fun initViews() {
         etUsername = findViewById(R.id.etUsername)
         etPassword = findViewById(R.id.etPassword)
+
+        // 👇 Các dòng này sẽ không bị lỗi ép kiểu nữa vì View là cha của tất cả
         btnLogin = findViewById(R.id.btnLogin)
         btnGoogleLogin = findViewById(R.id.btnGoogleLogin)
         btnFacebookLogin = findViewById(R.id.btnFacebookLogin)
@@ -41,11 +46,11 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Simple validation - you can replace this with actual authentication
+            // Simple validation
             if (username == "admin" && password == "123456") {
                 val intent = Intent(this, HomeActivity::class.java)
                 startActivity(intent)
-                finish() // Close login activity
+                finish()
             } else {
                 Toast.makeText(this, "Tên đăng nhập hoặc mật khẩu không đúng", Toast.LENGTH_SHORT).show()
             }
@@ -55,20 +60,19 @@ class LoginActivity : AppCompatActivity() {
     private fun setupSocialLoginButtons() {
         btnGoogleLogin.setOnClickListener {
             Toast.makeText(this, "Đăng nhập với Google", Toast.LENGTH_SHORT).show()
-            // TODO: Implement Google login
-            // For demo, we'll just navigate to home
             navigateToHome()
         }
 
         btnFacebookLogin.setOnClickListener {
             Toast.makeText(this, "Đăng nhập với Facebook", Toast.LENGTH_SHORT).show()
-            // TODO: Implement Facebook login  
-            // For demo, we'll just navigate to home
             navigateToHome()
         }
     }
 
     private fun navigateToHome() {
+        // Lưu ý: Đảm bảo bạn ĐÃ CÓ file HomeActivity.kt nhé
+        // Nếu chưa có HomeActivity, dòng này sẽ báo đỏ.
+        // Tạm thời comment lại nếu chưa tạo HomeActivity.
         val intent = Intent(this, HomeActivity::class.java)
         startActivity(intent)
         finish()

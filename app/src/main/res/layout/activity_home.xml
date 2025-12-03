@@ -6,7 +6,6 @@
     android:orientation="vertical"
     android:background="#F5F5F5">
 
-    <!-- Header -->
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="56dp"
@@ -24,7 +23,6 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <!-- Content -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -36,7 +34,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Welcome Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -72,7 +69,6 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Menu Items -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -89,7 +85,6 @@
                 android:rowCount="2"
                 android:layout_marginBottom="24dp">
 
-                <!-- Feature 1 -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
                     android:layout_height="120dp"
@@ -125,7 +120,6 @@
 
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Feature 2 -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
                     android:layout_height="120dp"
@@ -161,7 +155,6 @@
 
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Feature 3 -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
                     android:layout_height="120dp"
@@ -197,8 +190,8 @@
 
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Feature 4 -->
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardAlerts"
                     android:layout_width="0dp"
                     android:layout_height="120dp"
                     android:layout_columnWeight="1"
@@ -235,7 +228,6 @@
 
             </GridLayout>
 
-            <!-- Logout Button -->
             <Button
                 android:id="@+id/btnLogout"
                 android:layout_width="match_parent"
