@@ -52,9 +52,9 @@ class HomeActivity : BaseActivity() {
     }
     
     override fun onNavigationChatClicked() {
-        // TODO: Chuyển đến ChatActivity  
-        Toast.makeText(this, "Chuyển đến trang Chat", Toast.LENGTH_SHORT).show()
-        setActiveTab(2)
+        // Chuyển đến ChatActivity
+        val intent = Intent(this, ChatActivity::class.java)
+        startActivity(intent)
     }
     
     override fun onNavigationAccountClicked() {

@@ -80,7 +80,7 @@
             android:id="@+id/iconChat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/chat" />
+            android:src="@drawable/chat_line" />
 
         <TextView
             android:id="@+id/textChat"
