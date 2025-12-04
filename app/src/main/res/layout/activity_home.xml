@@ -69,13 +69,12 @@
                     android:padding="8dp"
                     android:layout_margin="4dp">
 
-                    <TextView
+                    <ImageView
+                        android:id="@+id/nofi"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_marginBottom="8dp"
-                        android:text="🔔"
-                        android:textSize="24sp"
-                        android:gravity="center" />
+                        android:src="@drawable/nofi" />
 
                     <TextView
                         android:layout_width="wrap_content"

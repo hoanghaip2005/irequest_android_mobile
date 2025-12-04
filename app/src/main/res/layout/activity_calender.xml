@@ -43,7 +43,7 @@
                         android:id="@+id/btnPrevMonth"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:src="@android:drawable/ic_media_previous"
+                        android:src="@drawable/broken_arrows_double_alt_arrow_left"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="Tháng trước" />
 
@@ -62,7 +62,7 @@
                         android:id="@+id/btnNextMonth"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:src="@android:drawable/ic_media_next"
+                        android:src="@drawable/broken_arrows_double_alt_arrow_right"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="Tháng sau" />
 
