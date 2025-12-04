@@ -1,5 +1,6 @@
 package com.project.irequest
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -15,44 +16,49 @@ open class BaseActivity : AppCompatActivity() {
     
     // Setup navigation cho các activity con
     protected fun setupBottomNavigation() {
-        bottomNavigation = findViewById(R.id.bottomNavigation)
+        bottomNavigation = findViewById(R.id.bottom_navigation)
         
-        // Trang chủ
         val navHome: LinearLayout = findViewById(R.id.navHome)
         navHome.setOnClickListener {
             onNavigationHomeClicked()
         }
         
-        // Công việc  
         val navWork: LinearLayout = findViewById(R.id.navWork)
         navWork.setOnClickListener {
             onNavigationWorkClicked()
         }
         
-        // Chat
         val navChat: LinearLayout = findViewById(R.id.navChat)
         navChat.setOnClickListener {
             onNavigationChatClicked()
         }
         
-        // Tài khoản
         val navAccount: LinearLayout = findViewById(R.id.navAccount)
         navAccount.setOnClickListener {
             onNavigationAccountClicked()
         }
     }
     
-    // Các method này có thể được override bởi activity con
+    // Điều hướng đến HomeActivity, tránh tạo lại activity mới
     protected open fun onNavigationHomeClicked() {
-        Toast.makeText(this, "Trang chủ clicked", Toast.LENGTH_SHORT).show()
+        if (this !is HomeActivity) {
+            val intent = Intent(this, HomeActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+            startActivity(intent)
+        }
     }
     
     protected open fun onNavigationWorkClicked() {
         Toast.makeText(this, "Công việc clicked", Toast.LENGTH_SHORT).show()
     }
     
+    // Điều hướng đến ChatActivity, tránh tạo lại activity mới
     protected open fun onNavigationChatClicked() {
-        Toast.makeText(this, "Chat clicked", Toast.LENGTH_SHORT).show()
+        if (this !is ChatActivity) {
+            val intent = Intent(this, ChatActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+            startActivity(intent)
+        }
     }
     
     protected open fun onNavigationAccountClicked() {
@@ -61,7 +67,7 @@ open class BaseActivity : AppCompatActivity() {
     
     // Method để highlight tab hiện tại
     protected fun setActiveTab(tabIndex: Int) {
-        // Reset tất cả tab về màu normal
+        if (!::bottomNavigation.isInitialized) return
         resetTabColors()
         
         when (tabIndex) {
@@ -75,13 +81,11 @@ open class BaseActivity : AppCompatActivity() {
     private fun resetTabColors() {
         val tabs = listOf(R.id.navHome, R.id.navWork, R.id.navChat, R.id.navAccount)
         for (tabId in tabs) {
-            val tab: LinearLayout = findViewById(tabId)
-            tab.alpha = 0.6f
+            findViewById<LinearLayout?>(tabId)?.alpha = 0.6f
         }
     }
     
     private fun highlightTab(tabId: Int) {
-        val tab: LinearLayout = findViewById(tabId)
-        tab.alpha = 1.0f
+        findViewById<LinearLayout?>(tabId)?.alpha = 1.0f
     }
 }

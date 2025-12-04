@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import com.google.android.material.card.MaterialCardView
 
 class HomeActivity : BaseActivity() {
     private lateinit var tvWelcome: TextView
     private lateinit var btnLogout: Button
+    private lateinit var cardChat: MaterialCardView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,10 +18,11 @@ class HomeActivity : BaseActivity() {
 
         initViews()
         setupLogoutButton()
-        
+        setupChatCard()
+
         // Setup navigation từ BaseActivity
         setupBottomNavigation()
-        
+
         // Set tab Home là active (index 0)
         setActiveTab(0)
     }
@@ -27,6 +30,7 @@ class HomeActivity : BaseActivity() {
     private fun initViews() {
         tvWelcome = findViewById(R.id.tvWelcome)
         btnLogout = findViewById(R.id.btnLogout)
+        cardChat = findViewById(R.id.cardChat)
     }
 
     private fun setupLogoutButton() {
@@ -38,25 +42,31 @@ class HomeActivity : BaseActivity() {
         }
     }
 
+    private fun setupChatCard() {
+        cardChat.setOnClickListener {
+            val intent = Intent(this, ChatActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
     // Override navigation methods để xử lý riêng cho HomeActivity
     override fun onNavigationHomeClicked() {
         // Đã ở trang chủ rồi, không cần làm gì
         Toast.makeText(this, "Bạn đang ở trang chủ", Toast.LENGTH_SHORT).show()
         setActiveTab(0)
     }
-    
+
     override fun onNavigationWorkClicked() {
         // Chuyển đến WorkActivity
         val intent = Intent(this, WorkActivity::class.java)
         startActivity(intent)
     }
-    
+
     override fun onNavigationChatClicked() {
-        // TODO: Chuyển đến ChatActivity  
-        Toast.makeText(this, "Chuyển đến trang Chat", Toast.LENGTH_SHORT).show()
-        setActiveTab(2)
+        val intent = Intent(this, ChatActivity::class.java)
+        startActivity(intent)
     }
-    
+
     override fun onNavigationAccountClicked() {
         // TODO: Chuyển đến AccountActivity
         Toast.makeText(this, "Chuyển đến trang Tài khoản", Toast.LENGTH_SHORT).show()

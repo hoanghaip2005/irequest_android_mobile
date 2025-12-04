@@ -5,15 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#1E1F22">
+    android:background="#FFFFFF">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#1E1F22"
+        android:background="#FFFFFF"
         app:title="Trò chuyện"
-        app:titleTextColor="#FFFFFF"/>
+        app:titleTextColor="#000000"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvChatList"

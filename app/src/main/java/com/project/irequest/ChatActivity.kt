@@ -1,12 +1,12 @@
 package com.project.irequest
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.util.concurrent.TimeUnit
 
-class ChatActivity : AppCompatActivity() {
+class ChatActivity : BaseActivity() {
 
     private lateinit var rvChatList: RecyclerView
     private lateinit var chatAdapter: ChatAdapter
@@ -15,6 +15,7 @@ class ChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
+        // --- Thiết lập RecyclerView ---
         rvChatList = findViewById(R.id.rvChatList)
         rvChatList.layoutManager = LinearLayoutManager(this)
 
@@ -28,5 +29,14 @@ class ChatActivity : AppCompatActivity() {
 
         chatAdapter = ChatAdapter(chatItems)
         rvChatList.adapter = chatAdapter
+
+        // --- Thiết lập Navigation ---
+        setupBottomNavigation()
+        setActiveTab(2) // Đặt tab Chat là active
+    }
+
+    // Ghi đè để không làm gì khi đang ở màn hình Chat
+    override fun onNavigationChatClicked() {
+        // Đã ở đây rồi
     }
 }
