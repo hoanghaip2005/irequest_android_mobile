@@ -260,12 +260,49 @@
                         android:padding="16dp"
                         android:visibility="gone">
 
+                        <!-- Comments List -->
                         <TextView
+                            android:id="@+id/tvNoComments"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Chưa có bình luận"
                             android:textSize="13sp"
                             android:textColor="#9E9E9E" />
+
+                        <!-- Comment Input Section -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="16dp"
+                            android:gravity="center_vertical">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginEnd="8dp"
+                                app:boxBackgroundColor="@android:color/white">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/etCommentInput"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:hint="Viết bình luận..."
+                                    android:inputType="text"
+                                    android:maxLines="3" />
+
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnSendComment"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Gửi"
+                                android:textSize="12sp"
+                                app:cornerRadius="4dp" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 

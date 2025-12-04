@@ -63,6 +63,9 @@ class WorkActivity : BaseActivity() {
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
 
+        // TODO: Uncomment role-based tab visibility when ready
+        // For now, show all tabs for testing purposes
+        /*
         // Ẩn tabs không cần thiết dựa vào role
         when (userRole) {
             RoleName.USER -> {
@@ -92,6 +95,7 @@ class WorkActivity : BaseActivity() {
                 tabLayout.getTabAt(3)?.view?.visibility = View.GONE
             }
         }
+        */
 
         // Select tab mặc định
         val defaultTab = when (userRole) {

@@ -70,4 +70,24 @@
 
     </fragment>
 
+    <!-- Edit Request Fragment (Create/Update) -->
+    <fragment
+        android:id="@+id/nav_edit_request_work"
+        android:name="com.irequest.ui.fragments.EditRequestFragment"
+        android:label="Tạo yêu cầu mới">
+
+        <argument
+            android:name="requestId"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+
+        <action
+            android:id="@+id/action_editRequest_work_to_myRequests"
+            app:destination="@id/nav_my_requests_work"
+            app:popUpTo="@id/nav_my_requests_work"
+            app:popUpToInclusive="true" />
+
+    </fragment>
+
 </navigation>

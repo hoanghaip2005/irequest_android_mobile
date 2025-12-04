@@ -87,6 +87,26 @@ class RequestDetailFragment : Fragment() {
             icCommentsExpand.rotation = if (isCommentsExpanded) 180f else 0f
         }
 
+        // Comment send button
+        val etCommentInput = view.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etCommentInput)
+        val btnSendComment = view.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnSendComment)
+        val tvNoComments = view.findViewById<TextView>(R.id.tvNoComments)
+        
+        btnSendComment.setOnClickListener {
+            val commentText = etCommentInput.text.toString().trim()
+            if (commentText.isEmpty()) {
+                Toast.makeText(requireContext(), "Vui lòng nhập bình luận", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            
+            // For now, just show success message
+            Toast.makeText(requireContext(), "Bình luận đã được gửi", Toast.LENGTH_SHORT).show()
+            etCommentInput.text?.clear()
+            tvNoComments.visibility = View.GONE
+            
+            // TODO: Save comment to database/backend
+        }
+
         // Attachments collapsible section
         val btnAttachmentsHeader = view.findViewById<LinearLayout>(R.id.btnAttachmentsHeader)
         val llAttachmentsContent = view.findViewById<LinearLayout>(R.id.llAttachmentsContent)
