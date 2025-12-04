@@ -1,6 +1,8 @@
 package com.irequest.ui.fragments
 
 import android.Manifest
+import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -12,6 +14,8 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.irequest.ui.data.RequestItem
 import com.irequest.ui.data.RequestStore
 import com.project.irequest.databinding.FragmentEditRequestBinding
@@ -25,8 +29,11 @@ class EditRequestFragment : Fragment() {
     private var _binding: FragmentEditRequestBinding? = null
     private val binding get() = _binding!!
     
+    private val attachmentsList = mutableListOf<String>()
+    
     companion object {
         private const val PERMISSION_REQUEST_CODE = 100
+        private const val FILE_PICKER_REQUEST_CODE = 1001
     }
 
     override fun onCreateView(
@@ -52,9 +59,7 @@ class EditRequestFragment : Fragment() {
         setupSpinners()
         setupToolbar()
         setupListeners()
-        
-        // Request file permission when fragment loads
-        requestFilePermission()
+        setupAttachmentsView()
     }
 
     private fun setupSpinners() {
@@ -161,7 +166,82 @@ class EditRequestFragment : Fragment() {
     }
 
     private fun openFilePicker() {
-        Toast.makeText(requireContext(), "Mở file picker để chọn tệp", Toast.LENGTH_SHORT).show()
+        // Use Intent directly - more reliable than ActivityResultContracts
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
+        intent.type = "*/*"
+        
+        try {
+            startActivityForResult(intent, FILE_PICKER_REQUEST_CODE)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(requireContext(), "Lỗi: ${e.message}", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        
+        if (requestCode == FILE_PICKER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            data?.data?.let { uri ->
+                val fileName = uri.lastPathSegment ?: "Tệp không xác định"
+                attachmentsList.add(fileName)
+                Toast.makeText(requireContext(), "Tệp được thêm: $fileName", Toast.LENGTH_SHORT).show()
+                updateAttachmentsView()
+            }
+        }
+    }
+
+    private fun setupAttachmentsView() {
+        updateAttachmentsView()
+    }
+
+    private fun updateAttachmentsView() {
+        val rvAttachments = binding.rvAttachments
+        val llEmptyAttachments = binding.llEmptyAttachments
+
+        if (attachmentsList.isEmpty()) {
+            llEmptyAttachments.visibility = View.VISIBLE
+            rvAttachments.visibility = View.GONE
+        } else {
+            llEmptyAttachments.visibility = View.GONE
+            rvAttachments.visibility = View.VISIBLE
+            // Setup adapter for attachments
+            val adapter = AttachmentAdapter(attachmentsList)
+            rvAttachments.layoutManager = LinearLayoutManager(requireContext())
+            rvAttachments.adapter = adapter
+        }
+    }
+
+    // Simple Adapter for attachments
+    private inner class AttachmentAdapter(private val items: MutableList<String>) :
+        RecyclerView.Adapter<AttachmentAdapter.ViewHolder>() {
+
+        inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+            fun bind(fileName: String) {
+                itemView.findViewById<android.widget.TextView>(com.project.irequest.R.id.tvFileName).text = fileName
+                itemView.findViewById<android.widget.ImageView>(com.project.irequest.R.id.btnDelete).setOnClickListener {
+                    items.remove(fileName)
+                    notifyDataSetChanged()
+                    updateAttachmentsView()
+                }
+                itemView.findViewById<android.widget.ImageView>(com.project.irequest.R.id.btnOpen).setOnClickListener {
+                    Toast.makeText(requireContext(), "Mở: $fileName", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            val itemView = LayoutInflater.from(parent.context)
+                .inflate(com.project.irequest.R.layout.item_attachment, parent, false)
+            return ViewHolder(itemView)
+        }
+
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            holder.bind(items[position])
+        }
+
+        override fun getItemCount() = items.size
     }
 
     override fun onRequestPermissionsResult(
