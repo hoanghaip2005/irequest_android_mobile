@@ -2,14 +2,23 @@ package com.project.irequest
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
+import com.google.android.material.card.MaterialCardView
 
 class HomeActivity : BaseActivity() {
+    private lateinit var tvWelcome: TextView
+    private lateinit var btnLogout: Button
+    private lateinit var cardRequests: MaterialCardView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
+        initViews()
+        setupLogoutButton()
+        setupRequestsCard()
         setupFeatureCards()
         
         // Setup navigation từ BaseActivity
@@ -17,6 +26,20 @@ class HomeActivity : BaseActivity() {
         
         // Set tab Home là active (index 0)
         setActiveTab(0)
+    }
+
+    private fun initViews() {
+        tvWelcome = findViewById(R.id.tvWelcome)
+        btnLogout = findViewById(R.id.btnLogout)
+        cardRequests = findViewById(R.id.cardRequests)
+    }
+
+    private fun setupLogoutButton() {
+        btnLogout.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+        }
     }
 
     private fun setupFeatureCards() {
@@ -37,10 +60,13 @@ class HomeActivity : BaseActivity() {
             val intent = Intent(this, PaymentActivity::class.java)
             startActivity(intent)
         }
-        
-        // TODO: Setup click listeners cho các feature cards khác
-        // findViewById<LinearLayout>(R.id.cardRequest).setOnClickListener { }
-        // ...
+    }
+
+    private fun setupRequestsCard() {
+        cardRequests.setOnClickListener {
+            val intent = Intent(this, RequestsActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     // Override navigation methods để xử lý riêng cho HomeActivity
