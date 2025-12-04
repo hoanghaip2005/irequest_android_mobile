@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Internet permission for API calls -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -10,7 +14,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Irequest">
+        android:theme="@style/Theme.Irequest"
+        android:usesCleartextTraffic="true">
 
         <!-- Login Activity - Launcher -->
         <activity
@@ -51,6 +56,21 @@
         <!-- Alerts Activity -->
         <activity
             android:name=".AlertsActivity"
+            android:exported="false" />
+
+        <!-- Account Activity -->
+        <activity
+            android:name=".AccountActivity"
+            android:exported="false" />
+
+        <!-- Calender Activity -->
+        <activity
+            android:name=".CalenderActivity"
+            android:exported="false" />
+
+        <!-- Payment Activity -->
+        <activity
+            android:name=".PaymentActivity"
             android:exported="false" />
 
     </application>

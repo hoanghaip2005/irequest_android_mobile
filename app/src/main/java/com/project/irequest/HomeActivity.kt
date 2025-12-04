@@ -2,20 +2,15 @@ package com.project.irequest
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 
 class HomeActivity : BaseActivity() {
-    private lateinit var tvWelcome: TextView
-    private lateinit var btnLogout: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        initViews()
-        setupLogoutButton()
+        setupFeatureCards()
         
         // Setup navigation từ BaseActivity
         setupBottomNavigation()
@@ -24,18 +19,28 @@ class HomeActivity : BaseActivity() {
         setActiveTab(0)
     }
 
-    private fun initViews() {
-        tvWelcome = findViewById(R.id.tvWelcome)
-        btnLogout = findViewById(R.id.btnLogout)
-    }
-
-    private fun setupLogoutButton() {
-        btnLogout.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+    private fun setupFeatureCards() {
+        // Đặt lịch
+        findViewById<android.widget.LinearLayout>(R.id.cardCalendar).setOnClickListener {
+            val intent = Intent(this, CalenderActivity::class.java)
             startActivity(intent)
-            finish()
         }
+        
+        // Thông báo
+        findViewById<android.widget.LinearLayout>(R.id.cardNotification).setOnClickListener {
+            val intent = Intent(this, AlertsActivity::class.java)
+            startActivity(intent)
+        }
+        
+        // Nộp phí
+        findViewById<android.widget.LinearLayout>(R.id.cardPayment).setOnClickListener {
+            val intent = Intent(this, PaymentActivity::class.java)
+            startActivity(intent)
+        }
+        
+        // TODO: Setup click listeners cho các feature cards khác
+        // findViewById<LinearLayout>(R.id.cardRequest).setOnClickListener { }
+        // ...
     }
 
     // Override navigation methods để xử lý riêng cho HomeActivity
@@ -58,8 +63,8 @@ class HomeActivity : BaseActivity() {
     }
     
     override fun onNavigationAccountClicked() {
-        // TODO: Chuyển đến AccountActivity
-        Toast.makeText(this, "Chuyển đến trang Tài khoản", Toast.LENGTH_SHORT).show()
-        setActiveTab(3)
+        // Chuyển đến AccountActivity
+        val intent = Intent(this, AccountActivity::class.java)
+        startActivity(intent)
     }
 }

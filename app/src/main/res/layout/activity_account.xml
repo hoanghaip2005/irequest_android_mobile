@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_navigation_container">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Header 0 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="24dp"
+                android:background="#FFFFFF"
+                android:elevation="2dp"
+                android:padding="16dp"
+                android:gravity="center_vertical">
+
+                <!-- 1 - Avatar -->
+                <RelativeLayout
+                    android:id="@+id/avatar"
+                    android:layout_width="68dp"
+                    android:layout_height="68dp"
+                    android:clipToOutline="true"
+                    android:background="@drawable/avatar" />
+
+                <!-- Khối A chứa các hàng thông tin -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="16dp">
+
+                    <!-- Hàng chứa 2 và 3 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <!-- 2 - Name -->
+                        <TextView
+                            android:id="@+id/name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Hoàng Hải"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:lineSpacingExtra="6sp"
+                            android:gravity="top"
+                            android:textColor="#000000" />
+
+                        <!-- 3 - Check icon -->
+                        <ImageView
+                            android:id="@+id/check"
+                            android:layout_width="11dp"
+                            android:layout_height="11dp"
+                            android:layout_marginStart="4dp"
+                            android:src="@drawable/check" />
+                    </LinearLayout>
+
+                    <!-- 4 - Nhân viên phục vụ -->
+                    <TextView
+                        android:id="@+id/nhanvienphucvu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Nhân viên phục vụ"
+                        android:textColor="#101828"
+                        android:textSize="14sp"
+                        android:gravity="top" />
+
+                    <!-- Hàng chứa 5 và 6 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <!-- 5 - Medal icon -->
+                        <ImageView
+                            android:id="@+id/medal"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:src="@drawable/noto_1st_place_medal" />
+
+                        <!-- 6 - Tiên phong cải tiến -->
+                        <TextView
+                            android:id="@+id/tienphong"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:text="Tiên phong cải tiến"
+                            android:textSize="12sp"
+                            android:textColor="#EAAA08"
+                            android:gravity="center_vertical" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Body container -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:orientation="vertical"
+                android:background="#FFFFFF">
+
+                <!-- 7 - Thông tin cá nhân (no top border) -->
+                <LinearLayout
+                    android:id="@+id/item_personal_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/border_bottom">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/user" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="Thông tin cá nhân"
+                        android:textSize="14sp"
+                        android:textColor="#1D2939" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/alt_arrow_right" />
+                </LinearLayout>
+
+                <!-- 8 - Điều khoản sử dụng -->
+                <LinearLayout
+                    android:id="@+id/item_terms"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/border_top_bottom">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/file_text" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="Điều khoản sử dụng"
+                        android:textSize="14sp"
+                        android:textColor="#1D2939" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/alt_arrow_right" />
+                </LinearLayout>
+
+                <!-- 9 - Chính sách bảo mật -->
+                <LinearLayout
+                    android:id="@+id/item_privacy_policy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/border_top_bottom">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/shield_keyhole" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="Chính sách bảo mật"
+                        android:textSize="14sp"
+                        android:textColor="#1D2939" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/alt_arrow_right" />
+                </LinearLayout>
+
+                <!-- 10 - Chính sách dữ liệu cá nhân -->
+                <LinearLayout
+                    android:id="@+id/item_personal_data_policy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/border_top_bottom">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/shield_user" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="Chính sách dữ liệu cá nhân"
+                        android:textSize="14sp"
+                        android:textColor="#1D2939" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/alt_arrow_right" />
+                </LinearLayout>
+
+                <!-- 11 - Bảo mật và quyền riêng tư -->
+                <LinearLayout
+                    android:id="@+id/item_security_privacy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/border_top_bottom">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/key" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="Bảo mật và quyền riêng tư"
+                        android:textSize="14sp"
+                        android:textColor="#1D2939" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/alt_arrow_right" />
+                </LinearLayout>
+
+                <!-- 12 - Hỗ trợ và trợ giúp -->
+                <LinearLayout
+                    android:id="@+id/item_support_help"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/border_top_bottom">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/question_circle" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="Hỗ trợ và trợ giúp"
+                        android:textSize="14sp"
+                        android:textColor="#1D2939" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/alt_arrow_right" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <!-- Bottom Navigation Container -->
+    <LinearLayout
+        android:id="@+id/bottom_navigation_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <!-- Logout Button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_logout"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="24dp"
+            android:text="Đăng xuất"
+            android:textSize="14sp"
+            android:textColor="#F04438"
+            android:textAllCaps="false"
+            android:background="@drawable/button_logout_bg"
+            android:gravity="center" />
+
+        <!-- Bottom Navigation -->
+        <include layout="@layout/bottom_navigation" />
+
+    </LinearLayout>
+
+</RelativeLayout>

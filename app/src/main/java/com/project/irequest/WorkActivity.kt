@@ -38,8 +38,8 @@ class WorkActivity : BaseActivity() {
     }
     
     override fun onNavigationAccountClicked() {
-        // TODO: Chuyển đến AccountActivity
-        Toast.makeText(this, "Chuyển đến trang Tài khoản", Toast.LENGTH_SHORT).show()
-        setActiveTab(3)
+        // Chuyển đến AccountActivity
+        val intent = Intent(this, AccountActivity::class.java)
+        startActivity(intent)
     }
 }

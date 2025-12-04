@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/tvDialogRequestId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="#001"
+                android:textSize="18sp"
+                android:textColor="#002C2C"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tvDialogStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Đang xử lý"
+                android:textSize="12sp"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/status_badge"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp" />
+
+        </LinearLayout>
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tiêu đề"
+            android:textSize="12sp"
+            android:textColor="#666666"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:id="@+id/tvDialogTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tiêu đề request"
+            android:textSize="18sp"
+            android:textColor="#002C2C"
+            android:textStyle="bold"
+            android:layout_marginTop="4dp" />
+
+        <!-- Description -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mô tả"
+            android:textSize="12sp"
+            android:textColor="#666666"
+            android:layout_marginTop="16dp" />
+
+        <TextView
+            android:id="@+id/tvDialogDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mô tả chi tiết request"
+            android:textSize="14sp"
+            android:textColor="#333333"
+            android:layout_marginTop="4dp" />
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E0E0E0"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Priority -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="Độ ưu tiên:"
+                android:textSize="14sp"
+                android:textColor="#666666" />
+
+            <TextView
+                android:id="@+id/tvDialogPriority"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Cao"
+                android:textSize="14sp"
+                android:textColor="#F44336"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- Workflow -->
+        <LinearLayout
+            android:id="@+id/layoutWorkflow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="Quy trình:"
+                android:textSize="14sp"
+                android:textColor="#666666" />
+
+            <TextView
+                android:id="@+id/tvDialogWorkflow"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Standard Workflow"
+                android:textSize="14sp"
+                android:textColor="#333333" />
+
+        </LinearLayout>
+
+        <!-- Department -->
+        <LinearLayout
+            android:id="@+id/layoutDepartment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="Phòng ban:"
+                android:textSize="14sp"
+                android:textColor="#666666" />
+
+            <TextView
+                android:id="@+id/tvDialogDepartment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="IT Department"
+                android:textSize="14sp"
+                android:textColor="#333333" />
+
+        </LinearLayout>
+
+        <!-- Creator -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="Người tạo:"
+                android:textSize="14sp"
+                android:textColor="#666666" />
+
+            <TextView
+                android:id="@+id/tvDialogCreator"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Nguyễn Văn A"
+                android:textSize="14sp"
+                android:textColor="#333333" />
+
+        </LinearLayout>
+
+        <!-- Assignee -->
+        <LinearLayout
+            android:id="@+id/layoutAssignee"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="Người xử lý:"
+                android:textSize="14sp"
+                android:textColor="#666666" />
+
+            <TextView
+                android:id="@+id/tvDialogAssignee"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Trần Thị B"
+                android:textSize="14sp"
+                android:textColor="#333333" />
+
+        </LinearLayout>
+
+        <!-- Created Date -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="Ngày tạo:"
+                android:textSize="14sp"
+                android:textColor="#666666" />
+
+            <TextView
+                android:id="@+id/tvDialogCreatedDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="04/12/2025 10:30"
+                android:textSize="14sp"
+                android:textColor="#333333" />
+
+        </LinearLayout>
+
+        <!-- Updated Date -->
+        <LinearLayout
+            android:id="@+id/layoutUpdatedDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="Cập nhật:"
+                android:textSize="14sp"
+                android:textColor="#666666" />
+
+            <TextView
+                android:id="@+id/tvDialogUpdatedDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="04/12/2025 14:20"
+                android:textSize="14sp"
+                android:textColor="#333333" />
+
+        </LinearLayout>
+
+        <!-- Attachment -->
+        <LinearLayout
+            android:id="@+id/layoutAttachment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="File đính kèm:"
+                android:textSize="14sp"
+                android:textColor="#666666" />
+
+            <TextView
+                android:id="@+id/tvDialogAttachment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="document.pdf"
+                android:textSize="14sp"
+                android:textColor="#2196F3"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- Action Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:layout_marginTop="16dp">
+
+            <Button
+                android:id="@+id/btnClose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Đóng"
+                android:textSize="14sp"
+                android:textColor="#666666"
+                android:background="?attr/selectableItemBackground"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp" />
+
+            <Button
+                android:id="@+id/btnViewDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Xem chi tiết"
+                android:textSize="14sp"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/status_badge"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
+                android:layout_marginStart="8dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
