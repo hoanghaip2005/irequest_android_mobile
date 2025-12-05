@@ -1,58 +1,91 @@
 package com.project.irequest
 
-import android.widget.ImageView
+import android.content.Intent
+import android.os.Bundle
 import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 
-abstract class BaseActivity : AppCompatActivity() {
-
-    protected fun setupBottomNavigation() {
-        val navHome = findViewById<LinearLayout>(R.id.navHome)
-        val navWork = findViewById<LinearLayout>(R.id.navWork)
-        val navChat = findViewById<LinearLayout>(R.id.navChat)
-        val navAccount = findViewById<LinearLayout>(R.id.navAccount)
-
-        navHome?.setOnClickListener { onNavigationHomeClicked() }
-        navWork?.setOnClickListener { onNavigationWorkClicked() }
-        navChat?.setOnClickListener { onNavigationChatClicked() }
-        navAccount?.setOnClickListener { onNavigationAccountClicked() }
+open class BaseActivity : AppCompatActivity() {
+    
+    protected lateinit var bottomNavigation: LinearLayout
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
     }
-
-    protected fun setActiveTab(tabIndex: Int) {
-        // Reset tất cả các tab về trạng thái không active
-        resetAllTabs()
-
-        // Set tab được chọn là active
-        when (tabIndex) {
-            0 -> setTabActive(R.id.navHome, R.id.iconHome, R.id.textHome)
-            1 -> setTabActive(R.id.navWork, R.id.iconWork, R.id.textWork)
-            2 -> setTabActive(R.id.navChat, R.id.iconChat, R.id.textChat)
-            3 -> setTabActive(R.id.navAccount, R.id.iconAccount, R.id.textAccount)
+    
+    // Setup navigation cho các activity con
+    protected fun setupBottomNavigation() {
+        bottomNavigation = findViewById(R.id.bottom_navigation)
+        
+        val navHome: LinearLayout = findViewById(R.id.navHome)
+        navHome.setOnClickListener {
+            onNavigationHomeClicked()
+        }
+        
+        val navWork: LinearLayout = findViewById(R.id.navWork)
+        navWork.setOnClickListener {
+            onNavigationWorkClicked()
+        }
+        
+        val navChat: LinearLayout = findViewById(R.id.navChat)
+        navChat.setOnClickListener {
+            onNavigationChatClicked()
+        }
+        
+        val navAccount: LinearLayout = findViewById(R.id.navAccount)
+        navAccount.setOnClickListener {
+            onNavigationAccountClicked()
         }
     }
-
-    private fun resetAllTabs() {
-        resetTab(R.id.iconHome, R.id.textHome)
-        resetTab(R.id.iconWork, R.id.textWork)
-        resetTab(R.id.iconChat, R.id.textChat)
-        resetTab(R.id.iconAccount, R.id.textAccount)
+    
+    // Điều hướng đến HomeActivity, tránh tạo lại activity mới
+    protected open fun onNavigationHomeClicked() {
+        if (this !is HomeActivity) {
+            val intent = Intent(this, HomeActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+            startActivity(intent)
+        }
     }
-
-    private fun resetTab(iconId: Int, textId: Int) {
-        findViewById<ImageView>(iconId)?.alpha = 0.5f
-        findViewById<TextView>(textId)?.setTextColor(ContextCompat.getColor(this, android.R.color.darker_gray))
+    
+    protected open fun onNavigationWorkClicked() {
+        Toast.makeText(this, "Công việc clicked", Toast.LENGTH_SHORT).show()
     }
-
-    private fun setTabActive(navId: Int, iconId: Int, textId: Int) {
-        findViewById<ImageView>(iconId)?.alpha = 1.0f
-        findViewById<TextView>(textId)?.setTextColor(ContextCompat.getColor(this, android.R.color.holo_blue_dark))
+    
+    // Điều hướng đến ChatActivity, tránh tạo lại activity mới
+    protected open fun onNavigationChatClicked() {
+        if (this !is ChatActivity) {
+            val intent = Intent(this, ChatActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+            startActivity(intent)
+        }
     }
-
-    // Abstract methods để các Activity con override
-    protected open fun onNavigationHomeClicked() {}
-    protected open fun onNavigationWorkClicked() {}
-    protected open fun onNavigationChatClicked() {}
-    protected open fun onNavigationAccountClicked() {}
+    
+    protected open fun onNavigationAccountClicked() {
+        Toast.makeText(this, "Tài khoản clicked", Toast.LENGTH_SHORT).show()
+    }
+    
+    // Method để highlight tab hiện tại
+    protected fun setActiveTab(tabIndex: Int) {
+        if (!::bottomNavigation.isInitialized) return
+        resetTabColors()
+        
+        when (tabIndex) {
+            0 -> highlightTab(R.id.navHome)
+            1 -> highlightTab(R.id.navWork) 
+            2 -> highlightTab(R.id.navChat)
+            3 -> highlightTab(R.id.navAccount)
+        }
+    }
+    
+    private fun resetTabColors() {
+        val tabs = listOf(R.id.navHome, R.id.navWork, R.id.navChat, R.id.navAccount)
+        for (tabId in tabs) {
+            findViewById<LinearLayout?>(tabId)?.alpha = 0.6f
+        }
+    }
+    
+    private fun highlightTab(tabId: Int) {
+        findViewById<LinearLayout?>(tabId)?.alpha = 1.0f
+    }
 }
