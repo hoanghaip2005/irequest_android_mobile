@@ -64,6 +64,9 @@ dependencies {
     implementation(libs.firebase.storage)
     implementation(libs.firebase.messaging)
     
+    // Facebook SDK
+    implementation("com.facebook.android:facebook-login:17.0.2")
+    
     // Coroutines
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)

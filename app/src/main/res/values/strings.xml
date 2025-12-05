@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">irequest</string>
 
+    <!-- Facebook Login Configuration -->
+    <string name="facebook_app_id">1366172454640655</string>
+    <string name="facebook_client_token">abd9936aa592f9087c5f1f4eb61fa421</string>
+    <string name="fb_login_protocol_scheme">fb1366172454640655</string>
+
     <!-- Feature 1: My Requests Management -->
     <string name="my_requests_title">Yêu cầu của tôi</string>
     <string name="search_hint">Tìm kiếm yêu cầu...</string>
