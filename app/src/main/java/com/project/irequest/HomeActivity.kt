@@ -77,6 +77,13 @@ class HomeActivity : BaseActivity() {
             val intent = Intent(this, PaymentActivity::class.java)
             startActivity(intent)
         }
+
+        // 11. Báo cáo
+        // (Đây là chỗ nối 2 màn hình lại với nhau)
+        findViewById<android.view.View>(R.id.cardReport).setOnClickListener {
+            val intent = Intent(this, ReportActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     // Override navigation methods để xử lý riêng cho HomeActivity

@@ -2,17 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Queries for Android 11+ -->
-    <queries>
-        <package android:name="com.facebook.katana" />
-    </queries>
-
-    <!-- Permissions for file access -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
-    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <!-- Internet permission for API calls -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -20,37 +10,12 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Irequest"
         android:usesCleartextTraffic="true">
-
-        <!-- Facebook Configuration -->
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
-        <meta-data
-            android:name="com.facebook.sdk.ClientToken"
-            android:value="@string/facebook_client_token" />
-
-        <!-- Facebook Activity -->
-        <activity
-            android:name="com.facebook.FacebookActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name" />
-        <activity
-            android:name="com.facebook.CustomTabActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="@string/fb_login_protocol_scheme" />
-            </intent-filter>
-        </activity>
 
         <!-- Login Activity - Launcher -->
         <activity
@@ -61,16 +26,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <!-- Register Activity -->
-        <activity
-            android:name=".RegisterActivity"
-            android:exported="false" />
-
-        <!-- Forgot Password Activity -->
-        <activity
-            android:name=".ForgotPasswordActivity"
-            android:exported="false" />
 
         <!-- Home Activity -->
         <activity
@@ -118,7 +73,7 @@
             android:name=".PaymentActivity"
             android:exported="false" />
 
-        <!-- Requests Activity - Yêu cầu -->
+        <!-- Requests Activity -->
         <activity
             android:name=".RequestsActivity"
             android:exported="false" />
@@ -128,6 +83,29 @@
             android:name=".DepartmentActivity"
             android:exported="false" />
 
+        <!-- Process Management Activity -->
+        <activity
+            android:name=".ProcessManagementActivity"
+            android:exported="false"
+            android:parentActivityName=".HomeActivity" />
+
+        <!-- Add Process Activity -->
+        <activity
+            android:name=".AddProcessActivity"
+            android:exported="false"
+            android:parentActivityName=".ProcessManagementActivity" />
+
+        <!-- Process Detail Activity -->
+        <activity
+            android:name=".ProcessDetailActivity"
+            android:exported="false"
+            android:parentActivityName=".ProcessManagementActivity" />
+
+        <!-- Report Activity-->
+        <activity android:name=".ReportActivity" />
+
+        <!--Smart Analysis Activity-->
+        <activity android:name=".SmartAnalysisActivity" />
     </application>
 
 </manifest>

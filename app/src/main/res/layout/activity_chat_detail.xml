@@ -77,8 +77,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="Nhập tin nhắn..."
-            android:textColorHint="#8A8A8A"
-            android:textColor="#000000"
+            android:textColorHint="#A0A0A0"
+            android:textColor="#FFFFFF"
             android:background="@android:color/transparent"
             android:maxLines="4" />
 
