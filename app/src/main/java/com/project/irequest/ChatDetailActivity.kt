@@ -3,9 +3,10 @@ package com.project.irequest
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -19,12 +20,21 @@ class ChatDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_detail)
 
-        val toolbar: Toolbar = findViewById(R.id.toolbar_chat_detail)
-        setSupportActionBar(toolbar)
+        val tvToolbarTitle: TextView = findViewById(R.id.tv_toolbar_title)
+        val ivBackArrow: ImageView = findViewById(R.id.iv_back_arrow)
+        val ivAvatar: ImageView = findViewById(R.id.iv_avatar)
 
+        // Nhận dữ liệu từ Intent
         val chatName = intent.getStringExtra("CHAT_NAME")
-        supportActionBar?.title = chatName
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        val avatarResId = intent.getIntExtra("AVATAR_RES_ID", R.drawable.ic_launcher_background)
+
+        // Hiển thị dữ liệu lên Toolbar
+        tvToolbarTitle.text = chatName
+        ivAvatar.setImageResource(avatarResId)
+
+        ivBackArrow.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
 
         // --- Thiết lập RecyclerView ---
         rvMessages = findViewById(R.id.rv_chat_messages)
@@ -62,10 +72,5 @@ class ChatDetailActivity : AppCompatActivity() {
         messages.add(ChatMessage("Tôi không thể đăng nhập được.", true))
         messages.add(ChatMessage("Bạn đã thử đặt lại mật khẩu chưa?", false))
         messages.add(ChatMessage("Rồi, nhưng không có tác dụng.", true))
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        onBackPressedDispatcher.onBackPressed()
-        return true
     }
 }

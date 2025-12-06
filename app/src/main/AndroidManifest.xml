@@ -73,6 +73,24 @@
             android:name=".PaymentActivity"
             android:exported="false" />
 
+        <!-- Process Management Activity -->
+        <activity
+            android:name=".ProcessManagementActivity"
+            android:exported="false"
+            android:parentActivityName=".HomeActivity" />
+
+        <!-- Add Process Activity -->
+        <activity
+            android:name=".AddProcessActivity"
+            android:exported="false"
+            android:parentActivityName=".ProcessManagementActivity" />
+
+        <!-- Process Detail Activity -->
+        <activity
+            android:name=".ProcessDetailActivity"
+            android:exported="false"
+            android:parentActivityName=".ProcessManagementActivity" />
+
     </application>
 
 </manifest>
