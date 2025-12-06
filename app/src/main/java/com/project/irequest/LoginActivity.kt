@@ -17,6 +17,8 @@ import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import java.util.Date
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var etUsername: EditText
@@ -30,6 +32,7 @@ class LoginActivity : AppCompatActivity() {
     // Facebook Login
     private lateinit var callbackManager: CallbackManager
     private lateinit var auth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
 
     companion object {
         private const val TAG = "LoginActivity"
@@ -37,22 +40,25 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
-        // Kiểm tra nếu user đã đăng nhập bằng Facebook
-        val accessToken = AccessToken.getCurrentAccessToken()
-        val isLoggedIn = accessToken != null && !accessToken.isExpired
-        if (isLoggedIn) {
-            navigateToHome()
-            return
-        }
-        
         setContentView(R.layout.activity_login)
 
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
         
         // Initialize Facebook Login
         callbackManager = CallbackManager.Factory.create()
+
+        // Kiểm tra nếu user đã đăng nhập (chỉ khi không phải từ logout)
+        // Kiểm tra cả Firebase và Facebook
+        val currentUser = auth.currentUser
+        val accessToken = AccessToken.getCurrentAccessToken()
+        val isLoggedIn = (currentUser != null) || (accessToken != null && !accessToken.isExpired)
+        
+        if (isLoggedIn && !isComingFromLogout()) {
+            navigateToHome()
+            return
+        }
 
         initViews()
         setupLoginButton()
@@ -60,6 +66,11 @@ class LoginActivity : AppCompatActivity() {
         setupForgotPassword()
         setupRegisterButton()
         setupFacebookLogin()
+    }
+    
+    private fun isComingFromLogout(): Boolean {
+        // Kiểm tra intent flags để xem có phải từ logout không
+        return (intent.flags and Intent.FLAG_ACTIVITY_CLEAR_TASK) != 0
     }
 
     private fun initViews() {
@@ -107,11 +118,28 @@ class LoginActivity : AppCompatActivity() {
                     navigateToHome()
                 } else {
                     Log.w(TAG, "signInWithEmail:failure", task.exception)
-                    Toast.makeText(
-                        this,
-                        "Đăng nhập thất bại: ${task.exception?.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    
+                    // Thông báo lỗi dễ hiểu
+                    val errorMessage = when {
+                        task.exception?.message?.contains("no user record", ignoreCase = true) == true ||
+                        task.exception?.message?.contains("user may have been deleted", ignoreCase = true) == true ->
+                            "Tài khoản không tồn tại. Vui lòng đăng ký trước."
+                        
+                        task.exception?.message?.contains("password is invalid", ignoreCase = true) == true ||
+                        task.exception?.message?.contains("credential is incorrect", ignoreCase = true) == true ||
+                        task.exception?.message?.contains("malformed", ignoreCase = true) == true ->
+                            "Email hoặc mật khẩu không đúng. Vui lòng thử lại."
+                        
+                        task.exception?.message?.contains("too many requests", ignoreCase = true) == true ->
+                            "Quá nhiều lần thử. Vui lòng thử lại sau."
+                        
+                        task.exception?.message?.contains("network", ignoreCase = true) == true ->
+                            "Lỗi kết nối mạng. Vui lòng kiểm tra Internet."
+                        
+                        else -> "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin."
+                    }
+                    
+                    Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
                 }
             }
     }
@@ -137,8 +165,8 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setupForgotPassword() {
         tvForgotPassword.setOnClickListener {
-            Toast.makeText(this, "Chức năng quên mật khẩu", Toast.LENGTH_SHORT).show()
-            // TODO: Implement forgot password functionality
+            val intent = Intent(this, ForgotPasswordActivity::class.java)
+            startActivity(intent)
         }
     }
     
@@ -203,16 +231,24 @@ class LoginActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     Log.d(TAG, "signInWithCredential:success")
-                    val user = auth.currentUser
-                    Log.d(TAG, "User: ${user?.displayName}, Email: ${user?.email}")
-                    Toast.makeText(
-                        this,
-                        "Chào mừng ${user?.displayName ?: "bạn"}!",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    val firebaseUser = auth.currentUser
+                    Log.d(TAG, "User: ${firebaseUser?.displayName}, Email: ${firebaseUser?.email}")
                     
-                    // Chuyển sang HomeActivity
-                    navigateToHome()
+                    if (firebaseUser != null) {
+                        // Save or update Facebook user in Firestore
+                        saveFacebookUserToFirestore(
+                            firebaseUser.uid,
+                            firebaseUser.displayName ?: "Facebook User",
+                            firebaseUser.email ?: ""
+                        )
+                    } else {
+                        Toast.makeText(
+                            this,
+                            "Chào mừng bạn!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        navigateToHome()
+                    }
                 } else {
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
                     Toast.makeText(
@@ -221,6 +257,73 @@ class LoginActivity : AppCompatActivity() {
                         Toast.LENGTH_LONG
                     ).show()
                 }
+            }
+    }
+
+    private fun saveFacebookUserToFirestore(userId: String, displayName: String, email: String) {
+        // Check if user already exists
+        firestore.collection("users")
+            .document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    // User already exists, just navigate
+                    Log.d(TAG, "Facebook user already exists in Firestore")
+                    Toast.makeText(
+                        this,
+                        "Chào mừng ${displayName}!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    navigateToHome()
+                } else {
+                    // Create new user document
+                    val userData = hashMapOf(
+                        "id" to userId,
+                        "userName" to displayName,
+                        "email" to email,
+                        "phoneNumber" to null,
+                        "homeAddress" to null,
+                        "avatar" to null,
+                        "birthDate" to null,
+                        "departmentId" to null,
+                        "departmentName" to null,
+                        "emailConfirmed" to true, // Facebook email is verified
+                        "phoneNumberConfirmed" to false,
+                        "roles" to listOf("User"),
+                        "createdAt" to Date()
+                    )
+
+                    firestore.collection("users")
+                        .document(userId)
+                        .set(userData)
+                        .addOnSuccessListener {
+                            Log.d(TAG, "Facebook user saved to Firestore")
+                            Toast.makeText(
+                                this,
+                                "Chào mừng ${displayName}!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            navigateToHome()
+                        }
+                        .addOnFailureListener { e ->
+                            Log.w(TAG, "Error saving Facebook user to Firestore", e)
+                            Toast.makeText(
+                                this,
+                                "Chào mừng ${displayName}!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            navigateToHome()
+                        }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error checking user in Firestore", e)
+                Toast.makeText(
+                    this,
+                    "Chào mừng ${displayName}!",
+                    Toast.LENGTH_SHORT
+                ).show()
+                navigateToHome()
             }
     }
     

@@ -16,7 +16,7 @@ open class BaseActivity : AppCompatActivity() {
     
     // Setup navigation cho các activity con
     protected fun setupBottomNavigation() {
-        bottomNavigation = findViewById(R.id.bottom_navigation)
+        bottomNavigation = findViewById(R.id.bottomNavigation)
         
         val navHome: LinearLayout = findViewById(R.id.navHome)
         navHome.setOnClickListener {

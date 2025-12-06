@@ -19,6 +19,8 @@ import com.facebook.login.LoginResult
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.firestore.FirebaseFirestore
+import java.util.Date
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var etFullName: EditText
@@ -32,6 +34,7 @@ class RegisterActivity : AppCompatActivity() {
     
     // Firebase & Facebook
     private lateinit var auth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
     private lateinit var callbackManager: CallbackManager
 
     companion object {
@@ -44,6 +47,7 @@ class RegisterActivity : AppCompatActivity() {
 
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
         
         // Initialize Facebook Login
         callbackManager = CallbackManager.Factory.create()
@@ -128,34 +132,36 @@ class RegisterActivity : AppCompatActivity() {
 
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
-                btnRegister.isEnabled = true
-                btnRegister.text = "Đăng Ký"
-
                 if (task.isSuccessful) {
                     Log.d(TAG, "createUserWithEmail:success")
                     
-                    // Update user profile with display name
-                    val user = auth.currentUser
-                    val profileUpdates = UserProfileChangeRequest.Builder()
-                        .setDisplayName(fullName)
-                        .build()
-                    
-                    user?.updateProfile(profileUpdates)
-                        ?.addOnCompleteListener { updateTask ->
-                            if (updateTask.isSuccessful) {
-                                Log.d(TAG, "User profile updated.")
+                    val firebaseUser = auth.currentUser
+                    if (firebaseUser != null) {
+                        // Update user profile with display name
+                        val profileUpdates = UserProfileChangeRequest.Builder()
+                            .setDisplayName(fullName)
+                            .build()
+                        
+                        firebaseUser.updateProfile(profileUpdates)
+                            .addOnCompleteListener { updateTask ->
+                                if (updateTask.isSuccessful) {
+                                    Log.d(TAG, "User profile updated.")
+                                    // Save additional user info to Firestore
+                                    saveUserToFirestore(firebaseUser.uid, fullName, email)
+                                } else {
+                                    btnRegister.isEnabled = true
+                                    btnRegister.text = "Đăng Ký"
+                                    Toast.makeText(this, "Lỗi cập nhật profile", Toast.LENGTH_SHORT).show()
+                                }
                             }
-                        }
-                    
-                    Toast.makeText(
-                        this,
-                        "Đăng ký thành công! Chào mừng $fullName",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    
-                    // Navigate to Home
-                    navigateToHome()
+                    } else {
+                        btnRegister.isEnabled = true
+                        btnRegister.text = "Đăng Ký"
+                    }
                 } else {
+                    btnRegister.isEnabled = true
+                    btnRegister.text = "Đăng Ký"
+                    
                     Log.w(TAG, "createUserWithEmail:failure", task.exception)
                     val errorMessage = when {
                         task.exception?.message?.contains("email address is already in use") == true ->
@@ -166,6 +172,56 @@ class RegisterActivity : AppCompatActivity() {
                     }
                     Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
                 }
+            }
+    }
+
+    private fun saveUserToFirestore(userId: String, fullName: String, email: String) {
+        val userData = hashMapOf(
+            "id" to userId,
+            "userName" to fullName,
+            "email" to email,
+            "phoneNumber" to null,
+            "homeAddress" to null,
+            "avatar" to null,
+            "birthDate" to null,
+            "departmentId" to null,
+            "departmentName" to null,
+            "emailConfirmed" to false,
+            "phoneNumberConfirmed" to false,
+            "roles" to listOf("User"),
+            "createdAt" to Date()
+        )
+
+        firestore.collection("users")
+            .document(userId)
+            .set(userData)
+            .addOnSuccessListener {
+                Log.d(TAG, "User data saved to Firestore")
+                btnRegister.isEnabled = true
+                btnRegister.text = "Đăng Ký"
+                
+                Toast.makeText(
+                    this,
+                    "Đăng ký thành công! Chào mừng $fullName",
+                    Toast.LENGTH_SHORT
+                ).show()
+                
+                // Navigate to Home
+                navigateToHome()
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error saving user to Firestore", e)
+                btnRegister.isEnabled = true
+                btnRegister.text = "Đăng Ký"
+                
+                Toast.makeText(
+                    this,
+                    "Đăng ký thành công nhưng lỗi lưu thông tin. Vui lòng đăng nhập.",
+                    Toast.LENGTH_LONG
+                ).show()
+                
+                // Still navigate to home as auth was successful
+                navigateToHome()
             }
     }
 
@@ -224,13 +280,23 @@ class RegisterActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     Log.d(TAG, "signInWithCredential:success")
-                    val user = auth.currentUser
-                    Toast.makeText(
-                        this,
-                        "Chào mừng ${user?.displayName ?: "bạn"}!",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    navigateToHome()
+                    val firebaseUser = auth.currentUser
+                    
+                    if (firebaseUser != null) {
+                        // Save Facebook user to Firestore
+                        saveFacebookUserToFirestore(
+                            firebaseUser.uid,
+                            firebaseUser.displayName ?: "Facebook User",
+                            firebaseUser.email ?: ""
+                        )
+                    } else {
+                        Toast.makeText(
+                            this,
+                            "Chào mừng bạn!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        navigateToHome()
+                    }
                 } else {
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
                     Toast.makeText(
@@ -239,6 +305,73 @@ class RegisterActivity : AppCompatActivity() {
                         Toast.LENGTH_LONG
                     ).show()
                 }
+            }
+    }
+
+    private fun saveFacebookUserToFirestore(userId: String, displayName: String, email: String) {
+        // Check if user already exists
+        firestore.collection("users")
+            .document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    // User already exists, just navigate
+                    Log.d(TAG, "Facebook user already exists in Firestore")
+                    Toast.makeText(
+                        this,
+                        "Chào mừng ${displayName}!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    navigateToHome()
+                } else {
+                    // Create new user document
+                    val userData = hashMapOf(
+                        "id" to userId,
+                        "userName" to displayName,
+                        "email" to email,
+                        "phoneNumber" to null,
+                        "homeAddress" to null,
+                        "avatar" to null,
+                        "birthDate" to null,
+                        "departmentId" to null,
+                        "departmentName" to null,
+                        "emailConfirmed" to true, // Facebook email is verified
+                        "phoneNumberConfirmed" to false,
+                        "roles" to listOf("User"),
+                        "createdAt" to Date()
+                    )
+
+                    firestore.collection("users")
+                        .document(userId)
+                        .set(userData)
+                        .addOnSuccessListener {
+                            Log.d(TAG, "Facebook user saved to Firestore")
+                            Toast.makeText(
+                                this,
+                                "Chào mừng ${displayName}!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            navigateToHome()
+                        }
+                        .addOnFailureListener { e ->
+                            Log.w(TAG, "Error saving Facebook user to Firestore", e)
+                            Toast.makeText(
+                                this,
+                                "Chào mừng ${displayName}!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            navigateToHome()
+                        }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error checking user in Firestore", e)
+                Toast.makeText(
+                    this,
+                    "Chào mừng ${displayName}!",
+                    Toast.LENGTH_SHORT
+                ).show()
+                navigateToHome()
             }
     }
 
