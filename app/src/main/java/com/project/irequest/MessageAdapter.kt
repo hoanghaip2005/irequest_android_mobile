@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 
 class MessageAdapter(private val messages: List<ChatMessage>) : RecyclerView.Adapter<MessageAdapter.MessageViewHolder>() {
 
-    // Các hằng số để xác định loại view
     private val VIEW_TYPE_SENT = 1
     private val VIEW_TYPE_RECEIVED = 2
 
@@ -38,6 +37,6 @@ class MessageAdapter(private val messages: List<ChatMessage>) : RecyclerView.Ada
     override fun getItemCount(): Int = messages.size
 
     class MessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val messageBody: TextView = itemView.findViewById(R.id.tv_message_body)
+        val messageBody: TextView = itemView.findViewById(R.id.tvMessage)
     }
 }
