@@ -44,6 +44,12 @@
         android:id="@+id/tvLastMessage"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+<<<<<<< HEAD
+=======
+        android:text="Bạn: Đây là tin nhắn cuối cùng..."
+        android:textColor="#A0A0A0"
+        android:textSize="14sp"
+>>>>>>> origin/t2
         android:layout_marginTop="4dp"
         android:layout_marginStart="12dp"
         android:layout_marginEnd="8dp"
@@ -61,7 +67,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="1 phút"
+<<<<<<< HEAD
         android:textColor="#666666"
+=======
+        android:textColor="#A0A0A0"
+>>>>>>> origin/t2
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/tvName"

@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        android:name=".IRequestApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -16,6 +17,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Irequest"
         android:usesCleartextTraffic="true">
+
+        <!-- Facebook Configuration -->
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="com.facebook.sdk.ClientToken"
+            android:value="@string/facebook_client_token" />
 
         <!-- Login Activity - Launcher -->
         <activity
@@ -104,7 +113,8 @@
         <!-- Report Activity-->
         <activity android:name=".ReportActivity" />
 
-        <!--Smart Analysis Activity-->
+        <!--Smart
+        Analysis Activity-->
         <activity android:name=".SmartAnalysisActivity" />
     </application>
 
