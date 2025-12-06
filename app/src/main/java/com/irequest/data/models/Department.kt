@@ -20,5 +20,9 @@ data class Department(
     
     // Computed fields for relationships
     val userCount: Int = 0,
-    val requestCount: Int = 0
+    val requestCount: Int = 0,
+    
+    // UI state for expansion in list
+    var isExpanded: Boolean = false,
+    val employees: List<Employee> = emptyList()
 )

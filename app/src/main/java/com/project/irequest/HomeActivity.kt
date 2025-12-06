@@ -53,7 +53,8 @@ class HomeActivity : BaseActivity() {
         
         // 6. Phòng ban
         findViewById<android.widget.LinearLayout>(R.id.cardDepartment).setOnClickListener {
-            Toast.makeText(this, "Tính năng Phòng ban đang phát triển", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, DepartmentActivity::class.java)
+            startActivity(intent)
         }
         
         // 7. Quy trình
