@@ -129,6 +129,11 @@
             android:exported="false"
             android:parentActivityName=".RequestsActivity" />
 
+        <!-- Report Activity-->
+        <activity android:name=".ReportActivity" />
+
+        <!--Smart Analysis Activity-->
+        <activity android:name=".SmartAnalysisActivity" />
     </application>
 
 </manifest>
