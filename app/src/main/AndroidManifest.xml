@@ -123,12 +123,6 @@
             android:name=".RequestsActivity"
             android:exported="false" />
 
-        <!-- Create Request Activity -->
-        <activity
-            android:name=".CreateRequestActivity"
-            android:exported="false"
-            android:parentActivityName=".RequestsActivity" />
-
     </application>
 
 </manifest>

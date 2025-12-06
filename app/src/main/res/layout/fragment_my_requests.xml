@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -172,7 +176,9 @@
         android:visibility="gone"
         android:layout_marginTop="32dp" />
 
-    <!-- FAB Button Create Request -->
+</LinearLayout>
+
+    <!-- FAB Button Create Request (Outside LinearLayout for proper positioning) -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabCreateRequest"
         android:layout_width="wrap_content"
@@ -182,6 +188,7 @@
         android:src="@android:drawable/ic_menu_add"
         app:fabSize="normal"
         android:contentDescription="Tạo yêu cầu mới"
-        android:tint="@android:color/white" />
+        app:tint="@android:color/white"
+        app:backgroundTint="#2196F3" />
 
-</LinearLayout>
+</FrameLayout>

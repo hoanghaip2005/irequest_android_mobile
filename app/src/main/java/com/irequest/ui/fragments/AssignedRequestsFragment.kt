@@ -1,16 +1,21 @@
 package com.irequest.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.irequest.data.models.Request
+import com.example.irequest.data.repository.FirebaseRequestRepository
 import com.irequest.ui.adapters.RequestAdapter
-import com.irequest.ui.data.RequestStore
 import com.project.irequest.R
 import com.project.irequest.databinding.FragmentAssignedRequestsBinding
+import kotlinx.coroutines.launch
 
 /**
  * AssignedRequestsFragment - Hiển thị các request đã được gán cho Agent
@@ -20,6 +25,14 @@ class AssignedRequestsFragment : Fragment() {
 
     private var _binding: FragmentAssignedRequestsBinding? = null
     private val binding get() = _binding!!
+    
+    private lateinit var repository: FirebaseRequestRepository
+    private lateinit var adapter: RequestAdapter
+    private val requests = mutableListOf<Request>()
+
+    companion object {
+        private const val TAG = "AssignedRequestsFragment"
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,56 +46,106 @@ class AssignedRequestsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        repository = FirebaseRequestRepository()
+        
         setupRecyclerView()
         setupListeners()
+        loadAssignedRequests()
     }
 
     private fun setupRecyclerView() {
         binding.rvAssignedRequests.layoutManager = LinearLayoutManager(requireContext())
-
-        // Load từ RequestStore - filter những request có assignee
-        val requests = RequestStore.getAllRequests()
-            .filter { it.assignee.isNotEmpty() && it.status != "COMPLETED" }
-            .map { item ->
-                RequestAdapter.RequestItem(
-                    id = item.id.toIntOrNull() ?: 0,
-                    title = item.title,
-                    date = item.date,
-                    category = item.category,
-                    priority = item.priority,
-                    description = item.description,
-                    status = item.status,
-                    assignee = item.assignee,
-                    deadline = item.deadline
-                )
+        
+        adapter = RequestAdapter(
+            requests = emptyList(),
+            onItemClick = { requestId ->
+                navigateToDetail(requestId)
             }
+        )
+        binding.rvAssignedRequests.adapter = adapter
+    }
 
-        if (requests.isEmpty()) {
-            binding.rvAssignedRequests.visibility = View.GONE
-            binding.llEmptyState.visibility = View.VISIBLE
-            binding.llErrorState.visibility = View.GONE
-        } else {
-            val adapter = RequestAdapter(
-                requests = requests,
-                onItemClick = { requestId ->
-                    navigateToDetail(requestId)
+    private fun loadAssignedRequests() {
+        binding.swipeRefresh.isRefreshing = true
+        
+        lifecycleScope.launch {
+            try {
+                val result = repository.getMyTasks()
+                
+                if (result.isSuccess) {
+                    requests.clear()
+                    requests.addAll(result.getOrNull() ?: emptyList())
+                    
+                    if (requests.isEmpty()) {
+                        showEmptyState()
+                    } else {
+                        showRequests()
+                    }
+                } else {
+                    showErrorState(result.exceptionOrNull()?.message)
                 }
-            )
-            binding.rvAssignedRequests.adapter = adapter
-            binding.rvAssignedRequests.visibility = View.VISIBLE
-            binding.llEmptyState.visibility = View.GONE
-            binding.llErrorState.visibility = View.GONE
+            } catch (e: Exception) {
+                Log.e(TAG, "Error loading assigned requests", e)
+                showErrorState(e.message)
+            } finally {
+                binding.swipeRefresh.isRefreshing = false
+            }
         }
+    }
+    
+    private fun showRequests() {
+        val requestItems = requests.map { request ->
+            RequestAdapter.RequestItem(
+                id = request.requestId,
+                title = request.title,
+                date = request.createdAt?.toString() ?: "",
+                category = request.workflowName ?: "Không xác định",
+                priority = request.priorityName ?: "Bình thường",
+                description = request.description ?: "",
+                status = request.statusName ?: "Mới",
+                assignee = request.assignedUserName ?: "Chưa gán",
+                deadline = ""
+            )
+        }
+        
+        adapter = RequestAdapter(
+            requests = requestItems,
+            onItemClick = { requestId ->
+                navigateToDetail(requestId)
+            }
+        )
+        binding.rvAssignedRequests.adapter = adapter
+        
+        binding.rvAssignedRequests.visibility = View.VISIBLE
+        binding.llEmptyState.visibility = View.GONE
+        binding.llErrorState.visibility = View.GONE
+    }
+    
+    private fun showEmptyState() {
+        binding.rvAssignedRequests.visibility = View.GONE
+        binding.llEmptyState.visibility = View.VISIBLE
+        binding.llErrorState.visibility = View.GONE
+    }
+    
+    private fun showErrorState(message: String?) {
+        binding.rvAssignedRequests.visibility = View.GONE
+        binding.llEmptyState.visibility = View.GONE
+        binding.llErrorState.visibility = View.VISIBLE
+        
+        Toast.makeText(
+            requireContext(),
+            "Lỗi: ${message ?: "Không thể tải danh sách yêu cầu"}",
+            Toast.LENGTH_LONG
+        ).show()
     }
 
     private fun setupListeners() {
         binding.swipeRefresh.setOnRefreshListener {
-            setupRecyclerView()
-            binding.swipeRefresh.isRefreshing = false
+            loadAssignedRequests()
         }
 
         binding.btnRetry.setOnClickListener {
-            setupRecyclerView()
+            loadAssignedRequests()
         }
     }
 
@@ -95,7 +158,7 @@ class AssignedRequestsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        setupRecyclerView()
+        loadAssignedRequests()
     }
 
     override fun onDestroyView() {

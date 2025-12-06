@@ -5,12 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.irequest.data.repository.FirebaseRequestRepository
+import com.google.firebase.firestore.FirebaseFirestore
 import com.irequest.ui.adapters.RequestAdapter
-import com.irequest.ui.data.RequestStore
 import com.project.irequest.R
 import com.project.irequest.databinding.FragmentApprovalQueueBinding
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 /**
  * ApprovalQueueFragment - Hiển thị các request cần phê duyệt (PENDING_APPROVAL status)
@@ -20,6 +25,9 @@ class ApprovalQueueFragment : Fragment() {
 
     private var _binding: FragmentApprovalQueueBinding? = null
     private val binding get() = _binding!!
+    private lateinit var repository: FirebaseRequestRepository
+    private val requests = mutableListOf<RequestAdapter.RequestItem>()
+    private val dateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,6 +35,7 @@ class ApprovalQueueFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentApprovalQueueBinding.inflate(inflater, container, false)
+        repository = FirebaseRequestRepository(FirebaseFirestore.getInstance())
         return binding.root
     }
 
@@ -35,28 +44,56 @@ class ApprovalQueueFragment : Fragment() {
 
         setupRecyclerView()
         setupListeners()
+        loadRequests()
     }
 
     private fun setupRecyclerView() {
         binding.rvApprovalQueue.layoutManager = LinearLayoutManager(requireContext())
+    }
 
-        // Load từ RequestStore - filter những request PENDING_APPROVAL
-        val requests = RequestStore.getAllRequests()
-            .filter { it.status == "PENDING_APPROVAL" }
-            .map { item ->
-                RequestAdapter.RequestItem(
-                    id = item.id.toIntOrNull() ?: 0,
-                    title = item.title,
-                    date = item.date,
-                    category = item.category,
-                    priority = item.priority,
-                    description = item.description,
-                    status = item.status,
-                    assignee = item.assignee,
-                    deadline = item.deadline
-                )
+    private fun loadRequests() {
+        showLoadingState()
+        
+        lifecycleScope.launch {
+            try {
+                val result = repository.getApprovalQueue()
+                
+                if (result.isSuccess) {
+                    val firebaseRequests = result.getOrNull() ?: emptyList()
+                    requests.clear()
+                    requests.addAll(firebaseRequests.map { request ->
+                        RequestAdapter.RequestItem(
+                            id = request.requestId,
+                            title = request.title ?: "No Title",
+                            date = request.createdAt?.let { dateFormat.format(it) } ?: "",
+                            category = request.workflowName ?: "Unknown",
+                            priority = request.priorityName ?: "Medium",
+                            description = request.description ?: "",
+                            status = request.statusName ?: "Unknown",
+                            assignee = request.assignedUserId ?: "Unassigned",
+                            deadline = request.createdAt?.let { dateFormat.format(it) } ?: ""
+                        )
+                    })
+                    showRequests()
+                } else {
+                    showErrorState(result.exceptionOrNull()?.message)
+                }
+            } catch (e: Exception) {
+                showErrorState(e.message)
             }
+        }
+    }
 
+    private fun showLoadingState() {
+        binding.rvApprovalQueue.visibility = View.GONE
+        binding.llEmptyState.visibility = View.GONE
+        binding.llErrorState.visibility = View.GONE
+        binding.swipeRefresh.isRefreshing = true
+    }
+
+    private fun showRequests() {
+        binding.swipeRefresh.isRefreshing = false
+        
         if (requests.isEmpty()) {
             binding.rvApprovalQueue.visibility = View.GONE
             binding.llEmptyState.visibility = View.VISIBLE
@@ -75,14 +112,20 @@ class ApprovalQueueFragment : Fragment() {
         }
     }
 
+    private fun showErrorState(message: String?) {
+        binding.swipeRefresh.isRefreshing = false
+        binding.rvApprovalQueue.visibility = View.GONE
+        binding.llEmptyState.visibility = View.GONE
+        binding.llErrorState.visibility = View.VISIBLE
+    }
+
     private fun setupListeners() {
         binding.swipeRefresh.setOnRefreshListener {
-            setupRecyclerView()
-            binding.swipeRefresh.isRefreshing = false
+            loadRequests()
         }
 
         binding.btnRetry.setOnClickListener {
-            setupRecyclerView()
+            loadRequests()
         }
     }
 
@@ -95,7 +138,7 @@ class ApprovalQueueFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        setupRecyclerView()
+        loadRequests()
     }
 
     override fun onDestroyView() {

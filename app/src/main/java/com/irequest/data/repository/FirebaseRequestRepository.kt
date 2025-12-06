@@ -82,6 +82,45 @@ class FirebaseRequestRepository(
     }
     
     /**
+     * Get unassigned requests (no assignee)
+     */
+    suspend fun getUnassignedRequests(page: Int = 1, pageSize: Int = 20): Result<List<Request>> {
+        return try {
+            val snapshot = requestsCollection
+                .whereEqualTo("assignedUserId", null)
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .limit(pageSize.toLong())
+                .get()
+                .await()
+            
+            val requests = snapshot.toObjects(Request::class.java)
+            Result.success(requests)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    
+    /**
+     * Get approval queue (pending approval)
+     */
+    suspend fun getApprovalQueue(page: Int = 1, pageSize: Int = 20): Result<List<Request>> {
+        return try {
+            val snapshot = requestsCollection
+                .whereEqualTo("isApproved", false)
+                .whereEqualTo("statusName", "Chờ phê duyệt")
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .limit(pageSize.toLong())
+                .get()
+                .await()
+            
+            val requests = snapshot.toObjects(Request::class.java)
+            Result.success(requests)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    
+    /**
      * Get request by ID
      */
     suspend fun getRequestById(requestId: Int): Result<Request> {
