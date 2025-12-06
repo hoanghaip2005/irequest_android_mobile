@@ -9,20 +9,13 @@
         android:id="@+id/toolbar_chat_detail"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-<<<<<<< HEAD
         android:background="#FFFFFF"
         app:contentInsetStart="0dp">
-=======
-        android:background="#1E1F22"
-        app:layout_constraintTop_toTopOf="parent"
-        app:titleTextColor="#FFFFFF" />
->>>>>>> origin/t2
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-<<<<<<< HEAD
             <ImageView
                 android:id="@+id/iv_back_arrow"
                 android:layout_width="wrap_content"
@@ -69,14 +62,6 @@
         </RelativeLayout>
 
     </androidx.appcompat.widget.Toolbar>
-=======
-    <View
-        android:id="@+id/view_divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#333333"
-        app:layout_constraintBottom_toTopOf="@id/layout_input_area" />
->>>>>>> origin/t2
 
     <LinearLayout
         android:id="@+id/layout_input_area"
