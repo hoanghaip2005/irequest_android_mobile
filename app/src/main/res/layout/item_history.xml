@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp"
+    android:gravity="center_vertical">
+
+    <!-- Timeline Dot -->
+    <View
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:background="@drawable/circle_background"
+        android:layout_marginEnd="16dp" />
+
+    <!-- History Content -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <!-- Action Text -->
+        <TextView
+            android:id="@+id/tvAction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Action description"
+            android:textSize="14sp"
+            android:textColor="#212121"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
+
+        <!-- Time and Actor -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tvTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2025-12-03 09:00"
+                android:textSize="12sp"
+                android:textColor="#9E9E9E"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:layout_width="1dp"
+                android:layout_height="12dp"
+                android:background="#BDBDBD"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:id="@+id/tvActor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Người dùng"
+                android:textSize="12sp"
+                android:textColor="#616161" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

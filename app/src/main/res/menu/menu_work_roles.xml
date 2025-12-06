@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Tab cho vai trò User/Requester -->
+    <item
+        android:id="@+id/nav_my_requests"
+        android:title="Yêu cầu của tôi"
+        android:icon="@android:drawable/ic_menu_view" />
+
+    <!-- Tab cho vai trò Agent -->
+    <item
+        android:id="@+id/nav_assigned_requests"
+        android:title="Công việc của tôi"
+        android:icon="@android:drawable/ic_menu_agenda" />
+
+    <!-- Tab cho vai trò Agent - Unassigned -->
+    <item
+        android:id="@+id/nav_unassigned_requests"
+        android:title="Chưa gán"
+        android:icon="@android:drawable/ic_menu_info_details" />
+
+    <!-- Tab cho vai trò Approver -->
+    <item
+        android:id="@+id/nav_approval_queue"
+        android:title="Chờ phê duyệt"
+        android:icon="@android:drawable/ic_menu_edit" />
+
+</menu>

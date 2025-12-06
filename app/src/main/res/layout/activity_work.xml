@@ -64,18 +64,26 @@
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Work Items -->
+            <!-- Task Count -->
             <TextView
+                android:id="@+id/tvTaskCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Danh sách công việc"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="#333333"
+                android:text="0 công việc"
+                android:textSize="14sp"
+                android:textColor="#666666"
                 android:layout_marginBottom="16dp" />
 
-            <!-- Work Item 1 -->
+            <!-- Tasks RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvTasks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipToPadding="false" />
+
+            <!-- Placeholder card (hidden when tasks exist) -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardEmptyState"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"

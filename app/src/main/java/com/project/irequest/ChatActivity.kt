@@ -2,7 +2,6 @@ package com.project.irequest
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.util.concurrent.TimeUnit
@@ -16,7 +15,7 @@ class ChatActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-        // Thiết lập RecyclerView
+        // --- Thiết lập RecyclerView ---
         rvChatList = findViewById(R.id.rvChatList)
         rvChatList.layoutManager = LinearLayoutManager(this)
 
@@ -31,34 +30,13 @@ class ChatActivity : BaseActivity() {
         chatAdapter = ChatAdapter(chatItems)
         rvChatList.adapter = chatAdapter
 
-        // Setup navigation từ BaseActivity
+        // --- Thiết lập Navigation ---
         setupBottomNavigation()
-        
-        // Set tab Chat là active (index 2)
-        setActiveTab(2)
+        setActiveTab(2) // Đặt tab Chat là active
     }
 
-    override fun onNavigationHomeClicked() {
-        val intent = Intent(this, HomeActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
-    
-    override fun onNavigationWorkClicked() {
-        val intent = Intent(this, WorkActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
-    
+    // Ghi đè để không làm gì khi đang ở màn hình Chat
     override fun onNavigationChatClicked() {
-        // Đã ở trang Chat rồi
-        Toast.makeText(this, "Bạn đang ở trang Chat", Toast.LENGTH_SHORT).show()
-        setActiveTab(2)
-    }
-    
-    override fun onNavigationAccountClicked() {
-        // Chuyển đến AccountActivity
-        val intent = Intent(this, AccountActivity::class.java)
-        startActivity(intent)
+        // Đã ở đây rồi
     }
 }

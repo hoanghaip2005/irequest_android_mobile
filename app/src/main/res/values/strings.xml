@@ -1,3 +1,106 @@
 <resources>
     <string name="app_name">irequest</string>
+
+    <!-- Facebook Login Configuration -->
+    <string name="facebook_app_id">1366172454640655</string>
+    <string name="facebook_client_token">abd9936aa592f9087c5f1f4eb61fa421</string>
+    <string name="fb_login_protocol_scheme">fb1366172454640655</string>
+
+    <!-- Feature 1: My Requests Management -->
+    <string name="my_requests_title">Yêu cầu của tôi</string>
+    <string name="search_hint">Tìm kiếm yêu cầu...</string>
+    <string name="empty_requests">Không có yêu cầu</string>
+    <string name="empty_requests_desc">Bạn chưa tạo yêu cầu nào</string>
+    <string name="error_loading">Lỗi tải dữ liệu</string>
+    <string name="error_connection">Vui lòng kiểm tra kết nối mạng</string>
+    <string name="btn_retry">Thử lại</string>
+    <string name="btn_create_request">Tạo yêu cầu mới</string>
+
+    <!-- Feature 2: Request Detail -->
+    <string name="detail_title">Chi tiết yêu cầu</string>
+    <string name="request_not_found">Không tìm thấy yêu cầu</string>
+    <string name="status">Trạng thái</string>
+    <string name="requester">Người yêu cầu</string>
+    <string name="assignee">Người xử lý</string>
+    <string name="not_assigned">Chưa phân công</string>
+    <string name="deadline">Deadline</string>
+    <string name="on_time">Đúng hạn</string>
+    <string name="soon_overdue">Sắp trễ</string>
+    <string name="overdue">Đã trễ</string>
+
+    <!-- Tabs -->
+    <string name="tab_comments">Thảo luận</string>
+    <string name="tab_attachments">Đính kèm</string>
+    <string name="tab_history">Lịch sử</string>
+
+    <!-- Actions -->
+    <string name="btn_back">Quay lại</string>
+    <string name="btn_edit">Sửa</string>
+    <string name="btn_assign">Nhận xử lý</string>
+    <string name="btn_approve">Phê duyệt</string>
+    <string name="btn_reject">Từ chối</string>
+    <string name="btn_cancel">Hủy</string>
+    <string name="btn_submit">Gửi</string>
+
+    <!-- Feature 3: Create/Update Request -->
+    <string name="create_request_title">Tạo yêu cầu mới</string>
+    <string name="edit_request_title">Chỉnh sửa yêu cầu</string>
+    <string name="field_title">Tiêu đề yêu cầu</string>
+    <string name="field_description">Mô tả chi tiết về yêu cầu...</string>
+    <string name="field_category">Chọn danh mục</string>
+    <string name="field_priority">Chọn mức độ ưu tiên</string>
+    <string name="title_required">Tiêu đề không được để trống</string>
+    <string name="title_max_length">Tiêu đề tối đa 100 ký tự</string>
+    <string name="description_max_length">Mô tả tối đa 1000 ký tự</string>
+    <string name="success_create">Tạo yêu cầu thành công</string>
+    <string name="success_update">Cập nhật yêu cầu thành công</string>
+    <string name="error_create">Lỗi tạo yêu cầu</string>
+    <string name="error_update">Lỗi cập nhật yêu cầu</string>
+
+    <!-- Feature 4: Attachments -->
+    <string name="attachments_title">Đính kèm minh chứng</string>
+    <string name="btn_add_attachment">+ Thêm</string>
+    <string name="empty_attachments">Chưa có đính kèm</string>
+    <string name="no_attachments">Không có đính kèm</string>
+    <string name="file_size_limit">Dung lượng tối đa 10MB</string>
+    <string name="max_files">Tối đa 5 file</string>
+
+    <!-- Priority Levels -->
+    <string name="priority_low">Thấp</string>
+    <string name="priority_medium">Trung bình</string>
+    <string name="priority_high">Cao</string>
+    <string name="priority_urgent">Khẩn cấp</string>
+
+    <!-- Request Status -->
+    <string name="status_new">NEW</string>
+    <string name="status_pending">PENDING_APPROVAL</string>
+    <string name="status_in_progress">IN_PROGRESS</string>
+    <string name="status_completed">COMPLETED</string>
+    <string name="status_rejected">REJECTED</string>
+    <string name="status_cancelled">CANCELLED</string>
+
+    <!-- Categories -->
+    <string name="category_it">IT</string>
+    <string name="category_hr">HR</string>
+    <string name="category_procurement">Mua sắm</string>
+    <string name="category_other">Khác</string>
+
+    <!-- Comments & Discussion -->
+    <string name="comment_hint">Viết bình luận...</string>
+    <string name="btn_send">Gửi</string>
+    <string name="no_comments">Không có bình luận</string>
+    <string name="hours_ago">%d giờ trước</string>
+    <string name="days_ago">%d ngày trước</string>
+    <string name="agent_role">Agent</string>
+    <string name="approver_role">Approver</string>
+
+    <!-- Activity Log -->
+    <string name="action_create">Tạo yêu cầu</string>
+    <string name="action_assign">Phân công xử lý</string>
+    <string name="action_status_change">Đổi trạng thái</string>
+    <string name="action_approve">Phê duyệt</string>
+    <string name="action_reject">Từ chối</string>
+    <string name="action_comment">Bình luận</string>
+    <string name="action_attachment">Thêm đính kèm</string>
+
 </resources>

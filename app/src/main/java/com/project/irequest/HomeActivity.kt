@@ -2,7 +2,6 @@ package com.project.irequest
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.LinearLayout
 import android.widget.Toast
 
 class HomeActivity : BaseActivity() {
@@ -22,26 +21,20 @@ class HomeActivity : BaseActivity() {
 
     private fun setupFeatureCards() {
         // Đặt lịch
-        findViewById<LinearLayout>(R.id.cardCalendar).setOnClickListener {
+        findViewById<android.widget.LinearLayout>(R.id.cardCalendar).setOnClickListener {
             val intent = Intent(this, CalenderActivity::class.java)
             startActivity(intent)
         }
         
         // Thông báo
-        findViewById<LinearLayout>(R.id.cardNotification).setOnClickListener {
+        findViewById<android.widget.LinearLayout>(R.id.cardNotification).setOnClickListener {
             val intent = Intent(this, AlertsActivity::class.java)
             startActivity(intent)
         }
         
         // Nộp phí
-        findViewById<LinearLayout>(R.id.cardPayment).setOnClickListener {
+        findViewById<android.widget.LinearLayout>(R.id.cardPayment).setOnClickListener {
             val intent = Intent(this, PaymentActivity::class.java)
-            startActivity(intent)
-        }
-
-        // Quản lý quy trình
-        findViewById<LinearLayout>(R.id.cardProcess).setOnClickListener {
-            val intent = Intent(this, ProcessManagementActivity::class.java)
             startActivity(intent)
         }
         
