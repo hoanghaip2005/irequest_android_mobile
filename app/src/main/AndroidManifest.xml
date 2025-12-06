@@ -123,6 +123,11 @@
             android:name=".RequestsActivity"
             android:exported="false" />
 
+        <!-- Department Activity -->
+        <activity
+            android:name=".DepartmentActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>
