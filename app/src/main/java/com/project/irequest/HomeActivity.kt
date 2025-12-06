@@ -37,7 +37,13 @@ class HomeActivity : BaseActivity() {
             val intent = Intent(this, PaymentActivity::class.java)
             startActivity(intent)
         }
-        
+
+        // Phòng ban
+        findViewById<android.widget.LinearLayout>(R.id.cardDepartment).setOnClickListener {
+            val intent = Intent(this, DepartmentActivity::class.java)
+            startActivity(intent)
+        }
+
         // TODO: Setup click listeners cho các feature cards khác
         // findViewById<LinearLayout>(R.id.cardRequest).setOnClickListener { }
         // ...

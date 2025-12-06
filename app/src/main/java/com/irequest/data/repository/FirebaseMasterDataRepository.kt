@@ -1,9 +1,11 @@
-package com.example.irequest.data.repository
+package com.project.irequest.data.repository
 
-import com.example.irequest.data.models.*
-import com.google.firebase.auth.FirebaseAuth
+import com.example.irequest.data.models.Department
+import com.example.irequest.data.models.Priority
+import com.example.irequest.data.models.Status
+import com.example.irequest.data.models.Workflow
+import com.example.irequest.data.models.WorkflowStep
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
 
 /**
