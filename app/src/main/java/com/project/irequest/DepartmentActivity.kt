@@ -59,7 +59,7 @@ class DepartmentActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                // 👇 CHỜ 300ms SAU KHI NGỪNG GÕ MỚI BẮT ĐẦU TÌM
+                // CHỜ 300ms SAU KHI NGỪNG GÕ MỚI BẮT ĐẦU TÌM
                 // Cách này giúp gõ tiếng Việt không bị lỗi mất dấu
                 searchRunnable = Runnable {
                     val query = s.toString().trim()
@@ -73,12 +73,12 @@ class DepartmentActivity : AppCompatActivity() {
     private fun loadMockData() {
         progressBar.visibility = View.VISIBLE
 
-        // Dữ liệu giả (Đã sửa: Ghi rõ assignedUserName để không bị nhầm)
+        // Dữ liệu giả
         val fakeList = listOf(
             Department(
                 departmentId = 1,
                 name = "Ban Giám Đốc",
-                assignedUserName = "Trần Văn CEO", // 👈 Ghi rõ dòng này mới hiện!
+                assignedUserName = "Trần Văn CEO",
                 description = "Điều hành toàn bộ hoạt động công ty",
                 employees = listOf(
                     Employee("Trần Văn CEO", "Tổng Giám Đốc"),
@@ -88,7 +88,7 @@ class DepartmentActivity : AppCompatActivity() {
             Department(
                 departmentId = 2,
                 name = "Phòng IT",
-                assignedUserName = "Lê Văn Code", // 👈 Ghi rõ dòng này
+                assignedUserName = "Lê Văn Code",
                 description = "Hỗ trợ kỹ thuật và phần mềm",
                 employees = listOf(
                     Employee("Lê Văn Code", "Trưởng phòng"),
@@ -99,7 +99,7 @@ class DepartmentActivity : AppCompatActivity() {
             Department(
                 departmentId = 3,
                 name = "Phòng Kế Toán",
-                assignedUserName = "Phạm Thị Tiền", // 👈 Ghi rõ dòng này
+                assignedUserName = "Phạm Thị Tiền",
                 description = "Quản lý tài chính và lương thưởng",
                 employees = listOf(
                     Employee("Phạm Thị Tiền", "Kế toán trưởng"),
@@ -109,7 +109,7 @@ class DepartmentActivity : AppCompatActivity() {
             Department(
                 departmentId = 4,
                 name = "Phòng Nhân Sự",
-                assignedUserName = "Nguyễn Thị Mai", // 👈 Ghi rõ dòng này
+                assignedUserName = "Nguyễn Thị Mai",
                 description = "Tuyển dụng và chế độ phúc lợi",
                 employees = listOf(
                     Employee("Nguyễn Thị Mai", "Trưởng phòng HR"),
