@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/groups_n_i_"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clipToOutline="true"
-    android:background="@drawable/groups_n_i_">
+    android:background="#F5F5F5">
 
     <!-- Toolbar -->
     <androidx.appcompat.widget.Toolbar
@@ -36,9 +34,9 @@
 
     <!-- Bottom Navigation -->
     <include layout="@layout/bottom_navigation"
-        android:id="@+id/bottom_nav"
+        android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:layout_alignParentBottom="true" />
 
     <!-- RecyclerView để hiển thị danh sách chat -->
@@ -47,7 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar"
-        android:layout_above="@id/bottom_nav"
+        android:layout_above="@id/bottomNavigation"
         android:padding="8dp" />
 
 </RelativeLayout>
