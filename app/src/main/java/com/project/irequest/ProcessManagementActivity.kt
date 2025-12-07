@@ -10,6 +10,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.project.irequest.ProcessAdapter
 
 class ProcessManagementActivity : AppCompatActivity() {
 
@@ -63,12 +64,28 @@ class ProcessManagementActivity : AppCompatActivity() {
     }
 
     private fun loadInitialData() {
-        // Dữ liệu mẫu ban đầu
+        // Dữ liệu mẫu ban đầu - Sử dụng Named Arguments để tránh lỗi lệch tham số
         processList.addAll(listOf(
-            Process("Quy trình Phê duyệt Đơn hàng", "Đang chờ", "15/07/2024"),
-            Process("Quy trình Tuyển dụng Nhân sự", "Hoàn thành", "12/07/2024"),
-            Process("Quy trình Hỗ trợ Khách hàng", "Đang chờ", "11/07/2024"),
-            Process("Quy trình Thanh toán", "Hoàn thành", "10/07/2024")
+            Process(
+                name = "Quy trình Phê duyệt Đơn hàng", 
+                status = "Đang chờ", 
+                date = "15/07/2024"
+            ),
+            Process(
+                name = "Quy trình Tuyển dụng Nhân sự", 
+                status = "Hoàn thành", 
+                date = "12/07/2024"
+            ),
+            Process(
+                name = "Quy trình Hỗ trợ Khách hàng", 
+                status = "Đang chờ", 
+                date = "11/07/2024"
+            ),
+            Process(
+                name = "Quy trình Thanh toán", 
+                status = "Hoàn thành", 
+                date = "10/07/2024"
+            )
         ))
         processAdapter.notifyDataSetChanged()
     }

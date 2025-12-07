@@ -2,10 +2,21 @@ package com.project.irequest
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
+import android.view.View
+import android.widget.LinearLayout
 import android.widget.Toast
-import com.google.android.material.card.MaterialCardView
+import androidx.annotation.IdRes
+import com.project.irequest.BaseActivity
+import com.project.irequest.CalenderActivity
+import com.project.irequest.AlertsActivity
+import com.project.irequest.RequestsActivity
+import com.project.irequest.ReportActivity
+import com.project.irequest.DepartmentActivity
+import com.project.irequest.ProcessManagementActivity
+import com.project.irequest.PaymentActivity
+import com.project.irequest.WorkActivity
+import com.project.irequest.ChatActivity
+import com.project.irequest.AccountActivity
 
 class HomeActivity : BaseActivity() {
 
@@ -23,66 +34,41 @@ class HomeActivity : BaseActivity() {
     }
 
     private fun setupFeatureCards() {
-        // 1. Đặt lịch
-        findViewById<android.widget.LinearLayout>(R.id.cardCalendar).setOnClickListener {
-            val intent = Intent(this, CalenderActivity::class.java)
-            startActivity(intent)
-        }
-        
-        // 2. Thông báo
-        findViewById<android.widget.LinearLayout>(R.id.cardNotification).setOnClickListener {
-            val intent = Intent(this, AlertsActivity::class.java)
-            startActivity(intent)
-        }
-        
-        // 3. Yêu cầu
-        findViewById<android.widget.LinearLayout>(R.id.cardRequest).setOnClickListener {
-            val intent = Intent(this, RequestsActivity::class.java)
-            startActivity(intent)
-        }
-        
-        // 4. Báo cáo
-        findViewById<android.widget.LinearLayout>(R.id.cardReport).setOnClickListener {
-            Toast.makeText(this, "Tính năng Báo cáo đang phát triển", Toast.LENGTH_SHORT).show()
-        }
-        
-        // 5. Nhân viên
-        findViewById<android.widget.LinearLayout>(R.id.cardEmployee).setOnClickListener {
-            Toast.makeText(this, "Tính năng Nhân viên đang phát triển", Toast.LENGTH_SHORT).show()
-        }
-        
-        // 6. Phòng ban
-        findViewById<android.widget.LinearLayout>(R.id.cardDepartment).setOnClickListener {
-            val intent = Intent(this, DepartmentActivity::class.java)
-            startActivity(intent)
-        }
-        
-        // 7. Quy trình
-        findViewById<android.widget.LinearLayout>(R.id.cardProcess).setOnClickListener {
-            Toast.makeText(this, "Tính năng Quy trình đang phát triển", Toast.LENGTH_SHORT).show()
-        }
-        
-        // 8. Bước quy trình
-        findViewById<android.widget.LinearLayout>(R.id.cardProcessStep).setOnClickListener {
-            Toast.makeText(this, "Tính năng Bước quy trình đang phát triển", Toast.LENGTH_SHORT).show()
-        }
-        
-        // 9. Quyền
-        findViewById<android.widget.LinearLayout>(R.id.cardPermission).setOnClickListener {
-            Toast.makeText(this, "Tính năng Quyền đang phát triển", Toast.LENGTH_SHORT).show()
-        }
-        
-        // 10. Nộp phí
-        findViewById<android.widget.LinearLayout>(R.id.cardPayment).setOnClickListener {
-            val intent = Intent(this, PaymentActivity::class.java)
-            startActivity(intent)
-        }
+        // Sử dụng hàm phụ trợ để code gọn hơn
+        setClickListener(R.id.cardCalendar, CalenderActivity::class.java)
+        setClickListener(R.id.cardNotification, AlertsActivity::class.java)
+        setClickListener(R.id.cardRequest, RequestsActivity::class.java)
+        setClickListener(R.id.cardReport, ReportActivity::class.java)
+        setClickListener(R.id.cardDepartment, DepartmentActivity::class.java)
+        setClickListener(R.id.cardProcess, ProcessManagementActivity::class.java) // <-- Logic quy trình ở đây
+        setClickListener(R.id.cardPayment, PaymentActivity::class.java)
 
-        // 11. Báo cáo
-        // (Đây là chỗ nối 2 màn hình lại với nhau)
-        findViewById<android.view.View>(R.id.cardReport).setOnClickListener {
-            val intent = Intent(this, ReportActivity::class.java)
+        // Các tính năng đang phát triển
+        setToastClickListener(R.id.cardEmployee, "Tính năng Nhân viên đang phát triển")
+        setToastClickListener(R.id.cardProcessStep, "Tính năng Bước quy trình đang phát triển")
+        setToastClickListener(R.id.cardPermission, "Tính năng Quyền đang phát triển")
+    }
+
+    /**
+     * Hàm phụ trợ để gán sự kiện click mở một Activity mới.
+     * @param viewId ID của View cần gán sự kiện.
+     * @param activityClass Class của Activity cần mở.
+     */
+    private fun setClickListener(@IdRes viewId: Int, activityClass: Class<*>) {
+        findViewById<View>(viewId).setOnClickListener {
+            val intent = Intent(this, activityClass)
             startActivity(intent)
+        }
+    }
+    
+    /**
+     * Hàm phụ trợ để gán sự kiện click hiển thị Toast.
+     * @param viewId ID của View cần gán sự kiện.
+     * @param message Nội dung Toast.
+     */
+    private fun setToastClickListener(@IdRes viewId: Int, message: String) {
+        findViewById<View>(viewId).setOnClickListener {
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         }
     }
 

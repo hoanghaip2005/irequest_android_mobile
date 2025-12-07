@@ -92,12 +92,6 @@
             android:name=".DepartmentActivity"
             android:exported="false" />
 
-        <!-- Process Management Activity -->
-        <activity
-            android:name=".ProcessManagementActivity"
-            android:exported="false"
-            android:parentActivityName=".HomeActivity" />
-
         <!-- Add Process Activity -->
         <activity
             android:name=".AddProcessActivity"
@@ -116,6 +110,12 @@
         <!--Smart
         Analysis Activity-->
         <activity android:name=".SmartAnalysisActivity" />
+
+        <!-- Process Management Activity -->
+        <activity
+            android:name=".ProcessManagementActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

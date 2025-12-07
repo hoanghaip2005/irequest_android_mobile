@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1E1F22">
+    android:background="?android:attr/colorBackground">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_chat_detail"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#FFFFFF"
+        android:background="?attr/colorSurface"
         app:contentInsetStart="0dp">
 
         <RelativeLayout
@@ -25,7 +25,7 @@
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:src="@drawable/arrow_back"
-                app:tint="#000000" />
+                app:tint="?android:attr/textColorPrimary" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -54,7 +54,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
                     android:text="Tên người nhận"
-                    android:textColor="#000000"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -69,6 +69,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="8dp"
+        android:background="?attr/colorSurface"
         android:layout_alignParentBottom="true">
 
         <EditText
@@ -77,8 +78,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="Nhập tin nhắn..."
-            android:textColorHint="#A0A0A0"
-            android:textColor="#FFFFFF"
+            android:textColorHint="?android:attr/textColorHint"
+            android:textColor="?android:attr/textColorPrimary"
             android:background="@android:color/transparent"
             android:maxLines="4" />
 
@@ -93,14 +94,14 @@
         android:id="@+id/view_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#E0E0E0"
+        android:background="?android:attr/listDivider"
         android:layout_above="@id/layout_input_area" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_chat_messages"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar_chat_detail"
+        android:layout_below="@+id/toolbar_chat_detail"
         android:layout_above="@id/view_divider" />
 
 </RelativeLayout>
