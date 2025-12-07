@@ -35,10 +35,10 @@ class ProcessAdapter(private val processList: List<Process>) :
             dateTextView.text = process.date
             statusChip.text = process.status
 
-            // Cập nhật màu sắc dựa trên trạng thái
+            // Cập nhật màu sắc dựa trên trạng thái (ĐÃ SỬA LỖI)
             val statusColor = when (process.status.lowercase()) {
-                "hoàn thành" -> R.color.custom_green
-                "đang chờ" -> R.color.custom_orange
+                "hoàn thành" -> R.color.primary_blue // Sử dụng màu đã có
+                "đang chờ" -> R.color.custom_orange   // Sử dụng màu đã có
                 else -> R.color.text_gray
             }
             statusChip.setChipBackgroundColorResource(statusColor)

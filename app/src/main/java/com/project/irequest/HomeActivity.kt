@@ -3,20 +3,8 @@ package com.project.irequest
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.annotation.IdRes
-import com.project.irequest.BaseActivity
-import com.project.irequest.CalenderActivity
-import com.project.irequest.AlertsActivity
-import com.project.irequest.RequestsActivity
-import com.project.irequest.ReportActivity
-import com.project.irequest.DepartmentActivity
-import com.project.irequest.ProcessManagementActivity
-import com.project.irequest.PaymentActivity
-import com.project.irequest.WorkActivity
-import com.project.irequest.ChatActivity
-import com.project.irequest.AccountActivity
 
 class HomeActivity : BaseActivity() {
 
