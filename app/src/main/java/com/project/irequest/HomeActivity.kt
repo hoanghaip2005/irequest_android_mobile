@@ -24,12 +24,15 @@ class HomeActivity : BaseActivity() {
     }
 
     private fun setupFeatureCards() {
-        setClickListener(R.id.cardCalendar, com.project.irequest.CalendarActivity::class.java)
+        setClickListener(R.id.cardCalendar, com.project.irequest.CalenderActivity::class.java)
         setClickListener(R.id.cardNotification, com.project.irequest.AlertsActivity::class.java)
         setClickListener(R.id.cardRequest, com.project.irequest.RequestsActivity::class.java)
         setClickListener(R.id.cardReport, com.project.irequest.ReportActivity::class.java)
         setClickListener(R.id.cardDepartment, com.project.irequest.DepartmentActivity::class.java)
         setClickListener(R.id.cardProcess, com.project.irequest.ProcessManagementActivity::class.java)
+        // cardProcessStep - will be opened from ProcessManagementActivity when user selects a process
+        setClickListener(R.id.cardProcessStep, com.project.irequest.ProcessManagementActivity::class.java)
+        setClickListener(R.id.cardPayment, com.project.irequest.PaymentActivity::class.java)
     }
 
     private fun setClickListener(@IdRes viewId: Int, activityClass: Class<*>) {

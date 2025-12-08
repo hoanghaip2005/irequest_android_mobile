@@ -105,7 +105,7 @@
 
         <!-- Calendar Activity -->
         <activity
-            android:name=".CalendarActivity"
+            android:name=".CalenderActivity"
             android:exported="false"
             android:parentActivityName=".HomeActivity" />
 
@@ -194,6 +194,12 @@
         <activity
             android:name=".ProcessManagementActivity"
             android:exported="false" />
+
+        <!-- Process Step Management Activity -->
+        <activity
+            android:name=".ProcessStepManagementActivity"
+            android:exported="false"
+            android:parentActivityName=".HomeActivity" />
 
     </application>
 

@@ -43,11 +43,13 @@ class ProcessAdapter(private val processList: List<Process>) :
             }
             statusChip.setChipBackgroundColorResource(statusColor)
 
-            // Xử lý sự kiện click để mở màn hình chi tiết
+            // Xử lý sự kiện click để mở màn hình chi tiết bước quy trình
             itemView.setOnClickListener {
                 val context = itemView.context
-                val intent = Intent(context, ProcessDetailActivity::class.java).apply {
-                    putExtra("EXTRA_PROCESS", process) // Truyền đối tượng Process
+                val intent = Intent(context, ProcessStepManagementActivity::class.java).apply {
+                    putExtra("PROCESS_ID", position) // Truyền ID/position của quy trình
+                    putExtra("PROCESS_NAME", process.name) // Truyền tên quy trình
+                    putExtra("PROCESS_STATUS", process.status) // Truyền trạng thái
                 }
                 context.startActivity(intent)
             }
