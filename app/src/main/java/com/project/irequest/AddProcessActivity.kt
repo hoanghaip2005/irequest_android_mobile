@@ -11,6 +11,7 @@ import com.google.android.material.textfield.TextInputEditText
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.UUID
 
 class AddProcessActivity : AppCompatActivity() {
 
@@ -34,9 +35,10 @@ class AddProcessActivity : AppCompatActivity() {
             if (processName.isNotEmpty()) {
                 val currentDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
                 val newProcess = Process(
+                    id = UUID.randomUUID().toString(),
                     name = processName,
                     status = "Đang chờ",
-                    creationDate = currentDate
+                    date = currentDate
                 )
 
                 val resultIntent = Intent()

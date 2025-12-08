@@ -91,10 +91,23 @@
             android:name=".AccountActivity"
             android:exported="false" />
 
-        <!-- Calender Activity -->
+        <!-- Security and Privacy Activity -->
         <activity
-            android:name=".CalenderActivity"
-            android:exported="false" />
+            android:name=".SecurityPrivacyActivity"
+            android:exported="false"
+            android:parentActivityName=".AccountActivity" />
+
+        <!-- Personal Information Activity -->
+        <activity
+            android:name=".PersonalInformationActivity"
+            android:exported="false"
+            android:parentActivityName=".AccountActivity" />
+
+        <!-- Calendar Activity -->
+        <activity
+            android:name=".CalendarActivity"
+            android:exported="false"
+            android:parentActivityName=".HomeActivity" />
 
         <!-- Payment Activity -->
         <activity
@@ -158,12 +171,6 @@
             android:name=".DepartmentActivity"
             android:exported="false" />
 
-        <!-- Process Management Activity -->
-        <activity
-            android:name=".ProcessManagementActivity"
-            android:exported="false"
-            android:parentActivityName=".HomeActivity" />
-
         <!-- Add Process Activity -->
         <activity
             android:name=".AddProcessActivity"
@@ -182,6 +189,12 @@
         <!--Smart
         Analysis Activity-->
         <activity android:name=".SmartAnalysisActivity" />
+
+        <!-- Process Management Activity -->
+        <activity
+            android:name=".ProcessManagementActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

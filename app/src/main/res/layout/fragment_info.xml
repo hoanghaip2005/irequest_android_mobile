@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Personal Info Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Thông tin cá nhân"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
+                    android:textStyle="bold"/>
+                <include layout="@layout/view_info_row" android:id="@+id/info_phone"/>
+                <include layout="@layout/view_info_row" android:id="@+id/info_gender"/>
+                <include layout="@layout/view_info_row" android:id="@+id/info_cccd"/>
+                <include layout="@layout/view_info_row" android:id="@+id/info_marital_status"/>
+                <include layout="@layout/view_info_row" android:id="@+id/info_email"/>
+                <include layout="@layout/view_info_row" android:id="@+id/info_dob"/>
+                <include layout="@layout/view_info_row" android:id="@+id/info_address"/>
+                <include layout="@layout/view_info_row" android:id="@+id/info_bank"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Degree Info Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bằng cấp"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
+                    android:textStyle="bold"/>
+                <include layout="@layout/view_info_row" android:id="@+id/degree_level"/>
+                <include layout="@layout/view_info_row" android:id="@+id/degree_major"/>
+                <include layout="@layout/view_info_row" android:id="@+id/degree_type"/>
+                <include layout="@layout/view_info_row" android:id="@+id/degree_university"/>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Contract Info Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hợp đồng"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
+                    android:textStyle="bold"/>
+                 <include layout="@layout/view_info_row" android:id="@+id/contract_type"/>
+                 <include layout="@layout/view_info_row" android:id="@+id/contract_start_date"/>
+                 <include layout="@layout/view_info_row" android:id="@+id/contract_end_date"/>
+                 <include layout="@layout/view_info_row" android:id="@+id/contract_status"/>
+             </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Job Info Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Thông tin công việc"
+                    android:textAppearance="?attr/textAppearanceSubtitle1"
+                    android:textStyle="bold"/>
+                 <include layout="@layout/view_info_row" android:id="@+id/job_position"/>
+                 <include layout="@layout/view_info_row" android:id="@+id/job_status"/>
+                 <include layout="@layout/view_info_row" android:id="@+id/job_type"/>
+                 <include layout="@layout/view_info_row" android:id="@+id/job_department"/>
+                 <include layout="@layout/view_info_row" android:id="@+id/job_manager"/>
+                 <include layout="@layout/view_info_row" android:id="@+id/job_branch"/>
+                 <include layout="@layout/view_info_row" android:id="@+id/job_start_date"/>
+                 <include layout="@layout/view_info_row" android:id="@+id/job_payment_form"/>
+                 <include layout="@layout/view_info_row" android:id="@+id/job_notes"/>
+             </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

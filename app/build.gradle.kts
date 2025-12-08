@@ -72,6 +72,9 @@ dependencies {
     
     // OkHttp for HTTP requests
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
+
+    // Circle ImageView
+    implementation("de.hdodenhof:circleimageview:3.1.0")
     
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
