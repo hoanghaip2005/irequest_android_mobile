@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#F9FAFB"
+    tools:context=".AccountActivity">
 
+    <!-- Scrollable content -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -12,21 +16,18 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <!-- Header 0 -->
+            <!-- Header -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="24dp"
-                android:background="#FFFFFF"
-                android:elevation="2dp"
-                android:padding="16dp"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <!-- 1 - Avatar -->
-                <RelativeLayout
+                <ImageView
                     android:id="@+id/avatar"
                     android:layout_width="68dp"
                     android:layout_height="68dp"
@@ -174,7 +175,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android.layout_marginStart="16dp"
+                        android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp"
                         android:text="Điều khoản sử dụng"
                         android:textSize="14sp"
@@ -219,7 +220,41 @@
                         android:layout_height="20dp"
                         android:src="@drawable/alt_arrow_right" />
                 </LinearLayout>
-                
+
+                <!-- 10 - Chính sách dữ liệu cá nhân -->
+                <LinearLayout
+                    android:id="@+id/item_personal_data_policy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/border_top_bottom">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/shield_keyhole" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="Chính sách dữ liệu cá nhân"
+                        android:textSize="14sp"
+                        android:textColor="#1D2939" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/alt_arrow_right" />
+                </LinearLayout>
+
                 <!-- 11 - Bảo mật và quyền riêng tư -->
                 <LinearLayout
                     android:id="@+id/item_security_privacy"

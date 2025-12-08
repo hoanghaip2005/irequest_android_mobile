@@ -103,6 +103,21 @@
             android:exported="false"
             android:parentActivityName=".AccountActivity" />
 
+        <!-- Terms of Use Activity -->
+        <activity
+            android:name=".TermsOfUseActivity"
+            android:exported="false" />
+
+        <!-- Privacy Policy Activity -->
+        <activity
+            android:name=".PrivacyPolicyActivity"
+            android:exported="false" />
+
+        <!-- Personal Data Policy Activity -->
+        <activity
+            android:name=".PersonalDataPolicyActivity"
+            android:exported="false" />
+
         <!-- Calendar Activity -->
         <activity
             android:name=".CalenderActivity"
@@ -134,12 +149,6 @@
         <!-- Payment History Activity -->
         <activity
             android:name=".PaymentHistoryActivity"
-            android:exported="false"
-            android:parentActivityName=".PaymentActivity" />
-
-        <!-- Payment Result WebView Activity -->
-        <activity
-            android:name=".PaymentResultActivity"
             android:exported="false"
             android:parentActivityName=".PaymentActivity" />
 
@@ -195,11 +204,15 @@
             android:name=".ProcessManagementActivity"
             android:exported="false" />
 
+
+
         <!-- Process Step Management Activity -->
         <activity
             android:name=".ProcessStepManagementActivity"
             android:exported="false"
             android:parentActivityName=".HomeActivity" />
+
+
 
     </application>
 

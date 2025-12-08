@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".PrivacyPolicyActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:title="Chính sách bảo mật"
+        app:navigationIcon="@drawable/ic_arrow_back" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="QUY ĐỊNH BẢO MẬT"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Timeso.vn tôn trọng những thông tin cá nhân của bạn. Xin hãy đọc và tìm hiểu về những quy định bảo mật thông tin sau đây của chúng tôi.\n\nViệc bạn truy cập, đăng ký, sử dụng trên website Timeso.vn có nghĩa rằng bạn đồng ý và chấp nhận rằng bạn bị ràng buộc bởi các điều khoản của bản quy định bảo mật của chúng tôi."
+                android:layout_marginBottom="16dp"
+                android:lineSpacingExtra="4dp"
+                android:textColor="@android:color/black"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="I. Mật khẩu và bảo mật"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Khi bạn đăng ký sử dụng trang web Timeso.vn, bạn sẽ được yêu cầu khởi tạo tài khoản có mật khẩu. Chúng tôi khuyến nghị bạn giữ mật khẩu này bảo mật và không được tiết lộ hoặc chia sẻ với bất kỳ ai. Nếu bạn biết hoặc nghi ngờ người khác biết mật khẩu của bạn, bạn nên thông báo với chúng tôi ngay lập tức bằng cách liên hệ với chúng tôi tới số hotline (028/024) 7108 2424."
+                android:layout_marginBottom="16dp"
+                android:lineSpacingExtra="4dp"
+                android:textColor="@android:color/black"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Khi Timeso.vn phát hiện bạn có hành vi vi phạm bảo mật hoặc sử dụng không đúng mục đích trên trang web Timeso.vn, chúng tôi có thể yêu cầu bạn thay đổi mật khẩu hoặc chừng mực cho phép có thể khóa tài khoản của bạn."
+                android:layout_marginBottom="16dp"
+                android:lineSpacingExtra="4dp"
+                android:textColor="@android:color/black"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Khi bạn tự nguyện tiết lộ thông tin cá nhân của bạn trực tuyến, thông tin đó có thể bị người khác thu thập và sử dụng."
+                android:layout_marginBottom="16dp"
+                android:lineSpacingExtra="4dp"
+                android:textColor="@android:color/black"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Trường hợp bạn mất mật khẩu hoặc mật khẩu hoặc sử dụng không đúng mục đích trang web Timeso.vn, bạn phải chịu tất cả sự mất mát hoặc thiệt hại phát sinh và chịu trách nhiệm sẽ bồi thường hoàn toàn cho Timeso.vn trong trường hợp Timeso.vn có xảy ra mất mát hoặc thiệt hại."
+                android:layout_marginBottom="16dp"
+                android:lineSpacingExtra="4dp"
+                android:textColor="@android:color/black"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Đáng tiếc là không có dữ liệu nào truyền trên Internet có thể bảo đảm an toàn 100%%. Do vậy, mặc dù chúng tôi cố gắng hết sức bảo vệ thông tin cá nhân của bạn, Website Timeso.vn có thể không thể bảo đảm hoặc cam kết về tính an toàn của thông tin bất kỳ mà bạn chuyển tới chúng tôi."
+                android:layout_marginBottom="16dp"
+                android:lineSpacingExtra="4dp"
+                android:textColor="@android:color/black"/>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
