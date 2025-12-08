@@ -9,6 +9,7 @@ import java.util.Date
  */
 data class Workflow(
     @DocumentId
+    val id: String = "",
     val workflowId: Int = 0,
     val workflowName: String = "",
     val priorityId: Int? = null,

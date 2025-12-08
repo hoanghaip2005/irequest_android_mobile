@@ -32,9 +32,16 @@
             android:textColor="#002C2C"
             android:gravity="center" />
 
-        <View
-            android:layout_width="24dp"
-            android:layout_height="24dp" />
+        <Button
+            android:id="@+id/btnHistory"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:text="Lịch sử"
+            android:textSize="12sp"
+            android:textColor="@android:color/white"
+            android:background="?attr/colorPrimary"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp" />
 
     </LinearLayout>
 

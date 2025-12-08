@@ -6,6 +6,25 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <!-- Queries để có thể mở apps khác -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="http" />
+        </intent>
+        <!-- MoMo app deep link -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="momo" />
+        </intent>
+    </queries>
+
     <application
         android:name=".IRequestApplication"
         android:allowBackup="true"
@@ -80,12 +99,59 @@
         <!-- Payment Activity -->
         <activity
             android:name=".PaymentActivity"
-            android:exported="false" />
+            android:exported="true"
+            android:launchMode="singleTop">
+            <!-- Deep link để nhận callback từ MoMo -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="irequest"
+                    android:host="payment" />
+            </intent-filter>
+        </activity>
+
+        <!-- Payment Result WebView Activity -->
+        <activity
+            android:name=".PaymentResultActivity"
+            android:exported="false"
+            android:parentActivityName=".PaymentActivity" />
+
+        <!-- Payment History Activity -->
+        <activity
+            android:name=".PaymentHistoryActivity"
+            android:exported="false"
+            android:parentActivityName=".PaymentActivity" />
+
+        <!-- Payment Result WebView Activity -->
+        <activity
+            android:name=".PaymentResultActivity"
+            android:exported="false"
+            android:parentActivityName=".PaymentActivity" />
 
         <!-- Requests Activity -->
         <activity
             android:name=".RequestsActivity"
             android:exported="false" />
+
+        <!-- Create Request Activity -->
+        <activity
+            android:name=".CreateRequestActivity"
+            android:exported="false"
+            android:parentActivityName=".RequestsActivity" />
+
+        <!-- Request Detail Activity -->
+        <activity
+            android:name=".RequestDetailActivity"
+            android:exported="false"
+            android:parentActivityName=".RequestsActivity" />
+
+        <!-- Task Detail Activity -->
+        <activity
+            android:name=".TaskDetailActivity"
+            android:exported="false"
+            android:parentActivityName=".WorkActivity" />
 
         <!-- Department Activity -->
         <activity

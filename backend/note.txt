@@ -1,0 +1,264 @@
+Thanh toán thường dùng bằng ví MoMo dành cho đối tác sử dụng các kênh bán hàng sau:
+
+Website trên máy tính
+Website trên di động
+Ứng dụng di động
+Thiết bị không hỗ trợ trình duyệt internet
+Thanh toán thường dùng bằng ứng dụng Ngân hàng dành cho đối tác sử dụng các kênh bán hàng sau:
+
+Website trên máy tính
+Thiết bị không hỗ trợ trình duyệt internet
+Hướng dẫn bên dưới cho bạn biết cách tích hợp phù hợp với từng nền tảng và cách hoạt động của API.
+
+Luồng Xử Lý
+Onetime_flow
+
+Cấu Hình API
+HTTP Information
+
+Lấy phương thức thanh toán
+Merchant server cần gọi tới API captureWallet của MoMo để lấy các phương thức thanh toán và áp dụng cho từng nền tảng của mình.
+
+requestType: Định danh loại request
+
+Thời gian timeout nhỏ nhất khi gọi API này nên là 30s để đảm bảo nhận phản hồi từ server của MoMo.
+
+HTTP Request
+POST /v2/gateway/api/create
+
+Attribute	Type	Required	Description
+partnerCode	String(50)		Thông tin tích hợp
+subPartnerCode	String(50)		Định danh duy nhất của tài khoản M4B của bạn
+Chỉ áp dụng cho nhóm đối tác thuộc Master Merchant, 3PSP: third party services provider
+storeName	String		Tên đối tác
+storeId	String(50)		Mã cửa hàng
+requestId	String(50)		Định danh duy nhất cho mỗi yêu cầu
+Đối tác sử dụng requestId để xử lý idempotency
+amount	Long		Số tiền cần thanh toán
+Nhỏ Nhất: 1.000 VND
+Tối đa: 50.000.000 VND
+Tiền tệ: VND
+Kiểu dữ liệu: Long
+orderId	String(200)		Mã đơn hàng của đối tác
+orderInfo	String(255)		Thông tin đơn hàng
+orderGroupId	Long		orderGroupId được MoMo cung cấp để phân nhóm đơn hàng cho các hoạt động vận hành sau này. Vui lòng liên hệ với MoMo để biết chi tiết cách sử dụng
+redirectUrl	String		Một URL của đối tác. URL này được sử dụng để chuyển trang (redirect) từ MoMo về trang mua hàng của đối tác sau khi khách hàng thanh toán.
+Hỗ trợ: AppLink and WebLink
+ipnUrl	String		API của đối tác. Được MoMo sử dụng để gửi kết quả thanh toán theo phương thức IPN (server-to-server)
+requestType	String		captureWallet
+extraData	String(1000)		Giá trị mặc định là rỗng""
+Encode base64 theo định dạng Json: {"key": "value"}
+Ví dụ với dữ liệu: {"username":"momo","skus":"value1,value2"}
+thì data extraData: eyJ1c2VybmFtZSI6Im1vbW8iLCJza3VzIjoidmFsdWUxLHZhbHVlMiJ9
+items	List		Danh sách các sản phẩm hiển thị trên trang thanh toán.
+Tối đa: 50 loại sản phẩm
+deliveryInfo	Object		Thông tin giao hàng của đơn hàng
+userInfo	Object		Thông tin người dùng
+referenceId	String(200)		Mã tham chiếu phụ của đối tác
+Ví dụ dùng trong các trường hợp như mã khách hàng, mã hộ gia đình, mã hóa đơn, mã thuê bao v.v
+autoCapture	Boolean		Nếu giá trị false, giao dịch sẽ không tự động capture. Mặc định là true
+lang	String		Ngôn ngữ của message được trả về (vi hoặc en)
+signature	String		Chữ ký để xác nhận giao dịch. Sử dụng thuật toán Hmac_SHA256 với data theo định dạng được sort từ a-z :
+accessKey=$accessKey&amount=$amount&extraData=$extraData
+&ipnUrl=$ipnUrl&orderId=$orderId&orderInfo=$orderInfo
+&partnerCode=$partnerCode&redirectUrl=$redirectUrl
+&requestId=$requestId&requestType=$requestType
+Chi tiết nội dung của items
+Attribute	Type	Required	Description
+id	String		SKU number
+name	String		Tên sản phẩm
+description	String		Miêu tả sản phẩm
+category	String		Phân loại ngành hàng của sản phẩm
+imageUrl	String		Link hình ảnh của sản phẩm
+manufacturer	String		Tên nhà sản xuất
+price	Long		Đơn giá
+currency	String		VND
+quantity	Integer		Số lượng của sản phẩm. Cần là một số lớn hơn 0
+unit	String		Đơn vị đo lường của sản phẩm này
+totalPrice	Long		Tổng giá = Đơn giá x Số lượng
+taxAmount	Long		Tổng thuế
+
+Mẫu items
+{
+  "id": "204727",  
+  "name": "YOMOST Bac Ha&Viet Quat 170ml",  
+  "description": "YOMOST Sua Chua Uong Bac Ha&Viet Quat 170ml/1 Hop",
+  "category": "beverage",
+  "imageUrl":"https://momo.vn/uploads/product1.jpg",
+  "manufacturer":"Vinamilk",
+  "price": 11000,               
+  "quantity": 5,
+  "unit":"hộp",
+  "totalPrice": 55000,
+  "taxAmount":"200"
+}
+
+
+Chi tiết nội dung của deliveryInfo
+Attribute	Type	Required	Description
+deliveryAddress	String		Địa chỉ giao hàng
+deliveryFee	String		Phí giao hàng
+quantity	String		Số lượng sản phẩm
+
+Mẫu deliveryInfo
+{
+    "deliveryAddress": "Phu My Hung Tower",
+    "deliveryFee": "30000",
+    "quantity": "2"
+}
+
+
+Chi tiết nội dung của userInfo
+Attribute	Type	Required	Description
+name	String		Tên của người dùng
+phoneNumber	String		Số điện thoại của người dùng
+email	String		Email của người dùng
+
+Mẫu userInfo
+
+Điều hướng thông tin (redirectUrl)
+
+WebLink: Link để mở website.
+
+AppLink: Link để mở mobile application.
+
+Tìm hiểu thêm về AppLink
+
+Android: https://developer.android.com/training/app-links
+
+iOS: https://developer.apple.com/documentation/uikit/core_app/..
+
+
+Mẫu Request
+
+HTTP Response
+Attribute	Type	Required	Description
+partnerCode	String		Thông tin tích hợp
+requestId	String		Giống với yêu cầu ban đầu
+orderId	String		Mã đơn hàng của đối tác
+amount	Long		Giống với số tiền yêu cầu ban đầu
+responseTime	Long		Thời gian trả kết quả thanh toán về đối tác
+Định dạng: timestamp
+message	String		Mô tả lỗi, ngôn ngữ dựa trên lang
+resultCode	int		Result Code
+payUrl	String		URL để chuyển từ trang mua hàng của đối tác sang trang thanh toán của MoMo
+deeplink	String		URL để mở ứng dụng trực tiếp MoMo (Khách hàng phải cài đặt ứng dụng MoMo trước) và trang xác nhận thanh toán.
+Nếu bạn gặp sự cố khi mở deeplink ở android 11, vui lòng xem hướng dẫn
+qrCodeUrl	String		Dữ liệu để tạo mã QR nếu bạn muốn khách hàng quét mã QR trực tiếp trên trang mua hàng hoặc in mã lên hoá đơn.
+Note: Đây không phải URL chứa hình ảnh của mã QR, bạn cần sử dụng thư viện ngoài để tạo mã QR.
+deeplinkMiniApp	String		URL mở màn hình xác nhận thanh toán của ứng dụng MoMo. Áp dụng khi đối tác sử dụng mini app nhúng vào trong ứng dụng MoMo.
+signature	String		Chữ ký](/docs/payment/api/other/signature) để xác nhận giao dịch. Sử dụng thuật toán Hmac_SHA256 theo định dạng :
+accessKey=$accessKey&amount=$amount&orderId=$orderId
+&partnerCode=$partnerCode&payUrl=&payUrl&requestId=
+$requestId&responseTime=$responseTime&resultCode=$resultCode
+userFee	Long		User Fee
+Trên môi trường production: Bạn cần phải xin quyền để sử dụng những trường qrCodeUrl, deeplink,deeplinkMiniApp.
+
+
+Mẫu Response
+
+Thanh toán
+Bạn cần cài đặt ứng dụng MoMo Test và sử dụng MoMo TEST Account để thực hiện giao dịch.
+
+Hướng dẫn thanh toán: Đăng nhập ứng dụng MoMo > Màn hình chính > Quét mã.
+
+Xử lý kết quả thanh toán
+>>>Tìm hiểu thêm về Payment Notification.
+
+Thông tin tham số
+Mô tả các tham số được dùng bởi MoMo trong URL redirectUrl và nội dung của body ipnUrl.
+
+Attribute	Type	Required	Description
+partnerCode	String		Thông tin tích hợp
+orderId	String		Mã đơn hàng của đối tác
+requestId	String		requestId của đối tác
+amount	Long		Số tiền thanh toán
+storeId	String		Mã cửa hàng
+Áp dụng cho QR code tĩnh
+orderInfo	String		Thông tin đơn hàng
+partnerUserId	String		Định danh duy nhất của MoMo cho mỗi tài khoản ví MoMo.
+orderType	String		momo_wallet
+transId	Long		Mã giao dịch của MoMo
+resultCode	Integer		Trạng thái giao dịch của đơn hàng Mã Kết Quả
+message	String		Mô tả lỗi ngôn ngữ dựa trên lang
+payType	String		Hình thức thanh toán: webApp, app,qrhoặc miniapp.
+Trường hợp bạn đang sử dụng AIO QR, hình thức thanh toán sẽ là aio_qrhoặc banktransfer_qr.
+responseTime	Long		Thời gian trả kết quả thanh toán về đối tác
+Định dạng:: timestamp
+extraData	String		Thông tin thêm
+signature	String		Chữ ký để xác nhận giao dịch. Sử dụng thuật toán Hmac_SHA256 với data theo định dạng được sort từ a-z :
+accessKey=$accessKey&amount=$amount&extraData=$extraData
+&message=$message&orderId=$orderId&orderInfo=$orderInfo
+&orderType=$orderType&partnerCode=$partnerCode&payType=
+$payType&requestId=$requestId&responseTime=
+$responseTime&resultCode=$resultCode&transId=$transId
+paymentOption	String		Tài khoản/Thẻ đã được dùng để thanh toán giao dịch: momo, pay_later
+userFee	Long		User Fee
+promotionInfo	List		Thông tin khuyến mãi
+Default value is null
+Details of promotionInfo
+Attribute	Type	Required	Description
+amount	Long		Số tiền giảm giá
+amountSponsor	Long		Số tiền giả giá merchant tham gia vào voucher/ campaign
+voucherId	String		ID của voucher/ campaign
+voucherType	String		Percent
+voucherName	String		Tên voucher/ campaign
+merchantRate	String		Tỉ lệ mà merchant tham gia vào voucher/ campaign
+
+Mẫu Request IPN
+
+Online tools, try yourself
+
+Result Codes & Messages
+Vui lòng tìm kiếm result codes và mô tả tương ứng của luồng Thanh toán Thông thường trong danh sách result codes tổng hợp ở đây.
+
+Kiểm tra trạng thái giao dịch
+API này dùng để truy vấn trạng thái giao dịch theo orderId cho từng đối tác cụ thể.
+
+Thời gian timeout nhỏ nhất khi gọi API này nên là 30s để đảm bảo nhận phản hồi từ server của MoMo.
+
+HTTP Request
+POST /v2/gateway/api/query
+
+Attribute	Type	Required	Description
+partnerCode	String		Thông tin tích hợp
+requestId	String		ID duy nhất cho mỗi request
+orderId	String		Mã đơn hàng của đối tác truy vấn
+lang	String		Ngôn ngữ của message được trả về (vi hoặc en)
+signature	String		Chữ ký để kiểm tra thông tin. Sử dụng thuật toán Hmac_SHA256 với data theo dạng sau: accessKey=$accessKey&orderId=$orderId&partnerCode=$partnerCode
+&requestId=$requestId
+Mẫu Request
+
+{
+    "partnerCode": "123456",
+    "requestId": "1527246504579",
+    "orderId": "1527246478428",
+    "signature": "13be80957a5ee32107198920fa26aa85a4ca238a29f46e292e8c33dd9186142a",
+    "lang": "en"
+}
+
+HTTP Response
+Attribute	Type	Required	Description
+partnerCode	String		Thông tin tích hợp
+requestId	String		ID duy nhất cho mỗi request
+orderId	String		Mã đơn hàng của đối tác
+extraData	String		Thông tin thêm. Mặc định : , giá trị được truyền bởi đối tác trong API Thiết lập phương thức thanh toán
+amount	Long		Số tiền cần thanh toán
+transId	Long		Mã giao dịch của MoMo
+payType	String		Phương thức thanh toán. web or qr. Default: "" nếu không phải giao dịch thanh toán
+resultCode	int		Result Code
+refundTrans	List		Danh sách các giao dịch được hoàn tiền
+message	String		Error description based on lang
+responseTime	Long		Thời gian trả kết quả thanh toán về đối tác
+Định dạng: timestamp
+paymentOption	String		Tài khoản/Thẻ đã được dùng để thanh toán giao dịch: momo, pay_later
+promotionInfo	List		Thông tin khuyến mãi
+Default value is null
+Details of promotionInfo
+Attribute	Type	Required	Description
+amount	Long		Số tiền giảm giá
+amountSponsor	Long		Số tiền giả giá merchant tham gia vào voucher/ campaign
+voucherId	String		ID của voucher/ campaign
+voucherType	String		Percent
+voucherName	String		Tên voucher/ campaign
+merchantRate	String		Tỉ lệ mà merchant tham gia vào voucher/ campaign

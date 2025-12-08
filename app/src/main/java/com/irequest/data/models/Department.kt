@@ -9,6 +9,7 @@ import java.util.Date
  */
 data class Department(
     @DocumentId
+    val id: String = "",
     val departmentId: Int = 0,
     val name: String = "",
     val description: String? = null,

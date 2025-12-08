@@ -9,12 +9,16 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.irequest.data.models.Department
 import com.example.irequest.data.models.Employee
+import com.example.irequest.data.repository.FirebaseDepartmentRepository
 import com.project.irequest.ui.DepartmentAdapter
+import kotlinx.coroutines.launch
 
 class DepartmentActivity : AppCompatActivity() {
 
@@ -24,6 +28,7 @@ class DepartmentActivity : AppCompatActivity() {
     private lateinit var etSearch: EditText
 
     private val adapter = DepartmentAdapter(emptyList())
+    private val departmentRepository = FirebaseDepartmentRepository()
 
     // 👇 Biến dùng để tạo độ trễ khi gõ phím (Sửa lỗi mất chữ tiếng Việt)
     private val searchHandler = Handler(Looper.getMainLooper())
@@ -35,7 +40,7 @@ class DepartmentActivity : AppCompatActivity() {
 
         initViews()
         setupSearch()
-        loadMockData()
+        loadDepartmentsFromFirebase()
     }
 
     private fun initViews() {
@@ -70,10 +75,48 @@ class DepartmentActivity : AppCompatActivity() {
         })
     }
 
-    private fun loadMockData() {
+    private fun loadDepartmentsFromFirebase() {
         progressBar.visibility = View.VISIBLE
-
-        // Dữ liệu giả
+        
+        lifecycleScope.launch {
+            departmentRepository.getAllDepartments()
+                .onSuccess { departments ->
+                    progressBar.visibility = View.GONE
+                    
+                    if (departments.isEmpty()) {
+                        Toast.makeText(
+                            this@DepartmentActivity,
+                            "Chưa có phòng ban nào. Vui lòng chạy script firebase_department_setup.py",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        
+                        // Fallback to mock data if Firebase is empty
+                        loadMockDataFallback()
+                    } else {
+                        adapter.updateData(departments)
+                        Toast.makeText(
+                            this@DepartmentActivity,
+                            "Đã tải ${departments.size} phòng ban",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+                .onFailure { e ->
+                    progressBar.visibility = View.GONE
+                    Toast.makeText(
+                        this@DepartmentActivity,
+                        "Lỗi kết nối Firebase: ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    
+                    // Fallback to mock data on error
+                    loadMockDataFallback()
+                }
+        }
+    }
+    
+    private fun loadMockDataFallback() {
+        // Dữ liệu giả (fallback khi Firebase chưa có dữ liệu)
         val fakeList = listOf(
             Department(
                 departmentId = 1,

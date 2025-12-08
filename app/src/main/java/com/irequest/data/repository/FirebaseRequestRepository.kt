@@ -32,7 +32,14 @@ class FirebaseRequestRepository(
                 .get()
                 .await()
             
-            val requests = snapshot.toObjects(Request::class.java)
+            val requests = snapshot.documents.mapNotNull { doc ->
+                try {
+                    doc.toObject(Request::class.java)
+                } catch (e: Exception) {
+                    android.util.Log.e("FirebaseRequest", "Error parsing request ${doc.id}: ${e.message}")
+                    null
+                }
+            }
             Result.success(requests)
         } catch (e: Exception) {
             Result.failure(e)
@@ -53,7 +60,14 @@ class FirebaseRequestRepository(
                 .get()
                 .await()
             
-            val requests = snapshot.toObjects(Request::class.java)
+            val requests = snapshot.documents.mapNotNull { doc ->
+                try {
+                    doc.toObject(Request::class.java)
+                } catch (e: Exception) {
+                    android.util.Log.e("FirebaseRequest", "Error parsing request ${doc.id}: ${e.message}")
+                    null
+                }
+            }
             Result.success(requests)
         } catch (e: Exception) {
             Result.failure(e)
@@ -74,7 +88,14 @@ class FirebaseRequestRepository(
                 .get()
                 .await()
             
-            val requests = snapshot.toObjects(Request::class.java)
+            val requests = snapshot.documents.mapNotNull { doc ->
+                try {
+                    doc.toObject(Request::class.java)
+                } catch (e: Exception) {
+                    android.util.Log.e("FirebaseRequest", "Error parsing request ${doc.id}: ${e.message}")
+                    null
+                }
+            }
             Result.success(requests)
         } catch (e: Exception) {
             Result.failure(e)
@@ -132,6 +153,25 @@ class FirebaseRequestRepository(
                 .await()
             
             val request = snapshot.documents.firstOrNull()?.toObject(Request::class.java)
+                ?: return Result.failure(Exception("Request not found"))
+            
+            Result.success(request)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    
+    /**
+     * Get request by ID (String)
+     */
+    suspend fun getRequestById(requestId: String): Result<Request> {
+        return try {
+            val document = requestsCollection
+                .document(requestId)
+                .get()
+                .await()
+            
+            val request = document.toObject(Request::class.java)
                 ?: return Result.failure(Exception("Request not found"))
             
             Result.success(request)
@@ -201,6 +241,22 @@ class FirebaseRequestRepository(
             
             // Create history entry
             createHistoryEntry(request.requestId, "updated", "Request updated")
+            
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    
+    /**
+     * Update request with custom fields
+     */
+    suspend fun updateRequest(requestId: String, updates: HashMap<String, Any>): Result<Unit> {
+        return try {
+            requestsCollection
+                .document(requestId)
+                .update(updates)
+                .await()
             
             Result.success(Unit)
         } catch (e: Exception) {
@@ -391,6 +447,40 @@ class FirebaseRequestRepository(
                 }
             
             Result.success(requests)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    
+    /**
+     * Update request status
+     */
+    suspend fun updateRequestStatus(requestId: String, statusId: Int, comment: String = ""): Result<Unit> {
+        return try {
+            val updates = hashMapOf<String, Any>(
+                "statusId" to statusId,
+                "updatedAt" to Date()
+            )
+            
+            // Update status name based on statusId
+            val statusName = when(statusId) {
+                1 -> "Mới"
+                2 -> "Đang xử lý"
+                3 -> "Hoàn thành"
+                4 -> "Đã đóng"
+                else -> "Không xác định"
+            }
+            updates["statusName"] = statusName
+            
+            requestsCollection
+                .document(requestId)
+                .update(updates)
+                .await()
+            
+            // Create history entry
+            createHistoryEntry(requestId.toIntOrNull() ?: 0, "status_changed", comment)
+            
+            Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
         }

@@ -21,7 +21,7 @@ data class Request(
     val attachmentFileSize: Long? = null,
     
     // Status and approval
-    val isApproved: Boolean = false,
+    var isApproved: Boolean = false,
     val statusId: Int? = null,
     val statusName: String? = null,
     
@@ -55,8 +55,8 @@ data class Request(
     val roleId: String = "default",
     
     // UI state
-    val isStarred: Boolean = false,
-    val isRead: Boolean = false,
+    var isStarred: Boolean = false,
+    var isRead: Boolean = false,
     
     // Computed fields (not stored in Firebase)
     val commentCount: Int = 0,

@@ -7,6 +7,7 @@ import com.google.firebase.firestore.DocumentId
  */
 data class WorkflowStep(
     @DocumentId
+    val id: String = "",
     val stepId: Int = 0,
     val stepName: String = "",
     val workflowId: Int? = null,

@@ -16,8 +16,9 @@ app.post('/api/create', (req, res) => {
 
     var orderInfo = paymentName || '1234567';
     var partnerCode = 'MOMO';
-    var redirectUrl = 'https://localhost:3000/api/result';
-    var ipnUrl = 'https://localhost:3000/api/result';
+    // Redirect về backend để hiển thị HTML
+    var redirectUrl = 'http://192.168.1.176:3000/api/result';
+    var ipnUrl = 'http://192.168.1.176:3000/api/result';
     var requestType = "payWithMethod";
     var orderId = partnerCode + new Date().getTime();
     var requestId = orderId;
@@ -110,8 +111,321 @@ app.post('/api/create', (req, res) => {
 })
 
 app.get('/api/result', (req, res) => {
-    console.log('result: ', req.query);
-})
+    console.log('=== MoMo Payment Result ===');
+    console.log('Query params:', req.query);
+
+    const {
+        partnerCode,
+        orderId,
+        requestId,
+        amount,
+        orderInfo,
+        orderType,
+        transId,
+        resultCode,
+        message,
+        payType,
+        responseTime,
+        extraData,
+        signature
+    } = req.query;
+
+    // Kiểm tra resultCode để xác định giao dịch thành công hay thất bại
+    if (resultCode === '0') {
+        // Giao dịch thành công
+        console.log('✅ Payment successful!');
+        console.log(`Order ID: ${orderId}`);
+        console.log(`Transaction ID: ${transId}`);
+        console.log(`Amount: ${amount} VND`);
+
+        // Trả về trang HTML thành công
+        res.send(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Thanh toán thành công</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        min-height: 100vh;
+                        margin: 0;
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    }
+                    .container {
+                        background: white;
+                        padding: 40px;
+                        border-radius: 10px;
+                        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+                        text-align: center;
+                        max-width: 500px;
+                    }
+                    .success-icon {
+                        font-size: 64px;
+                        color: #4CAF50;
+                        margin-bottom: 20px;
+                    }
+                    h1 {
+                        color: #333;
+                        margin: 0 0 10px 0;
+                    }
+                    .message {
+                        color: #666;
+                        margin-bottom: 30px;
+                    }
+                    .detail {
+                        text-align: left;
+                        background: #f5f5f5;
+                        padding: 20px;
+                        border-radius: 5px;
+                        margin-bottom: 20px;
+                    }
+                    .detail-row {
+                        display: flex;
+                        justify-content: space-between;
+                        margin-bottom: 10px;
+                    }
+                    .detail-label {
+                        font-weight: bold;
+                        color: #555;
+                    }
+                    .detail-value {
+                        color: #333;
+                    }
+                    .btn {
+                        background: #667eea;
+                        color: white;
+                        padding: 12px 30px;
+                        border: none;
+                        border-radius: 5px;
+                        font-size: 16px;
+                        cursor: pointer;
+                        text-decoration: none;
+                        display: inline-block;
+                    }
+                    .btn:hover {
+                        background: #5568d3;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="success-icon">✓</div>
+                    <h1>Thanh toán thành công!</h1>
+                    <p class="message">${message}</p>
+                    
+                    <div class="detail">
+                        <div class="detail-row">
+                            <span class="detail-label">Mã đơn hàng:</span>
+                            <span class="detail-value">${orderId}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Mã giao dịch:</span>
+                            <span class="detail-value">${transId}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Số tiền:</span>
+                            <span class="detail-value">${parseInt(amount).toLocaleString('vi-VN')} VND</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Phương thức:</span>
+                            <span class="detail-value">${payType}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Thời gian:</span>
+                            <span class="detail-value">${new Date(parseInt(responseTime)).toLocaleString('vi-VN')}</span>
+                        </div>
+                    </div>
+                    
+                    <a href="irequest://payment/success?orderId=${orderId}&transId=${transId}&amount=${amount}&payType=${payType}" class="btn">Quay về ứng dụng</a>
+                </div>
+                <script>
+                    // Tự động redirect sau 3 giây
+                    setTimeout(function() {
+                        window.location.href = 'irequest://payment/success?orderId=${orderId}&transId=${transId}&amount=${amount}&payType=${payType}';
+                    }, 3000);
+                </script>
+            </body>
+            </html>
+        `);
+    } else {
+        // Giao dịch thất bại
+        console.log('❌ Payment failed!');
+        console.log(`Result Code: ${resultCode}`);
+        console.log(`Message: ${message}`);
+
+        res.send(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Thanh toán thất bại</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        min-height: 100vh;
+                        margin: 0;
+                        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+                    }
+                    .container {
+                        background: white;
+                        padding: 40px;
+                        border-radius: 10px;
+                        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+                        text-align: center;
+                        max-width: 500px;
+                    }
+                    .error-icon {
+                        font-size: 64px;
+                        color: #f44336;
+                        margin-bottom: 20px;
+                    }
+                    h1 {
+                        color: #333;
+                        margin: 0 0 10px 0;
+                    }
+                    .message {
+                        color: #666;
+                        margin-bottom: 30px;
+                    }
+                    .detail {
+                        text-align: left;
+                        background: #f5f5f5;
+                        padding: 20px;
+                        border-radius: 5px;
+                        margin-bottom: 20px;
+                    }
+                    .detail-row {
+                        display: flex;
+                        justify-content: space-between;
+                        margin-bottom: 10px;
+                    }
+                    .detail-label {
+                        font-weight: bold;
+                        color: #555;
+                    }
+                    .detail-value {
+                        color: #333;
+                    }
+                    .btn {
+                        background: #667eea;
+                        color: white;
+                        padding: 12px 30px;
+                        border: none;
+                        border-radius: 5px;
+                        font-size: 16px;
+                        cursor: pointer;
+                        text-decoration: none;
+                        display: inline-block;
+                        margin: 5px;
+                    }
+                    .btn:hover {
+                        background: #5568d3;
+                    }
+                    .btn-retry {
+                        background: #4CAF50;
+                    }
+                    .btn-retry:hover {
+                        background: #45a049;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="error-icon">✗</div>
+                    <h1>Thanh toán thất bại!</h1>
+                    <p class="message">${message}</p>
+                    
+                    <div class="detail">
+                        <div class="detail-row">
+                            <span class="detail-label">Mã đơn hàng:</span>
+                            <span class="detail-value">${orderId}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Mã lỗi:</span>
+                            <span class="detail-value">${resultCode}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Số tiền:</span>
+                            <span class="detail-value">${parseInt(amount).toLocaleString('vi-VN')} VND</span>
+                        </div>
+                    </div>
+                    
+                    <a href="irequest://payment/failed?orderId=${orderId}&resultCode=${resultCode}" class="btn">Quay về ứng dụng</a>
+                </div>
+                <script>
+                    // Tự động redirect sau 3 giây
+                    setTimeout(function() {
+                        window.location.href = 'irequest://payment/failed?orderId=${orderId}&resultCode=${resultCode}';
+                    }, 3000);
+                </script>
+            </body>
+            </html>
+        `);
+    }
+});
+
+// POST endpoint cho IPN (Server-to-Server notification từ MoMo)
+app.post('/api/result', (req, res) => {
+    console.log('=== MoMo IPN Notification ===');
+    console.log('Body:', req.body);
+
+    // Xác thực signature từ MoMo
+    const crypto = require('crypto');
+    const secretKey = 'K951B6PE1waDMi640xX08PD3vg6EkVlz';
+    const accessKey = 'F8BBA842ECF85';
+
+    const {
+        partnerCode,
+        orderId,
+        requestId,
+        amount,
+        orderInfo,
+        orderType,
+        transId,
+        resultCode,
+        message,
+        payType,
+        responseTime,
+        extraData,
+        signature
+    } = req.body;
+
+    // Tạo signature để xác thực
+    const rawSignature = `accessKey=${accessKey}&amount=${amount}&extraData=${extraData}&message=${message}&orderId=${orderId}&orderInfo=${orderInfo}&orderType=${orderType}&partnerCode=${partnerCode}&payType=${payType}&requestId=${requestId}&responseTime=${responseTime}&resultCode=${resultCode}&transId=${transId}`;
+
+    const calculatedSignature = crypto.createHmac('sha256', secretKey)
+        .update(rawSignature)
+        .digest('hex');
+
+    // So sánh signature
+    if (signature === calculatedSignature) {
+        console.log('✅ Signature verified!');
+
+        // Xử lý cập nhật database, gửi email, etc.
+        if (resultCode === 0) {
+            console.log('✅ Payment confirmed via IPN');
+            // TODO: Cập nhật trạng thái đơn hàng trong database
+        } else {
+            console.log('❌ Payment failed via IPN');
+            // TODO: Xử lý đơn hàng thất bại
+        }
+
+        // Trả về 204 No Content để MoMo biết đã nhận được thông báo
+        res.status(204).send();
+    } else {
+        console.log('❌ Invalid signature!');
+        res.status(400).json({ message: 'Invalid signature' });
+    }
+});
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
