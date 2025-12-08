@@ -3,6 +3,7 @@ package com.project.irequest
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.IdRes
 
@@ -12,36 +13,25 @@ class HomeActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
+        val tvUserName = findViewById<TextView>(R.id.tvUserName)
+        tvUserName.text = "Xin chào, Hoàng Hải!"
+
         setupFeatureCards()
         
-        // Setup navigation từ BaseActivity
         setupBottomNavigation()
         
-        // Set tab Home là active (index 0)
         setActiveTab(0)
     }
 
     private fun setupFeatureCards() {
-        // Sử dụng hàm phụ trợ để code gọn hơn
-        setClickListener(R.id.cardCalendar, CalenderActivity::class.java)
-        setClickListener(R.id.cardNotification, AlertsActivity::class.java)
-        setClickListener(R.id.cardRequest, RequestsActivity::class.java)
-        setClickListener(R.id.cardReport, ReportActivity::class.java)
-        setClickListener(R.id.cardDepartment, DepartmentActivity::class.java)
-        setClickListener(R.id.cardProcess, ProcessManagementActivity::class.java) // <-- Logic quy trình ở đây
-        setClickListener(R.id.cardPayment, PaymentActivity::class.java)
-
-        // Các tính năng đang phát triển
-        setToastClickListener(R.id.cardEmployee, "Tính năng Nhân viên đang phát triển")
-        setToastClickListener(R.id.cardProcessStep, "Tính năng Bước quy trình đang phát triển")
-        setToastClickListener(R.id.cardPermission, "Tính năng Quyền đang phát triển")
+        setClickListener(R.id.cardCalendar, com.project.irequest.CalendarActivity::class.java)
+        setClickListener(R.id.cardNotification, com.project.irequest.AlertsActivity::class.java)
+        setClickListener(R.id.cardRequest, com.project.irequest.RequestsActivity::class.java)
+        setClickListener(R.id.cardReport, com.project.irequest.ReportActivity::class.java)
+        setClickListener(R.id.cardDepartment, com.project.irequest.DepartmentActivity::class.java)
+        setClickListener(R.id.cardProcess, com.project.irequest.ProcessManagementActivity::class.java)
     }
 
-    /**
-     * Hàm phụ trợ để gán sự kiện click mở một Activity mới.
-     * @param viewId ID của View cần gán sự kiện.
-     * @param activityClass Class của Activity cần mở.
-     */
     private fun setClickListener(@IdRes viewId: Int, activityClass: Class<*>) {
         findViewById<View>(viewId).setOnClickListener {
             val intent = Intent(this, activityClass)
@@ -49,39 +39,30 @@ class HomeActivity : BaseActivity() {
         }
     }
     
-    /**
-     * Hàm phụ trợ để gán sự kiện click hiển thị Toast.
-     * @param viewId ID của View cần gán sự kiện.
-     * @param message Nội dung Toast.
-     */
     private fun setToastClickListener(@IdRes viewId: Int, message: String) {
         findViewById<View>(viewId).setOnClickListener {
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         }
     }
 
-    // Override navigation methods để xử lý riêng cho HomeActivity
+    // Override navigation methods
     override fun onNavigationHomeClicked() {
-        // Đã ở trang chủ rồi, không cần làm gì
         Toast.makeText(this, "Bạn đang ở trang chủ", Toast.LENGTH_SHORT).show()
         setActiveTab(0)
     }
     
     override fun onNavigationWorkClicked() {
-        // Chuyển đến WorkActivity
-        val intent = Intent(this, WorkActivity::class.java)
+        val intent = Intent(this, com.project.irequest.WorkActivity::class.java)
         startActivity(intent)
     }
     
     override fun onNavigationChatClicked() {
-        // Chuyển đến ChatActivity
-        val intent = Intent(this, ChatActivity::class.java)
+        val intent = Intent(this, com.project.irequest.ChatActivity::class.java)
         startActivity(intent)
     }
     
     override fun onNavigationAccountClicked() {
-        // Chuyển đến AccountActivity
-        val intent = Intent(this, AccountActivity::class.java)
+        val intent = Intent(this, com.project.irequest.AccountActivity::class.java)
         startActivity(intent)
     }
 }

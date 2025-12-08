@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fillViewport="true"
+    android:background="@color/bg_light">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_white_rounded"
+            android:orientation="vertical"
+            android:padding="12dp">
+            
+            <TextView
+                android:text="Tháng 04/2025"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal"
+                android:weightSum="5">
+                <LinearLayout android:orientation="vertical" android:layout_weight="1" android:gravity="center" android:layout_width="0dp" android:layout_height="wrap_content">
+                    <TextView android:text="Th3" android:textSize="12sp" android:textColor="@color/text_secondary" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                    <TextView android:text="07" android:textStyle="bold" android:textColor="@color/teal_main" android:textSize="16sp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <LinearLayout android:orientation="vertical" android:layout_weight="1" android:background="@drawable/bg_rounded_dark_blue" android:padding="8dp" android:gravity="center" android:layout_width="0dp" android:layout_height="wrap_content">
+                    <TextView android:text="Th5" android:textSize="12sp" android:textColor="@android:color/white" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                    <TextView android:text="09" android:textStyle="bold" android:textColor="@android:color/white" android:textSize="16sp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                </LinearLayout>
+                </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#E0E0E0" android:layout_marginVertical="12dp"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView android:id="@+id/tvShiftType" android:text="Fulltime" android:textStyle="bold" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                <TextView android:text="Mặc định" android:textSize="10sp" android:background="#F0F0F0" android:padding="4dp" android:layout_marginStart="8dp" app:layout_constraintStart_toEndOf="@id/tvShiftType" app:layout_constraintTop_toTopOf="@id/tvShiftType" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                <TextView android:text="📍 Nhoy Tea 1" android:textSize="12sp" android:textColor="@color/text_secondary" android:layout_marginTop="4dp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/tvShiftType" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                <TextView android:text="7:30 - 17:30" android:textStyle="bold" android:textSize="16sp" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp">
+            
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:cardBackgroundColor="@color/card_bg_dark"
+                android:layout_marginEnd="8dp">
+                <LinearLayout android:padding="12dp" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content">
+                    <TextView android:text="Tổng ca tháng này" android:textColor="#B0BEC5" android:textSize="12sp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                    <LinearLayout android:orientation="horizontal" android:layout_marginTop="8dp" android:gravity="bottom" android:layout_width="match_parent" android:layout_height="wrap_content">
+                        <TextView android:text="172 giờ làm việc" android:textSize="10sp" android:textColor="#90A4AE" android:layout_weight="1" android:layout_width="0dp" android:layout_height="wrap_content"/>
+                        <TextView android:text="32 ca" android:textSize="20sp" android:textStyle="bold" android:textColor="@color/teal_main" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:cardBackgroundColor="@color/card_bg_dark"
+                android:layout_marginStart="8dp">
+                <LinearLayout android:padding="12dp" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content">
+                    <TextView android:text="Đã hoàn thành" android:textColor="#B0BEC5" android:textSize="12sp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                    <LinearLayout android:orientation="horizontal" android:layout_marginTop="8dp" android:gravity="bottom" android:layout_width="match_parent" android:layout_height="wrap_content">
+                        <TextView android:text="14 ca còn lại" android:textSize="10sp" android:textColor="#90A4AE" android:layout_weight="1" android:layout_width="0dp" android:layout_height="wrap_content"/>
+                        <TextView android:text="18 ca" android:textSize="20sp" android:textStyle="bold" android:textColor="@color/teal_main" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+
+        <TextView
+            android:text="Duyệt ca"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="8dp"
+            app:strokeWidth="0dp"
+            app:cardBackgroundColor="@android:color/white"
+            android:layout_marginBottom="8dp">
+            <androidx.constraintlayout.widget.ConstraintLayout android:padding="12dp" android:layout_width="match_parent" android:layout_height="wrap_content">
+                <TextView android:id="@+id/tvTitle1" android:text="Đăng ký ca ngày 12/04" android:textStyle="bold" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                <TextView android:text="Với Hoàng Nam - Ca chiều" android:textSize="12sp" android:textColor="@color/text_secondary" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/tvTitle1" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                <TextView android:text="Chờ duyệt" android:background="@drawable/bg_pill_orange" android:paddingHorizontal="12dp" android:paddingVertical="4dp" android:textSize="12sp" android:textColor="@color/status_orange_text" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="8dp"
+            app:strokeWidth="0dp"
+            app:cardBackgroundColor="@android:color/white"
+            android:layout_marginBottom="8dp">
+            <androidx.constraintlayout.widget.ConstraintLayout android:padding="12dp" android:layout_width="match_parent" android:layout_height="wrap_content">
+                <TextView android:id="@+id/tvTitle2" android:text="Đổi ca ngày 12/04" android:textStyle="bold" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                <TextView android:text="Với Lê Hương Thảo - Ca chiều" android:textSize="12sp" android:textColor="@color/text_secondary" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/tvTitle2" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                <TextView android:text="Đã duyệt" android:background="@drawable/bg_pill_green" android:paddingHorizontal="12dp" android:paddingVertical="4dp" android:textSize="12sp" android:textColor="@color/status_green_text" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

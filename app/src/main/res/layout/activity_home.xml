@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".HomeActivity">
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/background" />
+        android:layout_height="match_parent"
+        android:src="@drawable/background"
+        android:scaleType="centerCrop" />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/transparent">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -20,435 +22,156 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- User Info Section -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tvUserName"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:background="@android:color/white">
-
-                    <TextView
-                        android:id="@+id/tvUserName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Xin chào!"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:textColor="#333333"
-                        android:layout_marginBottom="16dp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="3">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="center"
-                            android:padding="8dp">
-
-                            <TextView
-                                android:id="@+id/tvTotalRequests"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0"
-                                android:textSize="24sp"
-                                android:textStyle="bold"
-                                android:textColor="#007AFF" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Tổng yêu cầu"
-                                android:textSize="12sp"
-                                android:textColor="#666666"
-                                android:layout_marginTop="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="center"
-                            android:padding="8dp">
-
-                            <TextView
-                                android:id="@+id/tvPendingRequests"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0"
-                                android:textSize="24sp"
-                                android:textStyle="bold"
-                                android:textColor="#FF9500" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Đang xử lý"
-                                android:textSize="12sp"
-                                android:textColor="#666666"
-                                android:layout_marginTop="4dp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="center"
-                            android:padding="8dp">
-
-                            <TextView
-                                android:id="@+id/tvCompletedRequests"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0"
-                                android:textSize="24sp"
-                                android:textStyle="bold"
-                                android:textColor="#34C759" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Hoàn thành"
-                                android:textSize="12sp"
-                                android:textColor="#666666"
-                                android:layout_marginTop="4dp" />
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
+                android:text="Xin chào, Hoàng Hải!"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="16dp" />
 
             <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:columnCount="3"
-                android:rowCount="3"
-                android:layout_marginBottom="24dp">
+                android:alignmentMode="alignMargins"
+                android:columnOrderPreserved="false">
 
-                <!-- Feature 1: Đặt lịch -->
-                <LinearLayout
+                <!-- Row 1 -->
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardCalendar"
-                    android:layout_width="122dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="#FFFFFF"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:elevation="2dp"
-                    android:padding="8dp"
-                    android:layout_margin="4dp">
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    style="@style/FeatureCardView">
+                    <LinearLayout style="@style/FeatureLayout" android:layout_width="match_parent" android:layout_height="wrap_content">
+                        <ImageView style="@style/FeatureIcon" android:layout_width="36dp" android:layout_height="36dp" android:src="@drawable/calender_icon"/>
+                        <TextView style="@style/FeatureTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Lịch"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
-                    <ImageView
-                        android:id="@+id/calender"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginBottom="8dp"
-                        android:src="@drawable/calender_icon" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="Lịch"
-                        android:textColor="#002C2C"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-                <!-- Feature 2: Thông báo -->
-                <LinearLayout
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardNotification"
-                    android:layout_width="122dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="#FFFFFF"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:elevation="2dp"
-                    android:padding="8dp"
-                    android:layout_margin="4dp">
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                     style="@style/FeatureCardView">
+                     <LinearLayout style="@style/FeatureLayout" android:layout_width="match_parent" android:layout_height="wrap_content">
+                        <ImageView style="@style/FeatureIcon" android:layout_width="36dp" android:layout_height="36dp" android:src="@drawable/nofi"/>
+                        <TextView style="@style/FeatureTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Thông báo"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
-                    <ImageView
-                        android:id="@+id/nofi"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginBottom="8dp"
-                        android:src="@drawable/nofi" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="Thông báo"
-                        android:textColor="#002C2C"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-                <!-- Feature 3: Yêu cầu -->
-                <LinearLayout
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardRequest"
-                    android:layout_width="122dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="#FFFFFF"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:elevation="2dp"
-                    android:padding="8dp"
-                    android:layout_margin="4dp">
-
-                    <TextView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginBottom="8dp"
-                        android:text="📋"
-                        android:textSize="24sp"
-                        android:gravity="center" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="Yêu cầu"
-                        android:textColor="#002C2C"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-                <!-- Feature 4: Báo cáo -->
-                <LinearLayout
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    style="@style/FeatureCardView">
+                    <LinearLayout style="@style/FeatureLayout" android:layout_width="match_parent" android:layout_height="wrap_content">
+                        <TextView style="@style/FeatureIcon" android:layout_width="36dp" android:layout_height="36dp" android:text="📋"/>
+                        <TextView style="@style/FeatureTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Yêu cầu"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+                
+                <!-- Row 2 -->
+                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardReport"
-                    android:layout_width="122dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="#FFFFFF"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:elevation="2dp"
-                    android:padding="8dp"
-                    android:layout_margin="4dp">
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    style="@style/FeatureCardView">
+                     <LinearLayout style="@style/FeatureLayout" android:layout_width="match_parent" android:layout_height="wrap_content">
+                        <TextView style="@style/FeatureIcon" android:layout_width="36dp" android:layout_height="36dp" android:text="📊"/>
+                        <TextView style="@style/FeatureTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Báo cáo"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
-                    <TextView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginBottom="8dp"
-                        android:text="📊"
-                        android:textSize="24sp"
-                        android:gravity="center" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="Báo cáo"
-                        android:textColor="#002C2C"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-                <!-- Feature 5: Nhân viên -->
-                <LinearLayout
-                    android:id="@+id/cardEmployee"
-                    android:layout_width="122dp"
-                    android:layout_height="wrap_content"
-                    android:background="#FFFFFF"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:elevation="2dp"
-                    android:padding="8dp"
-                    android:layout_margin="4dp">
-
-                    <TextView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginBottom="8dp"
-                        android:text="👥"
-                        android:textSize="24sp"
-                        android:gravity="center" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="Nhân viên"
-                        android:textColor="#002C2C"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-                <!-- Feature 6: Phòng ban -->
-                <LinearLayout
+                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardDepartment"
-                    android:layout_width="122dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="#FFFFFF"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:elevation="2dp"
-                    android:padding="8dp"
-                    android:layout_margin="4dp">
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    style="@style/FeatureCardView">
+                     <LinearLayout style="@style/FeatureLayout" android:layout_width="match_parent" android:layout_height="wrap_content">
+                        <ImageView style="@style/FeatureIcon" android:layout_width="36dp" android:layout_height="36dp" android:src="@drawable/department"/>
+                        <TextView style="@style/FeatureTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Phòng ban"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
-                    <ImageView
-                        android:id="@+id/depart"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginBottom="8dp"
-                        android:src="@drawable/department"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="Phòng ban"
-                        android:textColor="#002C2C"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-                <!-- Feature 7: Quy trình -->
-                <LinearLayout
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardProcess"
-                    android:layout_width="122dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="#FFFFFF"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:elevation="2dp"
-                    android:padding="8dp"
-                    android:layout_margin="4dp">
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    style="@style/FeatureCardView">
+                    <LinearLayout style="@style/FeatureLayout" android:layout_width="match_parent" android:layout_height="wrap_content">
+                        <TextView style="@style/FeatureIcon" android:layout_width="36dp" android:layout_height="36dp" android:text="⚙️"/>
+                        <TextView style="@style/FeatureTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Quy trình"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
-                    <TextView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginBottom="8dp"
-                        android:text="⚙️"
-                        android:textSize="24sp"
-                        android:gravity="center" />
+                 <!-- Row 3 -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardEmployee"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    style="@style/FeatureCardView">
+                    <LinearLayout style="@style/FeatureLayout" android:layout_width="match_parent" android:layout_height="wrap_content">
+                        <TextView style="@style/FeatureIcon" android:layout_width="36dp" android:layout_height="36dp" android:text="👥"/>
+                        <TextView style="@style/FeatureTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Nhân viên"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="Quy trình"
-                        android:textColor="#002C2C"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-                <!-- Feature 8: Bước quy trình -->
-                <LinearLayout
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardProcessStep"
-                    android:layout_width="122dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="#FFFFFF"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:elevation="2dp"
-                    android:padding="8dp"
-                    android:layout_margin="4dp">
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    style="@style/FeatureCardView">
+                    <LinearLayout style="@style/FeatureLayout" android:layout_width="match_parent" android:layout_height="wrap_content">
+                        <TextView style="@style/FeatureIcon" android:layout_width="36dp" android:layout_height="36dp" android:text="📝"/>
+                        <TextView style="@style/FeatureTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Bước QT"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
-                    <TextView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginBottom="8dp"
-                        android:text="📝"
-                        android:textSize="24sp"
-                        android:gravity="center" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="Bước QT"
-                        android:textColor="#002C2C"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-                <!-- Feature 9: Quyền -->
-                <LinearLayout
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardPermission"
-                    android:layout_width="122dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="#FFFFFF"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:elevation="2dp"
-                    android:padding="8dp"
-                    android:layout_margin="4dp">
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    style="@style/FeatureCardView">
+                    <LinearLayout style="@style/FeatureLayout" android:layout_width="match_parent" android:layout_height="wrap_content">
+                        <TextView style="@style/FeatureIcon" android:layout_width="36dp" android:layout_height="36dp" android:text="🔐"/>
+                        <TextView style="@style/FeatureTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Quyền"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
-                    <TextView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginBottom="8dp"
-                        android:text="🔐"
-                        android:textSize="24sp"
-                        android:gravity="center" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="Quyền"
-                        android:textColor="#002C2C"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-                <!-- Feature 10: Nộp phí -->
-                <LinearLayout
+                 <!-- Row 4 -->
+                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardPayment"
-                    android:layout_width="122dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="#FFFFFF"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:elevation="2dp"
-                    android:padding="8dp"
-                    android:layout_margin="4dp">
-
-                    <TextView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginBottom="8dp"
-                        android:text="💰"
-                        android:textSize="24sp"
-                        android:gravity="center" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="Nộp phí"
-                        android:textColor="#002C2C"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
+                    android:layout_columnWeight="1"
+                    android:layout_margin="4dp"
+                    style="@style/FeatureCardView">
+                    <LinearLayout style="@style/FeatureLayout" android:layout_width="match_parent" android:layout_height="wrap_content">
+                        <TextView style="@style/FeatureIcon" android:layout_width="36dp" android:layout_height="36dp" android:text="💰"/>
+                        <TextView style="@style/FeatureTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Nộp phí"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
             </GridLayout>
 
@@ -456,12 +179,10 @@
 
     </ScrollView>
 
-
     <include
         layout="@layout/bottom_navigation"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="16dp" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
 
 </FrameLayout>
