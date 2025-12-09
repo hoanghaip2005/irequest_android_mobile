@@ -124,8 +124,8 @@ class DepartmentActivity : AppCompatActivity() {
                 assignedUserName = "Trần Văn CEO",
                 description = "Điều hành toàn bộ hoạt động công ty",
                 employees = listOf(
-                    Employee("Trần Văn CEO", "Tổng Giám Đốc"),
-                    Employee("Lê Thư Ký", "Thư ký TGĐ")
+                    Employee(name = "Trần Văn CEO", role = "Tổng Giám Đốc", department = "Ban Giám Đốc"),
+                    Employee(name = "Lê Thư Ký", role = "Thư ký TGĐ", department = "Ban Giám Đốc")
                 )
             ),
             Department(
@@ -134,9 +134,9 @@ class DepartmentActivity : AppCompatActivity() {
                 assignedUserName = "Lê Văn Code",
                 description = "Hỗ trợ kỹ thuật và phần mềm",
                 employees = listOf(
-                    Employee("Lê Văn Code", "Trưởng phòng"),
-                    Employee("Nguyễn Fullstack", "Senior Dev"),
-                    Employee("Trần Mobile", "Android Dev")
+                    Employee(name = "Lê Văn Code", role = "Trưởng phòng", department = "Phòng IT"),
+                    Employee(name = "Nguyễn Fullstack", role = "Senior Dev", department = "Phòng IT"),
+                    Employee(name = "Trần Mobile", role = "Android Dev", department = "Phòng IT")
                 )
             ),
             Department(
@@ -145,8 +145,8 @@ class DepartmentActivity : AppCompatActivity() {
                 assignedUserName = "Phạm Thị Tiền",
                 description = "Quản lý tài chính và lương thưởng",
                 employees = listOf(
-                    Employee("Phạm Thị Tiền", "Kế toán trưởng"),
-                    Employee("Vũ Thu Chi", "Thủ quỹ")
+                    Employee(name = "Phạm Thị Tiền", role = "Kế toán trưởng", department = "Phòng Kế Toán"),
+                    Employee(name = "Vũ Thu Chi", role = "Thủ quỹ", department = "Phòng Kế Toán")
                 )
             ),
             Department(
@@ -155,8 +155,8 @@ class DepartmentActivity : AppCompatActivity() {
                 assignedUserName = "Nguyễn Thị Mai",
                 description = "Tuyển dụng và chế độ phúc lợi",
                 employees = listOf(
-                    Employee("Nguyễn Thị Mai", "Trưởng phòng HR"),
-                    Employee("Trần Tuyển Dụng", "Chuyên viên")
+                    Employee(name = "Nguyễn Thị Mai", role = "Trưởng phòng HR", department = "Phòng Nhân Sự"),
+                    Employee(name = "Trần Tuyển Dụng", role = "Chuyên viên", department = "Phòng Nhân Sự")
                 )
             )
         )

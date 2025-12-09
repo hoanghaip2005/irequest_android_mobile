@@ -137,12 +137,6 @@
             android:exported="false"
             android:parentActivityName=".PaymentActivity" />
 
-        <!-- Payment Result WebView Activity -->
-        <activity
-            android:name=".PaymentResultActivity"
-            android:exported="false"
-            android:parentActivityName=".PaymentActivity" />
-
         <!-- Requests Activity -->
         <activity
             android:name=".RequestsActivity"
@@ -169,6 +163,23 @@
         <!-- Department Activity -->
         <activity
             android:name=".DepartmentActivity"
+            android:exported="false" />
+
+        <!-- Employee Activity -->
+        <activity
+            android:name=".EmployeeActivity"
+            android:exported="false"
+            android:parentActivityName=".HomeActivity" />
+
+        <!-- Employee Detail Activity -->
+        <activity
+            android:name=".EmployeeDetailActivity"
+            android:exported="false"
+            android:parentActivityName=".EmployeeActivity" />
+
+        <!-- Add/Edit Employee Activity -->
+        <activity
+            android:name=".AddEditEmployeeActivity"
             android:exported="false" />
 
         <!-- Add Process Activity -->

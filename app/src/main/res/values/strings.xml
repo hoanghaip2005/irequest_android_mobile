@@ -103,4 +103,8 @@
     <string name="action_comment">Bình luận</string>
     <string name="action_attachment">Thêm đính kèm</string>
 
+    <!-- Employee filter prompts -->
+    <string name="prompt_select_branch">Chọn chi nhánh</string>
+    <string name="prompt_select_shift">Chọn ca</string>
+
 </resources>

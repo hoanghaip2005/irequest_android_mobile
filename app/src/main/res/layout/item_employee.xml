@@ -58,9 +58,18 @@
             android:id="@+id/tvEmployeeRole"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Chuyên viên • it@company.com"
+            android:text="Chuyên viên"
             android:textSize="13sp"
             android:textColor="#757575"
+            android:layout_marginTop="2dp"/>
+
+        <TextView
+            android:id="@+id/tvEmployeeDepartment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Phòng ban"
+            android:textSize="12sp"
+            android:textColor="#999999"
             android:layout_marginTop="2dp"/>
     </LinearLayout>
 
