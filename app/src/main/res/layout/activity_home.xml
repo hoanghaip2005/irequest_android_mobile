@@ -214,13 +214,12 @@
                     android:padding="8dp"
                     android:layout_margin="4dp">
 
-                    <TextView
+                    <ImageView
+                        android:id="@+id/request"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_marginBottom="8dp"
-                        android:text="📋"
-                        android:textSize="24sp"
-                        android:gravity="center" />
+                        android:src="@drawable/request" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -245,13 +244,13 @@
                     android:padding="8dp"
                     android:layout_margin="4dp">
 
-                    <TextView
+                    <ImageView
+                        android:id="@+id/reports"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_marginBottom="8dp"
-                        android:text="📊"
-                        android:textSize="24sp"
-                        android:gravity="center" />
+                        android:src="@drawable/reports" />
+
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -276,13 +275,13 @@
                     android:padding="8dp"
                     android:layout_margin="4dp">
 
-                    <TextView
+                    <ImageView
+                        android:id="@+id/user"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_marginBottom="8dp"
-                        android:text="👥"
-                        android:textSize="24sp"
-                        android:gravity="center" />
+                        android:src="@drawable/user"
+                        />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -338,13 +337,13 @@
                     android:padding="8dp"
                     android:layout_margin="4dp">
 
-                    <TextView
+                    <ImageView
+                        android:id="@+id/workflow"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_marginBottom="8dp"
-                        android:text="⚙️"
-                        android:textSize="24sp"
-                        android:gravity="center" />
+                        android:src="@drawable/workflow"
+                        />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -369,13 +368,13 @@
                     android:padding="8dp"
                     android:layout_margin="4dp">
 
-                    <TextView
+                    <ImageView
+                        android:id="@+id/workflowstep"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_marginBottom="8dp"
-                        android:text="📝"
-                        android:textSize="24sp"
-                        android:gravity="center" />
+                        android:src="@drawable/workflowstep"
+                        />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -431,13 +430,13 @@
                     android:padding="8dp"
                     android:layout_margin="4dp">
 
-                    <TextView
+                    <ImageView
+                        android:id="@+id/payment"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_marginBottom="8dp"
-                        android:text="💰"
-                        android:textSize="24sp"
-                        android:gravity="center" />
+                        android:src="@drawable/payment"
+                        />
 
                     <TextView
                         android:layout_width="wrap_content"

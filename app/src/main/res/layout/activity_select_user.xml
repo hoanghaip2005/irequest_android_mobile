@@ -23,7 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="Trò chuyện"
+                android:text="Chọn người chat"
                 android:textColor="?android:attr/textColorPrimary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -31,6 +31,19 @@
         </RelativeLayout>
 
     </androidx.appcompat.widget.Toolbar>
+
+    <!-- Search Bar -->
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@android:color/white"
+        android:elevation="2dp"
+        app:queryHint="Tìm kiếm người dùng..." />
 
     <!-- Bottom Navigation -->
     <include layout="@layout/bottom_navigation"
@@ -43,8 +56,9 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
-        android:layout_above="@+id/bottomNavigation">
+        android:layout_below="@id/searchView"
+        android:layout_above="@+id/bottomNavigation"
+        android:layout_marginTop="8dp">
 
         <!-- Loading Indicator -->
         <ProgressBar
@@ -60,31 +74,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Chưa có cuộc trò chuyện"
+            android:text="Không tìm thấy người dùng"
             android:textSize="16sp"
             android:textColor="@android:color/darker_gray"
             android:visibility="gone" />
 
-        <!-- RecyclerView để hiển thị danh sách chat -->
+        <!-- Users List -->
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvChatList"
+            android:id="@+id/rvUsers"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="8dp" />
 
     </FrameLayout>
-
-    <!-- Floating Action Button for New Chat -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabNewChat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_above="@id/bottomNavigation"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:src="@android:drawable/ic_input_add"
-        android:contentDescription="Chat mới"
-        app:tint="@android:color/white" />
 
 </RelativeLayout>

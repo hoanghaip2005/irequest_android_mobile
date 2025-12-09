@@ -1,20 +1,34 @@
 package com.project.irequest
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.irequest.data.repository.FirebaseChatRepository
+import kotlinx.coroutines.launch
 
 class ChatDetailActivity : AppCompatActivity() {
 
     private lateinit var rvMessages: RecyclerView
     private lateinit var messageAdapter: MessageAdapter
+    private lateinit var progressBar: ProgressBar
+    private lateinit var etMessageInput: EditText
+    private lateinit var btnSend: Button
+    
     private val messages = mutableListOf<ChatMessage>()
+    private val chatRepository = FirebaseChatRepository()
+    
+    private var chatId: String? = null
+    private var receiverId: String? = null
+    private var receiverName: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,10 +39,12 @@ class ChatDetailActivity : AppCompatActivity() {
         val ivAvatar: ImageView = findViewById(R.id.iv_avatar)
 
         // Nhận dữ liệu từ Intent
-        val chatName = intent.getStringExtra("CHAT_NAME")
+        val chatName = intent.getStringExtra("CHAT_NAME") ?: "Chat"
         val avatarResId = intent.getIntExtra("AVATAR_RES_ID", R.drawable.ic_launcher_background)
+        chatId = intent.getStringExtra("CHAT_ID")
+        receiverId = intent.getStringExtra("RECEIVER_ID")
+        receiverName = intent.getStringExtra("RECEIVER_NAME")
 
-        // Hiển thị dữ liệu lên Toolbar
         tvToolbarTitle.text = chatName
         ivAvatar.setImageResource(avatarResId)
 
@@ -36,41 +52,133 @@ class ChatDetailActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        // --- Thiết lập RecyclerView ---
+        setupViews()
+        
+        if (chatId != null) {
+            loadMessagesFromFirebase(chatId!!)
+        } else {
+              Toast.makeText(this, "Lỗi: Không có chatId", Toast.LENGTH_SHORT).show()
+        }
+    }
+    
+    private fun setupViews() {
         rvMessages = findViewById(R.id.rv_chat_messages)
+        progressBar = findViewById(R.id.progressBar)
+        etMessageInput = findViewById(R.id.et_message_input)
+        btnSend = findViewById(R.id.btn_send)
+        
         rvMessages.layoutManager = LinearLayoutManager(this)
-
-        // Thêm dữ liệu trò chuyện mẫu
-        addSampleMessages()
-
         messageAdapter = MessageAdapter(messages)
         rvMessages.adapter = messageAdapter
-        rvMessages.scrollToPosition(messages.size - 1) // Cuộn xuống tin nhắn cuối cùng
-
-        // --- Xử lý gửi tin nhắn ---
-        val etMessageInput: EditText = findViewById(R.id.et_message_input)
-        val btnSend: Button = findViewById(R.id.btn_send)
-
+        
         btnSend.setOnClickListener {
-            val messageText = etMessageInput.text.toString()
-            if (messageText.isNotEmpty()) {
-                val newMessage = ChatMessage(messageText, true) // Tin nhắn mới luôn được gửi đi
-                messages.add(newMessage)
-                messageAdapter.notifyItemInserted(messages.size - 1)
-                rvMessages.scrollToPosition(messages.size - 1) // Cuộn xuống khi có tin nhắn mới
-                etMessageInput.text.clear()
-            } else {
-                Toast.makeText(this, "Vui lòng nhập tin nhắn", Toast.LENGTH_SHORT).show()
+            sendMessage()
+        }
+    }
+    
+    private fun loadMessagesFromFirebase(chatId: String) {
+        progressBar.visibility = View.VISIBLE
+        
+        lifecycleScope.launch {
+            try {
+                val result = chatRepository.getChatMessages(chatId, 100)
+                
+                result.onSuccess { firebaseMessages ->
+                    progressBar.visibility = View.GONE
+                    
+                    if (firebaseMessages.isEmpty()) {
+                        // No messages - empty state
+                        messages.clear()
+                        messageAdapter.notifyDataSetChanged()
+                    } else {
+                        messages.clear()
+                        
+                        // Convert Message to ChatMessage
+                        firebaseMessages.forEach { msg ->
+                            val isSent = msg.senderId == com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
+                            messages.add(ChatMessage(msg.content, isSent))
+                        }
+                        
+                        messageAdapter.notifyDataSetChanged()
+                        rvMessages.scrollToPosition(messages.size - 1)
+                        
+                        // Mark messages as read
+                        chatRepository.markChatMessagesAsRead(chatId)
+                    }
+                }
+                
+                result.onFailure { error ->
+                    progressBar.visibility = View.GONE
+                    Toast.makeText(
+                        this@ChatDetailActivity,
+                        "Lỗi tải tin nhắn: ${error.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                
+            } catch (e: Exception) {
+                progressBar.visibility = View.GONE
+                Toast.makeText(
+                    this@ChatDetailActivity,
+                    "Lỗi: ${e.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+                e.printStackTrace()
             }
         }
     }
-
-    private fun addSampleMessages() {
-        messages.add(ChatMessage("Chào bạn, tôi có thể giúp gì cho bạn?", false))
-        messages.add(ChatMessage("Tôi đang gặp sự cố với tài khoản của mình.", true))
-        messages.add(ChatMessage("Vui lòng cho tôi biết chi tiết sự cố.", false))
-        messages.add(ChatMessage("Tôi không thể đăng nhập được.", true))
-        messages.add(ChatMessage("Bạn đã thử đặt lại mật khẩu chưa?", false))
-        messages.add(ChatMessage("Rồi, nhưng không có tác dụng.", true))
+    
+    private fun sendMessage() {
+        val messageText = etMessageInput.text.toString().trim()
+        if (messageText.isEmpty()) {
+            Toast.makeText(this, "Vui lòng nhập tin nhắn", Toast.LENGTH_SHORT).show()
+            return
+        }
+        
+        if (chatId == null) {
+            Toast.makeText(this, "Lỗi: Không có chatId", Toast.LENGTH_SHORT).show()
+            return
+        }
+        
+        // Send to Firebase
+        btnSend.isEnabled = false
+        
+        lifecycleScope.launch {
+            try {
+                val result = chatRepository.sendMessage(
+                    chatId = chatId!!,
+                    content = messageText,
+                    receiverId = receiverId,
+                    receiverName = receiverName
+                )
+                
+                result.onSuccess {
+                    // Add to UI
+                    val newMessage = ChatMessage(messageText, true)
+                    messages.add(newMessage)
+                    messageAdapter.notifyItemInserted(messages.size - 1)
+                    rvMessages.scrollToPosition(messages.size - 1)
+                    etMessageInput.text.clear()
+                }
+                
+                result.onFailure { error ->
+                    Toast.makeText(
+                        this@ChatDetailActivity,
+                        "Lỗi gửi tin nhắn: ${error.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                
+            } catch (e: Exception) {
+                Toast.makeText(
+                    this@ChatDetailActivity,
+                    "Lỗi: ${e.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+                e.printStackTrace()
+            } finally {
+                btnSend.isEnabled = true
+            }
+        }
     }
 }

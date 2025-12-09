@@ -75,6 +75,12 @@
             android:name=".ChatActivity"
             android:exported="false" />
 
+        <!-- Select User Activity -->
+        <activity
+            android:name=".SelectUserActivity"
+            android:exported="false"
+            android:parentActivityName=".ChatActivity" />
+
         <!-- Chat Detail Activity -->
         <activity
             android:name=".ChatDetailActivity"
