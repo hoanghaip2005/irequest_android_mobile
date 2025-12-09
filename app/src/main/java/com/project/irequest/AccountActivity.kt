@@ -16,6 +16,9 @@ class AccountActivity : BaseActivity() {
     private lateinit var buttonLogout: AppCompatButton
     private lateinit var itemPersonalInfo: LinearLayout
     private lateinit var itemSecurityPrivacy: LinearLayout
+    private lateinit var itemTerms: LinearLayout
+    private lateinit var itemPrivacyPolicy: LinearLayout
+    private lateinit var itemPersonalDataPolicy: LinearLayout
     private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +38,9 @@ class AccountActivity : BaseActivity() {
         buttonLogout = findViewById(R.id.button_logout)
         itemPersonalInfo = findViewById(R.id.item_personal_info)
         itemSecurityPrivacy = findViewById(R.id.item_security_privacy)
+        itemTerms = findViewById(R.id.item_terms)
+        itemPrivacyPolicy = findViewById(R.id.item_privacy_policy)
+        itemPersonalDataPolicy = findViewById(R.id.item_personal_data_policy)
     }
 
     private fun setupClickListeners() {
@@ -47,8 +53,23 @@ class AccountActivity : BaseActivity() {
             startActivity(intent)
         }
 
+        itemPrivacyPolicy.setOnClickListener {
+            val intent = Intent(this, PrivacyPolicyActivity::class.java)
+            startActivity(intent)
+        }
+
+        itemTerms.setOnClickListener {
+            val intent = Intent(this, TermsOfUseActivity::class.java)
+            startActivity(intent)
+        }
+
         itemSecurityPrivacy.setOnClickListener {
             val intent = Intent(this, SecurityPrivacyActivity::class.java)
+            startActivity(intent)
+        }
+
+        itemPersonalDataPolicy.setOnClickListener {
+            val intent = Intent(this, PersonalDataPolicyActivity::class.java)
             startActivity(intent)
         }
     }

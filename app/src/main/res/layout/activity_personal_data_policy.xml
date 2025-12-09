@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".PersonalDataPolicyActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:title="Chính sách dữ liệu cá nhân"
+        app:navigationIcon="@drawable/ic_arrow_back" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CHÍNH SÁCH DỮ LIỆU CÁ NHÂN"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Timeso trân trọng thông báo đến quý khách hàng về việc thu thập và sử dụng thông tin cá nhân. Để cung cấp dịch vụ tìm kiếm việc làm hiệu quả và đáp ứng nhu cầu của quý khách một cách tốt nhất, Timeso cần thu thập và xử lý một số thông tin cá nhân của quý khách khi quý khách đăng ký tài khoản và sử dụng các dịch vụ của Website và ứng dụng điện thoại được phát triển bởi Timeso (sau đây gọi là “Nền Tảng Việc Làm”)."
+                android:layout_marginBottom="16dp"
+                android:lineSpacingExtra="4dp"
+                android:textColor="@android:color/black"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Timeso cam kết tuân thủ và giữ thông tin của bạn riêng tư và an toàn theo đúng các quy định của pháp luật. Bằng cách lựa chọn xác nhận và đồng ý với Quy định Bảo mật khi đăng ký tài khoản, bạn cho phép chúng tôi thu thập, sử dụng, tiết lộ và/hoặc xử lý dữ liệu cá nhân của bạn như quy định trong Chính sách này. Việc cho phép này sẽ có hiệu lực và bắt đầu từ thời điểm bạn đồng ý cho đến khi bạn quyết định rút lại sự đồng ý hoặc tự động kết thúc trong các trường hợp theo quy định của pháp luật. Nếu bạn không đồng ý cho phép xử lý dữ liệu của bạn theo quy định này, vui lòng không sử dụng các dịch vụ của chúng tôi hoặc truy cập nền tảng của chúng tôi hoặc thông báo ngay cho chúng tôi về việc không đồng ý của bạn trong trường hợp bạn đã đồng ý trước đó."
+                android:layout_marginBottom="16dp"
+                android:lineSpacingExtra="4dp"
+                android:textColor="@android:color/black"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Trong quá trình vận hành và cung cấp dịch vụ cho bạn, Nền Tảng Việc Làm có thể dẫn tới các website hoặc ứng dụng khác mà chúng tôi không thể kiểm soát được. Trong trường hợp đó, Công ty Cổ phần Việc Làm 24h, chủ thể sở hữu và điều hành Nền Tảng Việc Làm, tuyên bố không chịu trách nhiệm về các chính sách bảo mật hoặc việc thực hiện các chính sách bảo mật của các website hoặc ứng dụng vừa nêu. Do đó, Timeso khuyến khích bạn xem xét các chính sách bảo mật thông tin của các website này để có thể hiểu các quyền, nghĩa vụ của bạn đối với các dữ liệu cá nhân của bạn do các chủ sở hữu website hoặc ứng dụng này đã thu thập, sử dụng và chia sẻ."
+                android:layout_marginBottom="16dp"
+                android:lineSpacingExtra="4dp"
+                android:textColor="@android:color/black"/>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
