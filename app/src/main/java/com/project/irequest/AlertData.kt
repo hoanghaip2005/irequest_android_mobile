@@ -15,5 +15,7 @@ data class AlertData(
     val time: String,
     var isRead: Boolean, // Đổi thành var để update trực tiếp
     val group: String,   // "Today", "Yesterday"
-    val badgeText: String? = null
+    val badgeText: String? = null,
+    val requestId: String? = null, // Link to request
+    val timestamp: Long = System.currentTimeMillis() // For sorting
 )

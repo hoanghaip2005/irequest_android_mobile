@@ -45,15 +45,29 @@
             android:name="com.facebook.sdk.ClientToken"
             android:value="@string/facebook_client_token" />
 
-        <!-- Login Activity - Launcher -->
+        <!-- Splash Activity - Launcher -->
         <activity
-            android:name=".LoginActivity"
-            android:exported="true">
+            android:name=".SplashActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Splash"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Onboarding Activity -->
+        <activity
+            android:name=".OnboardingActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <!-- Login Activity -->
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
 
         <!-- Home Activity -->
         <activity
@@ -186,6 +200,24 @@
             android:name=".DepartmentActivity"
             android:exported="false" />
 
+        <!-- Employee Activity -->
+        <activity
+            android:name=".EmployeeActivity"
+            android:exported="false"
+            android:parentActivityName=".HomeActivity" />
+
+        <!-- Employee Detail Activity -->
+        <activity
+            android:name=".EmployeeDetailActivity"
+            android:exported="false"
+            android:parentActivityName=".EmployeeActivity" />
+
+        <!-- Add/Edit Employee Activity -->
+        <activity
+            android:name=".AddEditEmployeeActivity"
+            android:exported="false"
+            android:parentActivityName=".EmployeeActivity" />
+
         <!-- Add Process Activity -->
         <activity
             android:name=".AddProcessActivity"
@@ -211,13 +243,11 @@
             android:exported="false" />
 
 
-
         <!-- Process Step Management Activity -->
         <activity
             android:name=".ProcessStepManagementActivity"
             android:exported="false"
             android:parentActivityName=".HomeActivity" />
-
 
 
     </application>

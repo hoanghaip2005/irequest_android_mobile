@@ -70,6 +70,9 @@ dependencies {
     // Facebook SDK
     implementation("com.facebook.android:facebook-login:17.0.2")
     
+    // Google Sign-In
+    implementation("com.google.android.gms:play-services-auth:21.0.0")
+    
     // OkHttp for HTTP requests
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
 

@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/white">
+
+    <TextView
+        android:id="@+id/tvFilterTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bộ lọc"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:paddingBottom="8dp"/>
+
+    <!-- Branch selector -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Chọn chi nhánh"
+        android:textSize="14sp"
+        android:paddingTop="8dp"
+        android:paddingBottom="4dp"/>
+
+    <Spinner
+        android:id="@+id/spinnerBranch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:prompt="@string/prompt_select_branch"/>
+
+    <!-- Shift selector -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Chọn ca"
+        android:textSize="14sp"
+        android:paddingTop="8dp"
+        android:paddingBottom="4dp"/>
+
+    <Spinner
+        android:id="@+id/spinnerShift"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:prompt="@string/prompt_select_shift"/>
+
+    <!-- Employee types -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Loại nhân viên"
+        android:paddingTop="12dp"
+        android:paddingBottom="8dp"
+        android:textSize="14sp"/>
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/cgEmployeeType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:singleSelection="false"
+        app:chipSpacing="8dp">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipTypeFulltime"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:checkable="true"
+            android:text="Chính thức" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipTypePartime"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:checkable="true"
+            android:text="Partime" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipTypeProbation"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:checkable="true"
+            android:text="Thử việc" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipTypeOther"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:checkable="true"
+            android:text="Khác" />
+
+    </com.google.android.material.chip.ChipGroup>
+
+    <!-- Join date order -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ngày vào làm"
+        android:paddingTop="12dp"
+        android:paddingBottom="8dp"
+        android:textSize="14sp"/>
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/cgJoinOrder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:singleSelection="true"
+        app:chipSpacing="8dp">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipJoinNewest"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:checkable="true"
+            android:text="Mới nhất" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipJoinOldest"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:checkable="true"
+            android:text="Lâu nhất" />
+
+    </com.google.android.material.chip.ChipGroup>
+
+    <!-- Contract status -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hạng hợp đồng"
+        android:paddingTop="12dp"
+        android:paddingBottom="8dp"
+        android:textSize="14sp"/>
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/cgContractStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:singleSelection="false"
+        app:chipSpacing="8dp">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipContractActive"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:checkable="true"
+            android:text="Còn hạn" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipContractExpiring"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:checkable="true"
+            android:text="Sắp hết hạn" />
+
+    </com.google.android.material.chip.ChipGroup>
+
+    <!-- KPI -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="KPI"
+        android:paddingTop="12dp"
+        android:paddingBottom="8dp"
+        android:textSize="14sp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="start"
+        android:paddingBottom="12dp">
+
+        <Button
+            android:id="@+id/btnKpiLowToHigh"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="Cao tới thấp"
+            android:layout_marginEnd="8dp"/>
+
+        <Button
+            android:id="@+id/btnKpiHighToLow"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="Thấp tới cao"/>
+
+    </LinearLayout>
+
+    <!-- Action buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:paddingTop="8dp">
+
+        <Button
+            android:id="@+id/btnCancelFilter"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="Hủy"
+            android:backgroundTint="#EEEEEE"/>
+
+        <Button
+            android:id="@+id/btnApplyFilter"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:text="Áp dụng"
+            android:backgroundTint="#0057B8"
+            android:textColor="@android:color/white"/>
+
+    </LinearLayout>
+
+</LinearLayout>

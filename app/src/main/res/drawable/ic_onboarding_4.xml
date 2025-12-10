@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="280dp"
+    android:height="280dp"
+    android:viewportWidth="280"
+    android:viewportHeight="280">
+
+    <!-- Background circle -->
+    <path
+        android:fillColor="#E8F5E9"
+        android:pathData="M140,40 a100,100 0 1,0 0,200 a100,100 0 1,0 0,-200" />
+
+    <!-- Chat bubbles -->
+    <path
+        android:fillColor="#00BCD4"
+        android:pathData="M90,110 h70 v40 h-70 z M95,150 l-10,10 v-10 z" />
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M120,160 h70 v40 h-70 z M185,200 l10,10 v-10 z" />
+
+    <!-- Message lines -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:pathData="M100,120 h50 M100,135 h40" />
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:pathData="M130,170 h50 M130,185 h45" />
+
+    <!-- People collaboration -->
+    <path
+        android:fillColor="#666666"
+        android:pathData="M100,85 a8,8 0 1,0 0,16 a8,8 0 1,0 0,-16" />
+    <path
+        android:fillColor="#666666"
+        android:pathData="M180,210 a8,8 0 1,0 0,16 a8,8 0 1,0 0,-16" />
+</vector>

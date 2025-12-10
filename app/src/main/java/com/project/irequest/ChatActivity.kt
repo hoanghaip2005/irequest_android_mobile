@@ -129,12 +129,22 @@ class ChatActivity : BaseActivity() {
                         
                         // Convert Chat to ChatItem
                         val chatItems = chats.map { chat ->
+                            // For direct chats, show the other user's name
+                            val displayName = if (chat.type == "user") {
+                                chat.otherUserName ?: chat.userName ?: "Unknown"
+                            } else {
+                                chat.groupName ?: "Group Chat"
+                            }
+                            
                             ChatItem(
-                                name = chat.userName ?: chat.groupName ?: "Unknown",
+                                chatId = chat.id,
+                                name = displayName,
                                 message = chat.lastMessage ?: "Chưa có tin nhắn",
                                 timestampMillis = chat.lastMessageTime?.time ?: System.currentTimeMillis(),
                                 unreadCount = chat.unreadCount,
-                                avatarResId = R.drawable.ic_launcher_background
+                                avatarResId = R.drawable.ic_launcher_background,
+                                receiverId = chat.otherUserId ?: chat.userId,
+                                receiverName = chat.otherUserName ?: chat.userName
                             )
                         }
                         

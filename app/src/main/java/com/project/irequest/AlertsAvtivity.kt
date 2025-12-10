@@ -1,8 +1,6 @@
 package com.project.irequest
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -10,12 +8,19 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import java.util.*
 
 class AlertsActivity : AppCompatActivity() {
 
@@ -29,6 +34,9 @@ class AlertsActivity : AppCompatActivity() {
     private lateinit var adapter: AlertsAdapter
     private val allAlerts = mutableListOf<AlertData>()
     private var displayedAlerts = mutableListOf<AlertData>()
+
+    private val firestore = FirebaseFirestore.getInstance()
+    private val auth = FirebaseAuth.getInstance()
 
     // Biến lưu trạng thái Tab hiện tại để khi undo/xóa thì không bị nhảy tab
     private var currentTabIndex = 0
@@ -67,14 +75,30 @@ class AlertsActivity : AppCompatActivity() {
         btnMarkAllRead.setOnClickListener {
             if (displayedAlerts.isEmpty()) return@setOnClickListener
 
-            // Cập nhật dữ liệu gốc
-            allAlerts.forEach { it.isRead = true }
-            // Cập nhật list đang hiện
-            displayedAlerts.forEach { it.isRead = true }
+            lifecycleScope.launch {
+                try {
+                    // Cập nhật Firebase
+                    val userId = auth.currentUser?.uid ?: return@launch
+                    val batch = firestore.batch()
+                    
+                    displayedAlerts.filter { !it.isRead }.forEach { alert ->
+                        val docRef = firestore.collection("notifications").document(alert.id)
+                        batch.update(docRef, "isRead", true)
+                    }
+                    
+                    batch.commit().await()
+                    
+                    // Cập nhật UI
+                    allAlerts.forEach { it.isRead = true }
+                    displayedAlerts.forEach { it.isRead = true }
 
-            adapter.notifyDataSetChanged()
-            updateHeaderCount()
-            Toast.makeText(this, "Đã đánh dấu tất cả là đã đọc", Toast.LENGTH_SHORT).show()
+                    adapter.notifyDataSetChanged()
+                    updateHeaderCount()
+                    Toast.makeText(this@AlertsActivity, "Đã đánh dấu tất cả là đã đọc", Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    Toast.makeText(this@AlertsActivity, "Lỗi: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
@@ -88,6 +112,18 @@ class AlertsActivity : AppCompatActivity() {
                 alert.isRead = true
                 adapter.notifyDataSetChanged()
                 updateHeaderCount()
+                
+                // Cập nhật Firebase
+                lifecycleScope.launch {
+                    try {
+                        firestore.collection("notifications")
+                            .document(alert.id)
+                            .update("isRead", true)
+                            .await()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
             }
         }
         rvAlerts.layoutManager = LinearLayoutManager(this)
@@ -139,10 +175,50 @@ class AlertsActivity : AppCompatActivity() {
                 snackbar.setAction("HOÀN TÁC") {
                     // Nếu bấm Hoàn tác -> Thêm lại
                     allAlerts.add(itemToDelete)
-                    // Cần tính toán lại vị trí trong displayedAlerts (để đơn giản ta reload filter)
                     filterData(currentTabIndex)
                     rvAlerts.scrollToPosition(position)
+                    
+                    // Hoàn tác trong Firebase
+                    lifecycleScope.launch {
+                        try {
+                            val notifMap = mapOf(
+                                "userId" to (auth.currentUser?.uid ?: ""),
+                                "type" to itemToDelete.type.name,
+                                "title" to itemToDelete.title,
+                                "message" to itemToDelete.message,
+                                "isRead" to itemToDelete.isRead,
+                                "createdAt" to Date(),
+                                "badgeText" to itemToDelete.badgeText,
+                                "requestId" to itemToDelete.requestId
+                            )
+                            firestore.collection("notifications")
+                                .document(itemToDelete.id)
+                                .set(notifMap)
+                                .await()
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
                 }
+                
+                snackbar.addCallback(object : Snackbar.Callback() {
+                    override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                        // Nếu không hoàn tác -> Xóa vĩnh viễn khỏi Firebase
+                        if (event != DISMISS_EVENT_ACTION) {
+                            lifecycleScope.launch {
+                                try {
+                                    firestore.collection("notifications")
+                                        .document(itemToDelete.id)
+                                        .delete()
+                                        .await()
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                }
+                            }
+                        }
+                    }
+                })
+                
                 // Set màu cho nút Hoàn tác (Màu xanh)
                 snackbar.setActionTextColor(resources.getColor(R.color.primary_blue, null))
                 snackbar.show()
@@ -156,15 +232,106 @@ class AlertsActivity : AppCompatActivity() {
         progressBar.visibility = View.VISIBLE
         rvAlerts.visibility = View.GONE
 
-        Handler(Looper.getMainLooper()).postDelayed({
-            allAlerts.clear()
-            allAlerts.addAll(generateInitialData())
-
+        val userId = auth.currentUser?.uid
+        if (userId == null) {
             progressBar.visibility = View.GONE
-            rvAlerts.visibility = View.VISIBLE
+            tvEmptyState.visibility = View.VISIBLE
+            tvEmptyState.text = "Vui lòng đăng nhập"
+            return
+        }
 
-            filterData(0)
-        }, 1000)
+        lifecycleScope.launch {
+            try {
+                // Lấy tất cả notifications của user, sort trong bộ nhớ để tránh cần index
+                val snapshot = firestore.collection("notifications")
+                    .whereEqualTo("userId", userId)
+                    .get()
+                    .await()
+
+                allAlerts.clear()
+                
+                // Chuyển thành list tạm để sort
+                val tempList = mutableListOf<AlertData>()
+                
+                snapshot.documents.forEach { doc ->
+                    try {
+                        val type = when (doc.getString("type")) {
+                            "REQUEST_UPDATE" -> AlertType.REQUEST_UPDATE
+                            "REQUEST_APPROVED" -> AlertType.REQUEST_APPROVED
+                            "SLA_WARNING" -> AlertType.SLA_WARNING
+                            "CHAT_MESSAGE" -> AlertType.CHAT_MESSAGE
+                            "REQUEST_REJECTED" -> AlertType.REQUEST_REJECTED
+                            else -> AlertType.INFO
+                        }
+                        
+                        val createdAt = doc.getDate("createdAt")
+
+                        val alert = AlertData(
+                            id = doc.id,
+                            type = type,
+                            title = doc.getString("title") ?: "",
+                            message = doc.getString("message") ?: "",
+                            time = formatTimeAgo(createdAt),
+                            isRead = doc.getBoolean("isRead") ?: false,
+                            group = getGroupFromDate(createdAt),
+                            badgeText = doc.getString("badgeText"),
+                            requestId = doc.getString("requestId"),
+                            timestamp = createdAt?.time ?: 0L
+                        )
+                        tempList.add(alert)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+                
+                // Sort theo timestamp descending trong bộ nhớ
+                allAlerts.addAll(tempList.sortedByDescending { it.timestamp })
+
+                progressBar.visibility = View.GONE
+                rvAlerts.visibility = View.VISIBLE
+
+                filterData(0)
+            } catch (e: Exception) {
+                progressBar.visibility = View.GONE
+                tvEmptyState.visibility = View.VISIBLE
+                tvEmptyState.text = "Lỗi: ${e.message}"
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun formatTimeAgo(date: Date?): String {
+        if (date == null) return ""
+
+        val now = Date()
+        val diff = now.time - date.time
+
+        val minutes = diff / (1000 * 60)
+        val hours = diff / (1000 * 60 * 60)
+        val days = diff / (1000 * 60 * 60 * 24)
+
+        return when {
+            minutes < 1 -> "Vừa xong"
+            minutes < 60 -> "${minutes} phút trước"
+            hours < 24 -> "${hours} giờ trước"
+            days < 7 -> "${days} ngày trước"
+            else -> "${days / 7} tuần trước"
+        }
+    }
+
+    private fun getGroupFromDate(date: Date?): String {
+        if (date == null) return "Khác"
+
+        val now = Date()
+        val diff = now.time - date.time
+        val days = diff / (1000 * 60 * 60 * 24)
+
+        return when {
+            days < 1 -> "Hôm nay"
+            days < 2 -> "Hôm qua"
+            days < 7 -> "Tuần này"
+            else -> "Trước đó"
+        }
     }
 
     private fun filterData(tabIndex: Int) {
@@ -195,42 +362,5 @@ class AlertsActivity : AppCompatActivity() {
     private fun updateHeaderCount() {
         val unreadCount = displayedAlerts.count { !it.isRead }
         tvSubHeader.text = if (unreadCount > 0) "$unreadCount tin chưa đọc" else "Đã đọc hết"
-    }
-
-    private fun generateInitialData(): List<AlertData> {
-        val list = mutableListOf<AlertData>()
-
-        list.add(AlertData(
-            type = AlertType.SLA_WARNING,
-            title = "Sắp hết hạn",
-            message = "Yêu cầu #REQ-001 cần xử lý gấp trước 17:00 chiều nay.",
-            time = "Còn 1h",
-            isRead = false,
-            group = "Hôm nay",
-            badgeText = "Khẩn cấp"
-        ))
-
-        for (i in 1..3) {
-            list.add(AlertData(
-                type = AlertType.REQUEST_UPDATE,
-                title = "Cập nhật yêu cầu",
-                message = "Yêu cầu #REQ-00${i+1} đã được chuyển sang phòng kế toán.",
-                time = "${i+1} giờ trước",
-                isRead = false,
-                group = "Hôm nay"
-            ))
-        }
-
-        for (i in 0..5) {
-            list.add(AlertData(
-                type = AlertType.REQUEST_APPROVED,
-                title = "Yêu cầu được duyệt",
-                message = "Trưởng phòng đã duyệt yêu cầu nghỉ phép #REQ-OLD-$i của bạn.",
-                time = "1 ngày trước",
-                isRead = true,
-                group = "Hôm qua"
-            ))
-        }
-        return list
     }
 }

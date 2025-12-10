@@ -1,5 +1,6 @@
 package com.project.irequest.ui
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.view.LayoutInflater
@@ -12,6 +13,7 @@ import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.irequest.data.models.Department
+import com.project.irequest.EmployeeDetailActivity
 import com.project.irequest.R
 import java.util.Locale
 import kotlin.math.abs
@@ -128,9 +130,13 @@ class DepartmentAdapter(
                         cardAvatar.setCardBackgroundColor(Color.parseColor(avatarColors[colorIndex]))
                     }
 
-                    // Click vào nhân viên
+                    // Click vào nhân viên -> Mở EmployeeDetailActivity
                     empView.setOnClickListener {
-                        Toast.makeText(itemView.context, "Chọn nhân viên: ${emp.name}", Toast.LENGTH_SHORT).show()
+                        val intent = Intent(itemView.context, EmployeeDetailActivity::class.java)
+                        intent.putExtra(EmployeeDetailActivity.EXTRA_EMPLOYEE_NAME, emp.name)
+                        intent.putExtra(EmployeeDetailActivity.EXTRA_EMPLOYEE_ROLE, emp.role)
+                        intent.putExtra(EmployeeDetailActivity.EXTRA_DEPARTMENT_NAME, dept.name)
+                        itemView.context.startActivity(intent)
                     }
 
                     // Nút gọi nhỏ (nếu có id ivCallSmall)

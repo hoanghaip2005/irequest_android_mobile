@@ -79,12 +79,12 @@
         android:id="@+id/fabNewChat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:layout_above="@id/bottomNavigation"
+        android:layout_alignParentEnd="true"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:src="@android:drawable/ic_input_add"
         android:contentDescription="Chat mới"
+        android:src="@android:drawable/ic_input_add"
         app:tint="@android:color/white" />
 
 </RelativeLayout>

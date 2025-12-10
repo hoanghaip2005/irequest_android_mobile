@@ -15,6 +15,7 @@ class SessionManager(private val context: Context) {
         private const val KEY_USER_EMAIL = "user_email"
         private const val KEY_USER_ROLE = "user_role"
         private const val KEY_IS_LOGGED_IN = "is_logged_in"
+        private const val KEY_ONBOARDING_COMPLETED = "onboarding_completed"
     }
 
     /**
@@ -98,4 +99,16 @@ class SessionManager(private val context: Context) {
      * Kiểm tra user có phải User/Requester
      */
     fun isUser(): Boolean = hasRole(RoleName.USER)
+    
+    /**
+     * Kiểm tra đã xem onboarding chưa
+     */
+    fun isOnboardingCompleted(): Boolean = preferences.getBoolean(KEY_ONBOARDING_COMPLETED, true)
+    
+    /**
+     * Đánh dấu đã xem onboarding
+     */
+    fun setOnboardingCompleted(completed: Boolean) {
+        preferences.edit().putBoolean(KEY_ONBOARDING_COMPLETED, completed).apply()
+    }
 }

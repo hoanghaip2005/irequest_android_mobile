@@ -17,18 +17,12 @@ class SmartAnalysisActivity : AppCompatActivity() {
             finish()
         }
 
-        // 2. XỬ LÝ NÚT ĐĂNG KÝ (Giả)
-        // Tìm nút theo ID bạn vừa đặt
-        val btnRegister = findViewById<Button>(R.id.btnRegister)
+        // 2. XỬ LÝ NÚT XEM DANH SÁCH YÊU CẦU ƯU TIÊN
+        val btnViewPriority = findViewById<Button>(R.id.btnViewPriority)
 
-        btnRegister?.setOnClickListener {
+        btnViewPriority?.setOnClickListener {
             // Hiện thông báo
-            Toast.makeText(this, "Đăng ký ca làm thành công!", Toast.LENGTH_SHORT).show()
-
-            // Đổi trạng thái nút để nhìn cho thật
-            btnRegister.text = "Đã đăng ký"
-            btnRegister.isEnabled = false // Khóa nút lại không cho bấm nữa
-            btnRegister.setBackgroundColor(Color.GRAY) // Đổi màu xám
+            Toast.makeText(this, "Chức năng đang phát triển", Toast.LENGTH_SHORT).show()
         }
     }
 }

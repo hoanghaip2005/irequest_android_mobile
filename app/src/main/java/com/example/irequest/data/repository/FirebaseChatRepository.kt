@@ -65,40 +65,70 @@ class FirebaseChatRepository(
     
     /**
      * Create or get direct chat with another user
+     * Creates bidirectional chat entries so both users can see the conversation
      */
     suspend fun getOrCreateDirectChat(otherUserId: String, otherUserName: String): Result<String> {
         return try {
             val currentUserId = auth.currentUser?.uid ?: return Result.failure(Exception("Not authenticated"))
-            val currentUserName = auth.currentUser?.displayName ?: "User"
+            val currentUserName = auth.currentUser?.displayName ?: auth.currentUser?.email ?: "User"
             
-            // Check if chat already exists
-            val existingChat = chatsCollection
+            // Check if chat already exists for current user
+            val existingChatForCurrentUser = chatsCollection
                 .whereEqualTo("type", "user")
-                .whereEqualTo("userId", otherUserId)
-                .whereEqualTo("createdById", currentUserId)
+                .whereEqualTo("userId", currentUserId)
+                .whereEqualTo("otherUserId", otherUserId)
                 .limit(1)
                 .get()
                 .await()
             
-            if (!existingChat.isEmpty) {
-                return Result.success(existingChat.documents[0].id)
+            if (!existingChatForCurrentUser.isEmpty) {
+                return Result.success(existingChatForCurrentUser.documents[0].id)
             }
             
-            // Create new chat
-            val chat = Chat(
+            // Generate a shared chat ID for both users
+            val sharedChatId = if (currentUserId < otherUserId) {
+                "chat_${currentUserId}_${otherUserId}"
+            } else {
+                "chat_${otherUserId}_${currentUserId}"
+            }
+            
+            // Create chat entry for current user
+            val chatForCurrentUser = Chat(
                 type = "user",
-                userId = otherUserId,
-                userName = otherUserName,
+                userId = currentUserId,
+                userName = currentUserName,
+                otherUserId = otherUserId,
+                otherUserName = otherUserName,
                 createdById = currentUserId,
                 createdByName = currentUserName,
                 createdAt = Date(),
                 lastMessage = null,
                 lastMessageTime = null,
-                unreadCount = 0
+                unreadCount = 0,
+                sharedChatId = sharedChatId
             )
             
-            val docRef = chatsCollection.add(chat).await()
-            Result.success(docRef.id)
+            // Create chat entry for other user
+            val chatForOtherUser = Chat(
+                type = "user",
+                userId = otherUserId,
+                userName = otherUserName,
+                otherUserId = currentUserId,
+                otherUserName = currentUserName,
+                createdById = currentUserId,
+                createdByName = currentUserName,
+                createdAt = Date(),
+                lastMessage = null,
+                lastMessageTime = null,
+                unreadCount = 0,
+                sharedChatId = sharedChatId
+            )
+            
+            // Add both chat entries
+            val docRef1 = chatsCollection.add(chatForCurrentUser).await()
+            chatsCollection.add(chatForOtherUser).await()
+            
+            Result.success(docRef1.id)
         } catch (e: Exception) {
             e.printStackTrace()
             Result.failure(e)
@@ -112,12 +142,14 @@ class FirebaseChatRepository(
         return try {
             val snapshot = messagesCollection
                 .whereEqualTo("groupId", chatId)
-                .orderBy("createdAt", Query.Direction.ASCENDING)
-                .limitToLast(limit.toLong())
+                // Removed orderBy and limitToLast to avoid index requirement
                 .get()
                 .await()
             
             val messages = snapshot.toObjects(Message::class.java)
+                // Sort by createdAt in memory and take last N messages
+                .sortedBy { it.createdAt?.time ?: 0L }
+                .takeLast(limit)
             Result.success(messages)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -127,6 +159,7 @@ class FirebaseChatRepository(
     
     /**
      * Send message to chat
+     * Updates both sender and receiver chat entries
      */
     suspend fun sendMessage(
         chatId: String,
@@ -136,7 +169,9 @@ class FirebaseChatRepository(
     ): Result<String> {
         return try {
             val currentUserId = auth.currentUser?.uid ?: return Result.failure(Exception("Not authenticated"))
-            val currentUserName = auth.currentUser?.displayName ?: "User"
+            val currentUserName = auth.currentUser?.displayName ?: auth.currentUser?.email ?: "User"
+            
+            android.util.Log.d("ChatRepo", "Creating message - chatId: $chatId, sender: $currentUserId, receiver: $receiverId")
             
             val message = Message(
                 content = content,
@@ -151,17 +186,47 @@ class FirebaseChatRepository(
             
             // Add message
             val docRef = messagesCollection.add(message).await()
+            android.util.Log.d("ChatRepo", "Message added to Firestore: ${docRef.id}")
             
-            // Update chat last message
-            chatsCollection.document(chatId).update(
-                mapOf(
-                    "lastMessage" to content,
-                    "lastMessageTime" to Date()
-                )
-            ).await()
+            val now = Date()
+            val updates = mapOf(
+                "lastMessage" to content,
+                "lastMessageTime" to now
+            )
+            
+            // Update current user's chat entry
+            try {
+                chatsCollection.document(chatId).update(updates).await()
+                android.util.Log.d("ChatRepo", "Updated sender's chat: $chatId")
+            } catch (e: Exception) {
+                android.util.Log.w("ChatRepo", "Failed to update sender's chat: ${e.message}")
+            }
+            
+            // Update the other user's chat entry
+            if (receiverId != null) {
+                try {
+                    val receiverChats = chatsCollection
+                        .whereEqualTo("userId", receiverId)
+                        .whereEqualTo("otherUserId", currentUserId)
+                        .limit(1)
+                        .get()
+                        .await()
+                    
+                    if (!receiverChats.isEmpty) {
+                        val receiverChatId = receiverChats.documents[0].id
+                        chatsCollection.document(receiverChatId).update(updates).await()
+                        android.util.Log.d("ChatRepo", "Updated receiver's chat: $receiverChatId")
+                    } else {
+                        android.util.Log.w("ChatRepo", "Receiver's chat not found for userId: $receiverId")
+                    }
+                } catch (e: Exception) {
+                    android.util.Log.w("ChatRepo", "Failed to update receiver's chat: ${e.message}")
+                }
+            }
             
             Result.success(docRef.id)
         } catch (e: Exception) {
+            android.util.Log.e("ChatRepo", "Error sending message", e)
             e.printStackTrace()
             Result.failure(e)
         }
@@ -216,7 +281,7 @@ class FirebaseChatRepository(
     fun observeMessages(chatId: String): Flow<List<Message>> = callbackFlow {
         val listener = messagesCollection
             .whereEqualTo("groupId", chatId)
-            .orderBy("createdAt", Query.Direction.ASCENDING)
+            // Removed orderBy to avoid index requirement - will sort in memory
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     close(error)
@@ -225,6 +290,8 @@ class FirebaseChatRepository(
                 
                 if (snapshot != null) {
                     val messages = snapshot.toObjects(Message::class.java)
+                        // Sort by createdAt in memory
+                        .sortedBy { it.createdAt?.time ?: 0L }
                     trySend(messages)
                 }
             }

@@ -43,10 +43,38 @@ class ProcessDetailActivity : AppCompatActivity() {
         // --- Setup for Process Steps RecyclerView ---
         // (Dữ liệu mẫu, bạn sẽ thay thế bằng logic lấy dữ liệu thật)
         val steps = listOf(
-            ProcessStep("Bước 1: Gửi yêu cầu", "Người dùng tạo và gửi yêu cầu phê duyệt.", "15/07/2024", StepStatus.COMPLETED),
-            ProcessStep("Bước 2: Trưởng phòng duyệt", "Trưởng phòng xem xét và phê duyệt yêu cầu.", "16/07/2024", StepStatus.COMPLETED),
-            ProcessStep("Bước 3: Ban giám đốc duyệt", "Ban giám đốc xem xét và phê duyệt cuối cùng.", "Đang chờ duyệt", StepStatus.CURRENT),
-            ProcessStep("Bước 4: Hoàn tất", "Quy trình kết thúc và thông báo cho người dùng.", "", StepStatus.UPCOMING)
+            ProcessStep(
+                stepId = "",
+                workflowId = "",
+                title = "Bước 1: Gửi yêu cầu",
+                description = "Người dùng tạo và gửi yêu cầu phê duyệt.",
+                date = "15/07/2024",
+                status = StepStatus.COMPLETED
+            ),
+            ProcessStep(
+                stepId = "",
+                workflowId = "",
+                title = "Bước 2: Trưởng phòng duyệt",
+                description = "Trưởng phòng xem xét và phê duyệt yêu cầu.",
+                date = "16/07/2024",
+                status = StepStatus.COMPLETED
+            ),
+            ProcessStep(
+                stepId = "",
+                workflowId = "",
+                title = "Bước 3: Ban giám đốc duyệt",
+                description = "Ban giám đốc xem xét và phê duyệt cuối cùng.",
+                date = "Đang chờ duyệt",
+                status = StepStatus.CURRENT
+            ),
+            ProcessStep(
+                stepId = "",
+                workflowId = "",
+                title = "Bước 4: Hoàn tất",
+                description = "Quy trình kết thúc và thông báo cho người dùng.",
+                date = "",
+                status = StepStatus.UPCOMING
+            )
         )
 
         // Setup RecyclerView

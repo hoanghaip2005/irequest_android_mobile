@@ -20,6 +20,13 @@ data class Chat(
     @ServerTimestamp
     val createdAt: Date? = null,
     
+    // For direct user chats - info about the other person
+    val otherUserId: String? = null,
+    val otherUserName: String? = null,
+    
+    // Shared chat ID to link conversations between 2 users
+    val sharedChatId: String? = null,
+    
     // Additional UI fields
     val lastMessage: String? = null,
     val lastMessageTime: Date? = null,

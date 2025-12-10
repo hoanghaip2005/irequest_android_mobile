@@ -29,6 +29,8 @@ class ChatDetailActivity : AppCompatActivity() {
     private var chatId: String? = null
     private var receiverId: String? = null
     private var receiverName: String? = null
+    
+    private var messagesListener: com.google.firebase.firestore.ListenerRegistration? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,10 +57,15 @@ class ChatDetailActivity : AppCompatActivity() {
         setupViews()
         
         if (chatId != null) {
-            loadMessagesFromFirebase(chatId!!)
+            setupRealtimeMessagesListener(chatId!!)
         } else {
               Toast.makeText(this, "Lỗi: Không có chatId", Toast.LENGTH_SHORT).show()
         }
+    }
+    
+    override fun onDestroy() {
+        super.onDestroy()
+        messagesListener?.remove()
     }
     
     private fun setupViews() {
@@ -74,6 +81,56 @@ class ChatDetailActivity : AppCompatActivity() {
         btnSend.setOnClickListener {
             sendMessage()
         }
+    }
+    
+    private fun setupRealtimeMessagesListener(chatId: String) {
+        progressBar.visibility = View.VISIBLE
+        
+        val firestore = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+        val currentUserId = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
+        
+        // Listen to messages in real-time
+        messagesListener = firestore.collection("messages")
+            .whereEqualTo("groupId", chatId)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    android.util.Log.e("ChatDetail", "Listen failed", error)
+                    progressBar.visibility = View.GONE
+                    Toast.makeText(
+                        this@ChatDetailActivity,
+                        "Lỗi tải tin nhắn: ${error.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@addSnapshotListener
+                }
+                
+                if (snapshot != null) {
+                    progressBar.visibility = View.GONE
+                    messages.clear()
+                    
+                    // Convert and sort messages
+                    val firebaseMessages = snapshot.documents.mapNotNull { doc ->
+                        doc.toObject(com.example.irequest.data.models.Message::class.java)
+                    }.sortedBy { it.createdAt?.time ?: 0L }
+                    
+                    firebaseMessages.forEach { msg ->
+                        val isSent = msg.senderId == currentUserId
+                        messages.add(ChatMessage(msg.content, isSent))
+                    }
+                    
+                    messageAdapter.notifyDataSetChanged()
+                    if (messages.isNotEmpty()) {
+                        rvMessages.scrollToPosition(messages.size - 1)
+                    }
+                    
+                    android.util.Log.d("ChatDetail", "Loaded ${messages.size} messages in real-time")
+                    
+                    // Mark messages as read
+                    lifecycleScope.launch {
+                        chatRepository.markChatMessagesAsRead(chatId)
+                    }
+                }
+            }
     }
     
     private fun loadMessagesFromFirebase(chatId: String) {
@@ -140,11 +197,16 @@ class ChatDetailActivity : AppCompatActivity() {
             return
         }
         
-        // Send to Firebase
+        // Clear input immediately for better UX
+        etMessageInput.text.clear()
+        
+        // Send to Firebase (realtime listener will add to UI automatically)
         btnSend.isEnabled = false
         
         lifecycleScope.launch {
             try {
+                android.util.Log.d("ChatDetail", "Sending message to chatId: $chatId, receiverId: $receiverId")
+                
                 val result = chatRepository.sendMessage(
                     chatId = chatId!!,
                     content = messageText,
@@ -152,16 +214,12 @@ class ChatDetailActivity : AppCompatActivity() {
                     receiverName = receiverName
                 )
                 
-                result.onSuccess {
-                    // Add to UI
-                    val newMessage = ChatMessage(messageText, true)
-                    messages.add(newMessage)
-                    messageAdapter.notifyItemInserted(messages.size - 1)
-                    rvMessages.scrollToPosition(messages.size - 1)
-                    etMessageInput.text.clear()
+                result.onSuccess { messageId ->
+                    android.util.Log.d("ChatDetail", "Message sent successfully: $messageId")
                 }
                 
                 result.onFailure { error ->
+                    android.util.Log.e("ChatDetail", "Failed to send message", error)
                     Toast.makeText(
                         this@ChatDetailActivity,
                         "Lỗi gửi tin nhắn: ${error.message}",
@@ -170,6 +228,7 @@ class ChatDetailActivity : AppCompatActivity() {
                 }
                 
             } catch (e: Exception) {
+                android.util.Log.e("ChatDetail", "Exception sending message", e)
                 Toast.makeText(
                     this@ChatDetailActivity,
                     "Lỗi: ${e.message}",

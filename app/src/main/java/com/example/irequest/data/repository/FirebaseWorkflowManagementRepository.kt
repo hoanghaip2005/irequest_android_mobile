@@ -59,12 +59,13 @@ class FirebaseWorkflowManagementRepository {
     
     /**
      * Lấy các bước của workflow theo thứ tự
+     * FIXED: Removed orderBy to avoid composite index requirement
+     * Now fetches all steps for workflowId and sorts in-memory
      */
     suspend fun getWorkflowSteps(workflowId: Int): Result<List<WorkflowStep>> {
         return try {
             val snapshot = workflowStepsCollection
                 .whereEqualTo("workflowId", workflowId)
-                .orderBy("stepOrder", Query.Direction.ASCENDING)
                 .get()
                 .await()
             
@@ -75,7 +76,7 @@ class FirebaseWorkflowManagementRepository {
                     e.printStackTrace()
                     null
                 }
-            }
+            }.sortedBy { it.stepOrder } // Sort in-memory by stepOrder
             
             Result.success(steps)
         } catch (e: Exception) {
@@ -131,5 +132,37 @@ class FirebaseWorkflowManagementRepository {
     suspend fun canUserProcessStep(userId: String, step: WorkflowStep): Boolean {
         // Kiểm tra assigned user
         return step.assignedUserId == userId
+    }
+    
+    /**
+     * Cập nhật thông tin bước quy trình
+     */
+    suspend fun updateWorkflowStep(
+        stepId: String,
+        title: String,
+        description: String,
+        assigneeId: String,
+        assigneeName: String,
+        status: String
+    ): Result<Unit> {
+        return try {
+            val updates = hashMapOf<String, Any>(
+                "stepName" to title,
+                "description" to description,
+                "assignedUserId" to assigneeId,
+                "assignedUserName" to assigneeName,
+                "status" to status
+            )
+            
+            workflowStepsCollection
+                .document(stepId)
+                .update(updates)
+                .await()
+            
+            Result.success(Unit)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Result.failure(e)
+        }
     }
 }

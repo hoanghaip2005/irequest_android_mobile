@@ -44,9 +44,15 @@ class SelectUserActivity : BaseActivity() {
         
         rvUsers.layoutManager = LinearLayoutManager(this)
         
+        // Make SearchView more responsive
+        searchView.isIconified = false
+        searchView.clearFocus()
+        searchView.queryHint = "Tìm kiếm theo tên, email..."
+        
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 filterUsers(query)
+                searchView.clearFocus()
                 return true
             }
             
@@ -158,4 +164,6 @@ data class UserItem(
     val email: String,
     val departmentName: String?,
     val avatarUrl: String?
-)
+) {
+    override fun toString() = userName
+}

@@ -44,8 +44,14 @@ class ChatAdapter(private val chatList: List<ChatItem>) :
         holder.itemView.setOnClickListener {
             val context = holder.itemView.context
             val intent = Intent(context, ChatDetailActivity::class.java)
+            intent.putExtra("CHAT_ID", item.chatId) // Truyền chat ID
             intent.putExtra("CHAT_NAME", item.name) // Truyền tên cuộc trò chuyện
             intent.putExtra("AVATAR_RES_ID", item.avatarResId) // Truyền ID ảnh đại diện
+            
+            // Truyền receiver info nếu có (cho direct chat)
+            item.receiverId?.let { intent.putExtra("RECEIVER_ID", it) }
+            item.receiverName?.let { intent.putExtra("RECEIVER_NAME", it) }
+            
             context.startActivity(intent)
         }
     }

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Personal Info -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thông tin cá nhân"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"/>
+            
+        <TextView android:id="@+id/tvPhoneNumber" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Số điện thoại: "/>
+        <TextView android:id="@+id/tvGender" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Giới tính: "/>
+        <TextView android:id="@+id/tvCccd" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="CCCD: "/>
+        <TextView android:id="@+id/tvMaritalStatus" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tình trạng: "/>
+        <TextView android:id="@+id/tvEmail" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Email: "/>
+        <TextView android:id="@+id/tvDateOfBirth" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Ngày sinh: "/>
+        <TextView android:id="@+id/tvAddress" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Địa chỉ: "/>
+        <TextView android:id="@+id/tvBankAccount" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tài khoản ngân hàng: "/>
+
+        <!-- Work Info -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thông tin công việc"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView android:id="@+id/tvPosition" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Vị trí: "/>
+        <TextView android:id="@+id/tvContractStatus" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Tình trạng hợp đồng: "/>
+        <TextView android:id="@+id/tvEmployeeType" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Loại nhân viên: "/>
+        <TextView android:id="@+id/tvDepartment" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Phòng ban: "/>
+        <TextView android:id="@+id/tvManager" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Quản lí: "/>
+        <TextView android:id="@+id/tvBranch" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Chi nhánh: "/>
+        <TextView android:id="@+id/tvJoinDate" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Ngày vào: "/>
+        <TextView android:id="@+id/tvPaymentMethod" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Hình thức trả lương: "/>
+        <TextView android:id="@+id/tvNotes" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Ghi chú: "/>
+
+        <!-- Recent Activity -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hoạt động gần đây"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView android:id="@+id/tvCheckIn" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Check in: "/>
+        <TextView android:id="@+id/tvCheckOut" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Check out: "/>
+        <TextView android:id="@+id/tvShiftRegister" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Đăng kí ca: "/>
+
+    </LinearLayout>
+</ScrollView>

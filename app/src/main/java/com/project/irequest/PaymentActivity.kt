@@ -150,7 +150,7 @@ class PaymentActivity : AppCompatActivity() {
                     val requestBody = jsonObject.toString().toRequestBody(mediaType)
                     
                     val request = Request.Builder()
-                        .url("http://192.168.1.176:3000/api/create") // IP máy tính
+                        .url("http://10.0.2.2:3000/api/create") // 10.0.2.2 = localhost của máy host khi dùng emulator
                         .post(requestBody)
                         .build()
                     

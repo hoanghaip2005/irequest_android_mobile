@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.irequest.data.repository.FirebaseWorkflowManagementRepository
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class ProcessStepManagementActivity : BaseActivity() {
 
@@ -85,14 +86,21 @@ class ProcessStepManagementActivity : BaseActivity() {
                         // Convert WorkflowStep to ProcessStep
                         val processSteps = workflowSteps.map { step ->
                             ProcessStep(
+                                stepId = step.stepId.toString(),
+                                workflowId = step.workflowId.toString(),
                                 title = step.stepName,
                                 description = buildStepDescription(step),
                                 date = "", // WorkflowStep không có date
-                                status = getStepStatus(step)
+                                status = getStepStatus(step),
+                                assignee = step.assignedUserName,
+                                department = step.departmentName,
+                                timeLimit = step.timeLimitHours?.let { "$it giờ" }
                             )
                         }
                         
-                        adapter = ProcessStepAdapter(processSteps)
+                        adapter = ProcessStepAdapter(processSteps) { step ->
+                            showEditStepDialog(step)
+                        }
                         recyclerView.adapter = adapter
                         
                         Toast.makeText(
@@ -206,12 +214,170 @@ class ProcessStepManagementActivity : BaseActivity() {
         recyclerView.visibility = View.VISIBLE
         tvEmpty.visibility = View.GONE
         
-        adapter = ProcessStepAdapter(sampleSteps)
+        adapter = ProcessStepAdapter(sampleSteps) { step ->
+            showEditStepDialog(step)
+        }
         recyclerView.adapter = adapter
     }
 
     override fun onNavigationHomeClicked() {
         finish()
+    }
+    
+    private fun showEditStepDialog(step: ProcessStep) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_edit_step, null)
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+        
+        val etStepTitle = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etStepTitle)
+        val etStepDescription = dialogView.findViewById<com.google.android.material.textfield.TextInputEditText>(R.id.etStepDescription)
+        val spinnerAssignee = dialogView.findViewById<android.widget.Spinner>(R.id.spinnerAssignee)
+        val spinnerStatus = dialogView.findViewById<android.widget.Spinner>(R.id.spinnerStatus)
+        val btnCancel = dialogView.findViewById<android.widget.Button>(R.id.btnCancel)
+        val btnSave = dialogView.findViewById<android.widget.Button>(R.id.btnSave)
+        
+        // Populate data
+        etStepTitle.setText(step.title)
+        etStepDescription.setText(step.description)
+        
+        // Load users from Firebase for assignee spinner
+        loadUsersForSpinner(spinnerAssignee, step.assignee)
+        
+        // Setup status spinner
+        val statusArray = arrayOf("Chờ xử lý", "Đang xử lý", "Hoàn thành", "Sắp tới")
+        val statusAdapter = android.widget.ArrayAdapter(this, android.R.layout.simple_spinner_item, statusArray)
+        statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerStatus.adapter = statusAdapter
+        
+        // Set current status
+        val statusPosition = when (step.status) {
+            StepStatus.PENDING -> 0
+            StepStatus.CURRENT -> 1
+            StepStatus.COMPLETED -> 2
+            StepStatus.UPCOMING -> 3
+        }
+        spinnerStatus.setSelection(statusPosition)
+        
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+        
+        btnSave.setOnClickListener {
+            val newTitle = etStepTitle.text.toString().trim()
+            val newDescription = etStepDescription.text.toString().trim()
+            val selectedUser = spinnerAssignee.selectedItem as? UserItem
+            val newAssignee = selectedUser?.userName ?: ""
+            val newAssigneeId = selectedUser?.userId ?: ""
+            val newStatus = when (spinnerStatus.selectedItemPosition) {
+                0 -> "PENDING"
+                1 -> "CURRENT"
+                2 -> "COMPLETED"
+                3 -> "UPCOMING"
+                else -> "PENDING"
+            }
+            
+            if (newTitle.isEmpty()) {
+                etStepTitle.error = "Vui lòng nhập tiêu đề"
+                return@setOnClickListener
+            }
+            
+            // Save to Firebase
+            saveStepToFirebase(step.stepId, newTitle, newDescription, newAssigneeId, newAssignee, newStatus, dialog)
+        }
+        
+        dialog.show()
+    }
+    
+    private fun loadUsersForSpinner(spinner: android.widget.Spinner, currentAssignee: String?) {
+        lifecycleScope.launch {
+            try {
+                val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+                val snapshot = db.collection("users").get().await()
+                
+                val users = mutableListOf<UserItem>()
+                users.add(UserItem("", "-- Chọn người phụ trách --", "", null, null)) // Default option
+                
+                snapshot.documents.forEach { doc ->
+                    val id = doc.id
+                    val name = doc.getString("userName") ?: doc.getString("email") ?: "User"
+                    val email = doc.getString("email") ?: ""
+                    val department = doc.getString("departmentName")
+                    val avatar = doc.getString("avatar")
+                    users.add(UserItem(id, name, email, department, avatar))
+                }
+                
+                val adapter = android.widget.ArrayAdapter(
+                    this@ProcessStepManagementActivity,
+                    android.R.layout.simple_spinner_item,
+                    users
+                )
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                spinner.adapter = adapter
+                
+                // Set current assignee if exists
+                if (currentAssignee != null) {
+                    val position = users.indexOfFirst { it.userName == currentAssignee }
+                    if (position >= 0) {
+                        spinner.setSelection(position)
+                    }
+                }
+                
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Toast.makeText(
+                    this@ProcessStepManagementActivity,
+                    "Lỗi tải danh sách người dùng: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+    
+    private fun saveStepToFirebase(stepId: String, title: String, description: String, assigneeId: String, assigneeName: String, status: String, dialog: androidx.appcompat.app.AlertDialog) {
+        if (stepId.isEmpty()) {
+            Toast.makeText(this, "Không thể cập nhật: thiếu stepId", Toast.LENGTH_SHORT).show()
+            dialog.dismiss()
+            return
+        }
+        
+        lifecycleScope.launch {
+            try {
+                val result = workflowRepository.updateWorkflowStep(stepId, title, description, assigneeId, assigneeName, status)
+                
+                result.onSuccess {
+                    Toast.makeText(
+                        this@ProcessStepManagementActivity,
+                        "Đã cập nhật bước quy trình",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    dialog.dismiss()
+                    
+                    // Reload data
+                    val processId = intent.getIntExtra("PROCESS_ID", -1)
+                    val processName = intent.getStringExtra("PROCESS_NAME") ?: "Quy trình"
+                    val processStatus = intent.getStringExtra("PROCESS_STATUS") ?: ""
+                    if (processId != -1) {
+                        loadWorkflowStepsFromFirebase(processId, processName, processStatus)
+                    }
+                }
+                
+                result.onFailure { error ->
+                    Toast.makeText(
+                        this@ProcessStepManagementActivity,
+                        "Lỗi: ${error.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(
+                    this@ProcessStepManagementActivity,
+                    "Lỗi: ${e.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+                e.printStackTrace()
+            }
+        }
     }
     
     override fun onNavigationWorkClicked() {

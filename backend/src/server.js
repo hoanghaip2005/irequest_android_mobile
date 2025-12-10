@@ -17,8 +17,8 @@ app.post('/api/create', (req, res) => {
     var orderInfo = paymentName || '1234567';
     var partnerCode = 'MOMO';
     // Redirect về backend để hiển thị HTML
-    var redirectUrl = 'http://192.168.1.176:3000/api/result';
-    var ipnUrl = 'http://192.168.1.176:3000/api/result';
+    var redirectUrl = 'http://10.0.2.2:3000/api/result';
+    var ipnUrl = 'http://10.0.2.2:3000/api/result';
     var requestType = "payWithMethod";
     var orderId = partnerCode + new Date().getTime();
     var requestId = orderId;
@@ -427,6 +427,9 @@ app.post('/api/result', (req, res) => {
     }
 });
 
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
     console.log(`Example app listening on port ${port}`)
+    console.log(`Access from emulator: http://10.0.2.2:${port}`)
+    console.log(`Access from local: http://localhost:${port}`)
+    console.log(`Access from network: http://192.168.1.176:${port}`)
 })

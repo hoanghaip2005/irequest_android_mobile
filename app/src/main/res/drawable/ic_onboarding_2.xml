@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="280dp"
+    android:height="280dp"
+    android:viewportWidth="280"
+    android:viewportHeight="280">
+
+    <!-- Background circle -->
+    <path
+        android:fillColor="#F3E5F5"
+        android:pathData="M140,40 a100,100 0 1,0 0,200 a100,100 0 1,0 0,-200" />
+
+    <!-- Workflow arrows -->
+    <path
+        android:strokeColor="#9C27B0"
+        android:strokeWidth="4"
+        android:pathData="M80,120 h40 M130,120 h40 M180,120 h20" />
+
+    <!-- Approval stamps -->
+    <path
+        android:fillColor="#9C27B0"
+        android:pathData="M100,110 a10,10 0 1,0 0,20 a10,10 0 1,0 0,-20" />
+    <path
+        android:fillColor="#9C27B0"
+        android:pathData="M150,110 a10,10 0 1,0 0,20 a10,10 0 1,0 0,-20" />
+    <path
+        android:fillColor="#4CAF50"
+        android:pathData="M200,110 a10,10 0 1,0 0,20 a10,10 0 1,0 0,-20" />
+
+    <!-- User icons -->
+    <path
+        android:fillColor="#666666"
+        android:pathData="M100,155 a8,8 0 1,0 0,16 a8,8 0 1,0 0,-16 M95,175 h10 v10 h-10 z" />
+    <path
+        android:fillColor="#666666"
+        android:pathData="M150,155 a8,8 0 1,0 0,16 a8,8 0 1,0 0,-16 M145,175 h10 v10 h-10 z" />
+</vector>

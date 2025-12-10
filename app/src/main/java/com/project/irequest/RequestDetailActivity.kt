@@ -96,7 +96,8 @@ class RequestDetailActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.Main).launch {
             try {
                 val result = withContext(Dispatchers.IO) {
-                    requestRepository.getRequestById(requestId.toInt())
+                    // Dùng version String của getRequestById
+                    requestRepository.getRequestById(requestId)
                 }
                 
                 result.onSuccess { request ->

@@ -15,8 +15,15 @@ import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Date
 
@@ -33,9 +40,13 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var callbackManager: CallbackManager
     private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
+    
+    // Google Sign-In
+    private lateinit var googleSignInClient: GoogleSignInClient
 
     companion object {
         private const val TAG = "LoginActivity"
+        private const val RC_GOOGLE_SIGN_IN = 9001
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +59,9 @@ class LoginActivity : AppCompatActivity() {
         
         // Initialize Facebook Login
         callbackManager = CallbackManager.Factory.create()
+        
+        // Initialize Google Sign-In
+        initializeGoogleSignIn()
 
         // Kiểm tra nếu user đã đăng nhập (chỉ khi không phải từ logout)
         // Kiểm tra cả Firebase và Facebook
@@ -146,10 +160,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setupSocialLoginButtons() {
         btnGoogleLogin.setOnClickListener {
-            Toast.makeText(this, "Đăng nhập với Google", Toast.LENGTH_SHORT).show()
-            // TODO: Implement Google login
-            // For demo, we'll just navigate to home
-            navigateToHome()
+            signInWithGoogle()
         }
 
         btnFacebookLogin.setOnClickListener {
@@ -181,6 +192,161 @@ class LoginActivity : AppCompatActivity() {
         val intent = Intent(this, HomeActivity::class.java)
         startActivity(intent)
         finish()
+    }
+    
+    private fun initializeGoogleSignIn() {
+        // Cấu hình Google Sign-In
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
+    }
+    
+    private fun signInWithGoogle() {
+        val signInIntent = googleSignInClient.signInIntent
+        startActivityForResult(signInIntent, RC_GOOGLE_SIGN_IN)
+    }
+    
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        
+        // Facebook callback
+        callbackManager.onActivityResult(requestCode, resultCode, data)
+        
+        // Google Sign-In callback
+        if (requestCode == RC_GOOGLE_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            handleGoogleSignInResult(task)
+        }
+    }
+    
+    private fun handleGoogleSignInResult(completedTask: Task<GoogleSignInAccount>) {
+        try {
+            val account = completedTask.getResult(ApiException::class.java)
+            Log.d(TAG, "Google sign in success: ${account.email}")
+            firebaseAuthWithGoogle(account.idToken!!)
+        } catch (e: ApiException) {
+            Log.w(TAG, "Google sign in failed", e)
+            
+            val errorMessage = when (e.statusCode) {
+                12501 -> "Đăng nhập bị hủy"
+                12500 -> "Lỗi cấu hình Google Sign-In. Vui lòng kiểm tra google-services.json"
+                7 -> "Lỗi kết nối mạng. Vui lòng thử lại."
+                else -> "Đăng nhập Google thất bại: ${e.message}"
+            }
+            
+            Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
+        }
+    }
+    
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    Log.d(TAG, "signInWithCredential:success")
+                    val firebaseUser = auth.currentUser
+                    Log.d(TAG, "User: ${firebaseUser?.displayName}, Email: ${firebaseUser?.email}")
+                    
+                    if (firebaseUser != null) {
+                        // Save or update Google user in Firestore
+                        saveGoogleUserToFirestore(
+                            firebaseUser.uid,
+                            firebaseUser.displayName ?: "Google User",
+                            firebaseUser.email ?: "",
+                            firebaseUser.photoUrl?.toString()
+                        )
+                    } else {
+                        Toast.makeText(
+                            this,
+                            "Chào mừng bạn!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        navigateToHome()
+                    }
+                } else {
+                    Log.w(TAG, "signInWithCredential:failure", task.exception)
+                    Toast.makeText(
+                        this,
+                        "Xác thực Google thất bại: ${task.exception?.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+    }
+    
+    private fun saveGoogleUserToFirestore(
+        userId: String, 
+        displayName: String, 
+        email: String,
+        photoUrl: String?
+    ) {
+        // Check if user already exists
+        firestore.collection("users")
+            .document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    // User already exists, just navigate
+                    Log.d(TAG, "Google user already exists in Firestore")
+                    Toast.makeText(
+                        this,
+                        "Chào mừng ${displayName}!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    navigateToHome()
+                } else {
+                    // Create new user document
+                    val userData = hashMapOf(
+                        "id" to userId,
+                        "userName" to displayName,
+                        "email" to email,
+                        "phoneNumber" to null,
+                        "homeAddress" to null,
+                        "avatar" to photoUrl,
+                        "birthDate" to null,
+                        "departmentId" to null,
+                        "departmentName" to null,
+                        "emailConfirmed" to true, // Google email is verified
+                        "phoneNumberConfirmed" to false,
+                        "roles" to listOf("User"),
+                        "createdAt" to Date()
+                    )
+
+                    firestore.collection("users")
+                        .document(userId)
+                        .set(userData)
+                        .addOnSuccessListener {
+                            Log.d(TAG, "Google user saved to Firestore")
+                            Toast.makeText(
+                                this,
+                                "Chào mừng ${displayName}!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            navigateToHome()
+                        }
+                        .addOnFailureListener { e ->
+                            Log.w(TAG, "Error saving Google user to Firestore", e)
+                            Toast.makeText(
+                                this,
+                                "Chào mừng ${displayName}!",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            navigateToHome()
+                        }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error checking user in Firestore", e)
+                Toast.makeText(
+                    this,
+                    "Chào mừng ${displayName}!",
+                    Toast.LENGTH_SHORT
+                ).show()
+                navigateToHome()
+            }
     }
     
     private fun setupFacebookLogin() {

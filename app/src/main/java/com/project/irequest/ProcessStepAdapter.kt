@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class ProcessStepAdapter(private val steps: List<ProcessStep>) :
-    RecyclerView.Adapter<ProcessStepAdapter.StepViewHolder>() {
+class ProcessStepAdapter(
+    private val steps: List<ProcessStep>,
+    private val onStepClick: (ProcessStep) -> Unit = {}
+) : RecyclerView.Adapter<ProcessStepAdapter.StepViewHolder>() {
 
     class StepViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val stepNumber: TextView = view.findViewById(R.id.tvStepNumber)
@@ -29,6 +31,11 @@ class ProcessStepAdapter(private val steps: List<ProcessStep>) :
 
     override fun onBindViewHolder(holder: StepViewHolder, position: Int) {
         val step = steps[position]
+        
+        // Click event
+        holder.itemView.setOnClickListener {
+            onStepClick(step)
+        }
         
         // Step number
         holder.stepNumber.text = "Bước ${position + 1}"

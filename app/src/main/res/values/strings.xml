@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">irequest</string>
 
+    <!-- Google Sign-In Configuration -->
+    <string name="default_web_client_id">
+        1048366616832-2mavkqet5j9qanv0qeinbs4cqv3i0gf0.apps.googleusercontent.com</string>
+
     <!-- Facebook Login Configuration -->
     <string name="facebook_app_id">1366172454640655</string>
     <string name="facebook_client_token">abd9936aa592f9087c5f1f4eb61fa421</string>
@@ -102,5 +106,9 @@
     <string name="action_reject">Từ chối</string>
     <string name="action_comment">Bình luận</string>
     <string name="action_attachment">Thêm đính kèm</string>
+
+    <!-- Employee Filter -->
+    <string name="prompt_select_branch">Chọn chi nhánh</string>
+    <string name="prompt_select_shift">Chọn ca làm việc</string>
 
 </resources>

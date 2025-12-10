@@ -28,6 +28,7 @@ class HomeActivity : BaseActivity() {
         setClickListener(R.id.cardNotification, com.project.irequest.AlertsActivity::class.java)
         setClickListener(R.id.cardRequest, com.project.irequest.RequestsActivity::class.java)
         setClickListener(R.id.cardReport, com.project.irequest.ReportActivity::class.java)
+        setClickListener(R.id.cardEmployee, com.project.irequest.EmployeeActivity::class.java)
         setClickListener(R.id.cardDepartment, com.project.irequest.DepartmentActivity::class.java)
         setClickListener(R.id.cardProcess, com.project.irequest.ProcessManagementActivity::class.java)
         // cardProcessStep - will be opened from ProcessManagementActivity when user selects a process

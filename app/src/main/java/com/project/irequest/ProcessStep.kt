@@ -10,8 +10,13 @@ enum class StepStatus {
 
 // Định nghĩa dữ liệu bước để sửa lỗi "Unresolved reference 'ProcessStep'"
 data class ProcessStep(
+    val stepId: String = "",
+    val workflowId: String = "",
     val title: String,
     val description: String,
     val date: String,
-    val status: StepStatus
+    val status: StepStatus,
+    val assignee: String? = null,  // Người phụ trách
+    val department: String? = null,  // Phòng ban
+    val timeLimit: String? = null   // Thời hạn
 )
