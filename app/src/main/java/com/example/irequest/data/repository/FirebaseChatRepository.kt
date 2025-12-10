@@ -189,20 +189,20 @@ class FirebaseChatRepository(
             android.util.Log.d("ChatRepo", "Message added to Firestore: ${docRef.id}")
             
             val now = Date()
-            val updates = mapOf(
+            val senderUpdates = mapOf(
                 "lastMessage" to content,
                 "lastMessageTime" to now
             )
             
-            // Update current user's chat entry
+            // Update current user's chat entry (người gửi không cần tăng unreadCount)
             try {
-                chatsCollection.document(chatId).update(updates).await()
+                chatsCollection.document(chatId).update(senderUpdates).await()
                 android.util.Log.d("ChatRepo", "Updated sender's chat: $chatId")
             } catch (e: Exception) {
                 android.util.Log.w("ChatRepo", "Failed to update sender's chat: ${e.message}")
             }
             
-            // Update the other user's chat entry
+            // Update the other user's chat entry (người nhận cần tăng unreadCount)
             if (receiverId != null) {
                 try {
                     val receiverChats = chatsCollection
@@ -213,9 +213,18 @@ class FirebaseChatRepository(
                         .await()
                     
                     if (!receiverChats.isEmpty) {
-                        val receiverChatId = receiverChats.documents[0].id
-                        chatsCollection.document(receiverChatId).update(updates).await()
-                        android.util.Log.d("ChatRepo", "Updated receiver's chat: $receiverChatId")
+                        val receiverChatDoc = receiverChats.documents[0]
+                        val receiverChatId = receiverChatDoc.id
+                        val currentUnreadCount = receiverChatDoc.getLong("unreadCount") ?: 0
+                        
+                        val receiverUpdates = mapOf(
+                            "lastMessage" to content,
+                            "lastMessageTime" to now,
+                            "unreadCount" to (currentUnreadCount + 1)
+                        )
+                        
+                        chatsCollection.document(receiverChatId).update(receiverUpdates).await()
+                        android.util.Log.d("ChatRepo", "Updated receiver's chat: $receiverChatId with unreadCount: ${currentUnreadCount + 1}")
                     } else {
                         android.util.Log.w("ChatRepo", "Receiver's chat not found for userId: $receiverId")
                     }
@@ -247,29 +256,55 @@ class FirebaseChatRepository(
     
     /**
      * Mark all messages in chat as read
+     * Simplified query to avoid composite index requirement
      */
     suspend fun markChatMessagesAsRead(chatId: String): Result<Unit> {
         return try {
             val currentUserId = auth.currentUser?.uid ?: return Result.failure(Exception("Not authenticated"))
             
+            android.util.Log.d("ChatRepo", "Marking messages as read for groupId: $chatId, currentUser: $currentUserId")
+            
+            // Get all unread messages in this chat (filter senderId in memory)
             val snapshot = messagesCollection
                 .whereEqualTo("groupId", chatId)
                 .whereEqualTo("isRead", false)
-                .whereNotEqualTo("senderId", currentUserId)
                 .get()
                 .await()
             
             val batch = firestore.batch()
+            var updateCount = 0
             snapshot.documents.forEach { doc ->
-                batch.update(doc.reference, "isRead", true)
+                val senderId = doc.getString("senderId")
+                // Only mark as read if not sent by current user
+                if (senderId != currentUserId) {
+                    batch.update(doc.reference, "isRead", true)
+                    updateCount++
+                }
             }
-            batch.commit().await()
             
-            // Reset unread count in chat
-            chatsCollection.document(chatId).update("unreadCount", 0).await()
+            if (updateCount > 0) {
+                batch.commit().await()
+                android.util.Log.d("ChatRepo", "Marked $updateCount messages as read")
+            }
+            
+            // Reset unread count in current user's chat document
+            // Need to find the chat document for current user
+            val currentUserChatSnapshot = chatsCollection
+                .whereEqualTo("userId", currentUserId)
+                .whereEqualTo("sharedChatId", chatId)
+                .limit(1)
+                .get()
+                .await()
+            
+            if (!currentUserChatSnapshot.isEmpty) {
+                val chatDocId = currentUserChatSnapshot.documents[0].id
+                chatsCollection.document(chatDocId).update("unreadCount", 0).await()
+                android.util.Log.d("ChatRepo", "Reset unreadCount for chat: $chatDocId")
+            }
             
             Result.success(Unit)
         } catch (e: Exception) {
+            android.util.Log.e("ChatRepo", "Error marking messages as read", e)
             e.printStackTrace()
             Result.failure(e)
         }

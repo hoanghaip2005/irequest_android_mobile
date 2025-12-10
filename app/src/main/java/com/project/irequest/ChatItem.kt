@@ -8,5 +8,6 @@ data class ChatItem(
     val unreadCount: Int,
     val avatarResId: Int,
     val receiverId: String? = null,
-    val receiverName: String? = null
+    val receiverName: String? = null,
+    val sharedChatId: String? = null
 )

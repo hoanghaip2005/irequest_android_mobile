@@ -27,6 +27,7 @@ class ChatDetailActivity : AppCompatActivity() {
     private val chatRepository = FirebaseChatRepository()
     
     private var chatId: String? = null
+    private var sharedChatId: String? = null
     private var receiverId: String? = null
     private var receiverName: String? = null
     
@@ -44,6 +45,7 @@ class ChatDetailActivity : AppCompatActivity() {
         val chatName = intent.getStringExtra("CHAT_NAME") ?: "Chat"
         val avatarResId = intent.getIntExtra("AVATAR_RES_ID", R.drawable.ic_launcher_background)
         chatId = intent.getStringExtra("CHAT_ID")
+        sharedChatId = intent.getStringExtra("SHARED_CHAT_ID")
         receiverId = intent.getStringExtra("RECEIVER_ID")
         receiverName = intent.getStringExtra("RECEIVER_NAME")
 
@@ -56,8 +58,33 @@ class ChatDetailActivity : AppCompatActivity() {
 
         setupViews()
         
-        if (chatId != null) {
-            setupRealtimeMessagesListener(chatId!!)
+        // Sử dụng sharedChatId để lắng nghe tin nhắn (cả 2 user cùng sharedChatId)
+        // Nếu sharedChatId null (chat cũ), tạo sharedChatId từ receiverId
+        val chatIdToUse = if (sharedChatId != null) {
+            sharedChatId
+        } else {
+            val localReceiverId = receiverId
+            if (localReceiverId != null) {
+                // Generate sharedChatId từ currentUserId và receiverId
+                val currentUserId = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
+                if (currentUserId != null) {
+                    if (currentUserId < localReceiverId) {
+                        "chat_${currentUserId}_${localReceiverId}"
+                    } else {
+                        "chat_${localReceiverId}_${currentUserId}"
+                    }
+                } else {
+                    chatId
+                }
+            } else {
+                chatId
+            }
+        }
+        
+        android.util.Log.d("ChatDetail", "Using chatIdToUse: $chatIdToUse (sharedChatId=$sharedChatId, chatId=$chatId, receiverId=$receiverId)")
+        
+        if (chatIdToUse != null) {
+            setupRealtimeMessagesListener(chatIdToUse)
         } else {
               Toast.makeText(this, "Lỗi: Không có chatId", Toast.LENGTH_SHORT).show()
         }
@@ -89,6 +116,8 @@ class ChatDetailActivity : AppCompatActivity() {
         val firestore = com.google.firebase.firestore.FirebaseFirestore.getInstance()
         val currentUserId = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
         
+        android.util.Log.d("ChatDetail", "Setting up listener for groupId: $chatId, currentUser: $currentUserId")
+        
         // Listen to messages in real-time
         messagesListener = firestore.collection("messages")
             .whereEqualTo("groupId", chatId)
@@ -108,14 +137,19 @@ class ChatDetailActivity : AppCompatActivity() {
                     progressBar.visibility = View.GONE
                     messages.clear()
                     
+                    android.util.Log.d("ChatDetail", "Received ${snapshot.documents.size} message documents")
+                    
                     // Convert and sort messages
                     val firebaseMessages = snapshot.documents.mapNotNull { doc ->
-                        doc.toObject(com.example.irequest.data.models.Message::class.java)
+                        val msg = doc.toObject(com.example.irequest.data.models.Message::class.java)
+                        android.util.Log.d("ChatDetail", "Message: groupId=${msg?.groupId}, senderId=${msg?.senderId}, content=${msg?.content}")
+                        msg
                     }.sortedBy { it.createdAt?.time ?: 0L }
                     
                     firebaseMessages.forEach { msg ->
                         val isSent = msg.senderId == currentUserId
                         messages.add(ChatMessage(msg.content, isSent))
+                        android.util.Log.d("ChatDetail", "Adding message: isSent=$isSent, content=${msg.content}")
                     }
                     
                     messageAdapter.notifyDataSetChanged()
@@ -192,7 +226,29 @@ class ChatDetailActivity : AppCompatActivity() {
             return
         }
         
-        if (chatId == null) {
+        // Sử dụng sharedChatId, nếu null thì tạo từ receiverId
+        val chatIdToUse = if (sharedChatId != null) {
+            sharedChatId
+        } else {
+            val localReceiverId = receiverId
+            if (localReceiverId != null) {
+                // Generate sharedChatId từ currentUserId và receiverId
+                val currentUserId = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
+                if (currentUserId != null) {
+                    if (currentUserId < localReceiverId) {
+                        "chat_${currentUserId}_${localReceiverId}"
+                    } else {
+                        "chat_${localReceiverId}_${currentUserId}"
+                    }
+                } else {
+                    chatId
+                }
+            } else {
+                chatId
+            }
+        }
+        
+        if (chatIdToUse == null) {
             Toast.makeText(this, "Lỗi: Không có chatId", Toast.LENGTH_SHORT).show()
             return
         }
@@ -205,10 +261,10 @@ class ChatDetailActivity : AppCompatActivity() {
         
         lifecycleScope.launch {
             try {
-                android.util.Log.d("ChatDetail", "Sending message to chatId: $chatId, receiverId: $receiverId")
+                android.util.Log.d("ChatDetail", "Sending message to sharedChatId: $chatIdToUse, receiverId: $receiverId")
                 
                 val result = chatRepository.sendMessage(
-                    chatId = chatId!!,
+                    chatId = chatIdToUse,
                     content = messageText,
                     receiverId = receiverId,
                     receiverName = receiverName

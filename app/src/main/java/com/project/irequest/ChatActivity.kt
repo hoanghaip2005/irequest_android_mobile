@@ -71,18 +71,33 @@ class ChatActivity : BaseActivity() {
                 val result = chatRepository.getOrCreateDirectChat(userId, userName)
                 
                 result.onSuccess { chatId ->
-                    progressBar.visibility = View.GONE
+                    // Lấy thông tin chat đầy đủ để có sharedChatId
+                    val chatResult = chatRepository.getChatById(chatId)
                     
-                    // Open chat detail
-                    val intent = Intent(this@ChatActivity, ChatDetailActivity::class.java)
-                    intent.putExtra("CHAT_ID", chatId)
-                    intent.putExtra("CHAT_NAME", userName)
-                    intent.putExtra("RECEIVER_ID", userId)
-                    intent.putExtra("RECEIVER_NAME", userName)
-                    startActivity(intent)
+                    chatResult.onSuccess { chat ->
+                        progressBar.visibility = View.GONE
+                        
+                        // Open chat detail
+                        val intent = Intent(this@ChatActivity, ChatDetailActivity::class.java)
+                        intent.putExtra("CHAT_ID", chatId)
+                        intent.putExtra("SHARED_CHAT_ID", chat?.sharedChatId)
+                        intent.putExtra("CHAT_NAME", userName)
+                        intent.putExtra("RECEIVER_ID", userId)
+                        intent.putExtra("RECEIVER_NAME", userName)
+                        startActivity(intent)
+                        
+                        // Reload chats
+                        loadChatsFromFirebase()
+                    }
                     
-                    // Reload chats
-                    loadChatsFromFirebase()
+                    chatResult.onFailure {
+                        progressBar.visibility = View.GONE
+                        Toast.makeText(
+                            this@ChatActivity,
+                            "Lỗi tải thông tin chat",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
                 
                 result.onFailure { error ->
@@ -144,7 +159,8 @@ class ChatActivity : BaseActivity() {
                                 unreadCount = chat.unreadCount,
                                 avatarResId = R.drawable.ic_launcher_background,
                                 receiverId = chat.otherUserId ?: chat.userId,
-                                receiverName = chat.otherUserName ?: chat.userName
+                                receiverName = chat.otherUserName ?: chat.userName,
+                                sharedChatId = chat.sharedChatId
                             )
                         }
                         
