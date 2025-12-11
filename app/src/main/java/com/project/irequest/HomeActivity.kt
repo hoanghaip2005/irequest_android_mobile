@@ -2,16 +2,35 @@ package com.project.irequest
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.IdRes
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class HomeActivity : BaseActivity() {
+
+    private lateinit var firestore: FirebaseFirestore
+    private lateinit var auth: FirebaseAuth
+    
+    private lateinit var tvTotalRequests: TextView
+    private lateinit var tvPendingRequests: TextView
+    private lateinit var tvCompletedRequests: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
+        // Initialize Firebase
+        firestore = FirebaseFirestore.getInstance()
+        auth = FirebaseAuth.getInstance()
+        
+        // Initialize TextViews
+        tvTotalRequests = findViewById(R.id.tvTotalRequests)
+        tvPendingRequests = findViewById(R.id.tvPendingRequests)
+        tvCompletedRequests = findViewById(R.id.tvCompletedRequests)
 
         val tvUserName = findViewById<TextView>(R.id.tvUserName)
         tvUserName.text = "Xin chào, Hoàng Hải!"
@@ -21,6 +40,48 @@ class HomeActivity : BaseActivity() {
         setupBottomNavigation()
         
         setActiveTab(0)
+        
+        // Load request statistics
+        loadRequestStatistics()
+    }
+    
+    private fun loadRequestStatistics() {
+        val currentUserId = auth.currentUser?.uid
+        if (currentUserId == null) {
+            Log.e("HomeActivity", "User not logged in")
+            return
+        }
+        
+        // Query requests for current user
+        firestore.collection("requests")
+            .whereEqualTo("userId", currentUserId)
+            .get()
+            .addOnSuccessListener { documents ->
+                var totalCount = 0
+                var pendingCount = 0
+                var completedCount = 0
+                
+                for (document in documents) {
+                    totalCount++
+                    val status = document.getString("status") ?: ""
+                    
+                    when (status.lowercase()) {
+                        "pending", "đang xử lý", "processing" -> pendingCount++
+                        "completed", "hoàn thành", "done" -> completedCount++
+                    }
+                }
+                
+                // Update UI
+                tvTotalRequests.text = totalCount.toString()
+                tvPendingRequests.text = pendingCount.toString()
+                tvCompletedRequests.text = completedCount.toString()
+                
+                Log.d("HomeActivity", "Statistics loaded: Total=$totalCount, Pending=$pendingCount, Completed=$completedCount")
+            }
+            .addOnFailureListener { exception ->
+                Log.e("HomeActivity", "Error loading statistics", exception)
+                Toast.makeText(this, "Không thể tải thống kê", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun setupFeatureCards() {

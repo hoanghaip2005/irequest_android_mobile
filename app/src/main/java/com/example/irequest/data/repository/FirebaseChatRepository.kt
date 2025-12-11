@@ -242,6 +242,94 @@ class FirebaseChatRepository(
     }
     
     /**
+     * Send message with image to chat
+     * Similar to sendMessage but includes imageUrl
+     */
+    suspend fun sendMessageWithImage(
+        chatId: String,
+        content: String,
+        imageUrl: String,
+        receiverId: String? = null,
+        receiverName: String? = null
+    ): Result<String> {
+        return try {
+            val currentUserId = auth.currentUser?.uid ?: return Result.failure(Exception("Not authenticated"))
+            val currentUserName = auth.currentUser?.displayName ?: auth.currentUser?.email ?: "User"
+            
+            android.util.Log.d("ChatRepo", "Creating image message - chatId: $chatId, sender: $currentUserId, receiver: $receiverId")
+            
+            val message = Message(
+                content = content,
+                senderId = currentUserId,
+                senderName = currentUserName,
+                receiverId = receiverId,
+                receiverName = receiverName,
+                groupId = chatId,
+                createdAt = Date(),
+                isRead = false,
+                imageUrl = imageUrl,
+                messageType = "IMAGE"
+            )
+            
+            // Add message
+            val docRef = messagesCollection.add(message).await()
+            android.util.Log.d("ChatRepo", "Image message added to Firestore: ${docRef.id}")
+            
+            val now = Date()
+            val lastMessageText = if (content.isNotEmpty()) content else "Đã gửi ảnh"
+            val senderUpdates = mapOf(
+                "lastMessage" to lastMessageText,
+                "lastMessageTime" to now
+            )
+            
+            // Update current user's chat entry
+            try {
+                chatsCollection.document(chatId).update(senderUpdates).await()
+                android.util.Log.d("ChatRepo", "Updated sender's chat: $chatId")
+            } catch (e: Exception) {
+                android.util.Log.w("ChatRepo", "Failed to update sender's chat: ${e.message}")
+            }
+            
+            // Update the other user's chat entry
+            if (receiverId != null) {
+                try {
+                    val receiverChats = chatsCollection
+                        .whereEqualTo("userId", receiverId)
+                        .whereEqualTo("otherUserId", currentUserId)
+                        .limit(1)
+                        .get()
+                        .await()
+                    
+                    if (!receiverChats.isEmpty) {
+                        val receiverChatDoc = receiverChats.documents[0]
+                        val receiverChatId = receiverChatDoc.id
+                        val currentUnreadCount = receiverChatDoc.getLong("unreadCount") ?: 0
+                        
+                        val receiverUpdates = mapOf(
+                            "lastMessage" to lastMessageText,
+                            "lastMessageTime" to now,
+                            "unreadCount" to (currentUnreadCount + 1)
+                        )
+                        
+                        chatsCollection.document(receiverChatId).update(receiverUpdates).await()
+                        android.util.Log.d("ChatRepo", "Updated receiver's chat: $receiverChatId with unreadCount: ${currentUnreadCount + 1}")
+                    } else {
+                        android.util.Log.w("ChatRepo", "Receiver's chat not found for userId: $receiverId")
+                    }
+                } catch (e: Exception) {
+                    android.util.Log.w("ChatRepo", "Failed to update receiver's chat: ${e.message}")
+                }
+            }
+            
+            Result.success(docRef.id)
+        } catch (e: Exception) {
+            android.util.Log.e("ChatRepo", "Error sending image message", e)
+            e.printStackTrace()
+            Result.failure(e)
+        }
+    }
+    
+    /**
      * Mark message as read
      */
     suspend fun markMessageAsRead(messageId: String): Result<Unit> {

@@ -79,6 +79,10 @@ dependencies {
     // Circle ImageView
     implementation("de.hdodenhof:circleimageview:3.1.0")
     
+    // Glide for image loading
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
+    
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -1,6 +1,10 @@
 package com.project.irequest
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -8,12 +12,16 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.irequest.data.repository.FirebaseChatRepository
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import java.util.*
 
 class ChatDetailActivity : AppCompatActivity() {
 
@@ -22,16 +30,31 @@ class ChatDetailActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
     private lateinit var etMessageInput: EditText
     private lateinit var btnSend: Button
+    private lateinit var btnAddImage: ImageView
     
     private val messages = mutableListOf<ChatMessage>()
     private val chatRepository = FirebaseChatRepository()
+    private val storage = FirebaseStorage.getInstance()
     
     private var chatId: String? = null
     private var sharedChatId: String? = null
     private var receiverId: String? = null
     private var receiverName: String? = null
+    private var selectedImageUri: Uri? = null
     
     private var messagesListener: com.google.firebase.firestore.ListenerRegistration? = null
+    
+    // Image picker launcher
+    private val imagePickerLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            result.data?.data?.let { uri ->
+                selectedImageUri = uri
+                uploadAndSendImage(uri)
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,6 +123,7 @@ class ChatDetailActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progressBar)
         etMessageInput = findViewById(R.id.et_message_input)
         btnSend = findViewById(R.id.btn_send)
+        btnAddImage = findViewById(R.id.btnAddImage)
         
         rvMessages.layoutManager = LinearLayoutManager(this)
         messageAdapter = MessageAdapter(messages)
@@ -107,6 +131,10 @@ class ChatDetailActivity : AppCompatActivity() {
         
         btnSend.setOnClickListener {
             sendMessage()
+        }
+        
+        btnAddImage.setOnClickListener {
+            openImagePicker()
         }
     }
     
@@ -148,8 +176,13 @@ class ChatDetailActivity : AppCompatActivity() {
                     
                     firebaseMessages.forEach { msg ->
                         val isSent = msg.senderId == currentUserId
-                        messages.add(ChatMessage(msg.content, isSent))
-                        android.util.Log.d("ChatDetail", "Adding message: isSent=$isSent, content=${msg.content}")
+                        val messageType = when {
+                            msg.imageUrl != null && msg.content.isNotEmpty() -> MessageType.TEXT_WITH_IMAGE
+                            msg.imageUrl != null -> MessageType.IMAGE
+                            else -> MessageType.TEXT
+                        }
+                        messages.add(ChatMessage(msg.content, isSent, msg.imageUrl, messageType))
+                        android.util.Log.d("ChatDetail", "Adding message: isSent=$isSent, content=${msg.content}, imageUrl=${msg.imageUrl}")
                     }
                     
                     messageAdapter.notifyDataSetChanged()
@@ -293,6 +326,102 @@ class ChatDetailActivity : AppCompatActivity() {
                 e.printStackTrace()
             } finally {
                 btnSend.isEnabled = true
+            }
+        }
+    }
+    
+    private fun openImagePicker() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        intent.type = "image/*"
+        imagePickerLauncher.launch(intent)
+    }
+    
+    private fun uploadAndSendImage(imageUri: Uri) {
+        val chatIdToUse = if (sharedChatId != null) {
+            sharedChatId
+        } else {
+            val localReceiverId = receiverId
+            if (localReceiverId != null) {
+                val currentUserId = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid
+                if (currentUserId != null) {
+                    if (currentUserId < localReceiverId) {
+                        "chat_${currentUserId}_${localReceiverId}"
+                    } else {
+                        "chat_${localReceiverId}_${currentUserId}"
+                    }
+                } else {
+                    chatId
+                }
+            } else {
+                chatId
+            }
+        }
+        
+        if (chatIdToUse == null) {
+            Toast.makeText(this, "Lỗi: Không có chatId", Toast.LENGTH_SHORT).show()
+            return
+        }
+        
+        // Show progress
+        progressBar.visibility = View.VISIBLE
+        btnAddImage.isEnabled = false
+        btnSend.isEnabled = false
+        
+        lifecycleScope.launch {
+            try {
+                // Create unique filename
+                val timestamp = System.currentTimeMillis()
+                val filename = "chat_images/${chatIdToUse}/${timestamp}_${UUID.randomUUID()}.jpg"
+                val storageRef = storage.reference.child(filename)
+                
+                // Upload image
+                val uploadTask = storageRef.putFile(imageUri).await()
+                
+                // Get download URL
+                val downloadUrl = storageRef.downloadUrl.await()
+                
+                android.util.Log.d("ChatDetail", "Image uploaded: $downloadUrl")
+                
+                // Get message text if any
+                val messageText = etMessageInput.text.toString().trim()
+                etMessageInput.text.clear()
+                
+                // Send message with image URL
+                val result = chatRepository.sendMessageWithImage(
+                    chatId = chatIdToUse,
+                    content = messageText,
+                    imageUrl = downloadUrl.toString(),
+                    receiverId = receiverId,
+                    receiverName = receiverName
+                )
+                
+                result.onSuccess { messageId ->
+                    android.util.Log.d("ChatDetail", "Image message sent successfully: $messageId")
+                    Toast.makeText(this@ChatDetailActivity, "Đã gửi ảnh", Toast.LENGTH_SHORT).show()
+                }
+                
+                result.onFailure { error ->
+                    android.util.Log.e("ChatDetail", "Failed to send image message", error)
+                    Toast.makeText(
+                        this@ChatDetailActivity,
+                        "Lỗi gửi ảnh: ${error.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                
+            } catch (e: Exception) {
+                android.util.Log.e("ChatDetail", "Exception uploading image", e)
+                Toast.makeText(
+                    this@ChatDetailActivity,
+                    "Lỗi tải ảnh: ${e.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+                e.printStackTrace()
+            } finally {
+                progressBar.visibility = View.GONE
+                btnAddImage.isEnabled = true
+                btnSend.isEnabled = true
+                selectedImageUri = null
             }
         }
     }

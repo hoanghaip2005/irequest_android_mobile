@@ -96,6 +96,13 @@
         android:background="?attr/colorSurface"
         android:layout_alignParentBottom="true">
 
+        <ImageView
+            android:id="@+id/btnAddImage"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/gallery"
+            android:layout_marginRight="8dp"/>
+
         <EditText
             android:id="@+id/et_message_input"
             android:layout_width="0dp"

@@ -75,6 +75,10 @@ data class Message(
     val attachmentSize: Long? = null,
     val thumbnailUrl: String? = null,
     
+    // Image message (simplified)
+    val imageUrl: String? = null,
+    val messageType: String? = null, // "TEXT", "IMAGE", "TEXT_WITH_IMAGE"
+    
     // Reply to message
     val replyToMessageId: String? = null,
     val replyToContent: String? = null
